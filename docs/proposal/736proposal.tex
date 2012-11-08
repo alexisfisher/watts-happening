@@ -1,0 +1,75 @@
+\documentclass{article}
+\usepackage{alltt}
+\usepackage{verbatim}
+
+\title{Project Proposal: Watt's Happening}
+\author{Ben Bramble, Nick Burek, Alexis Fisher, and Adam Vail}
+\begin{document}
+\maketitle
+
+\section*{Problem}
+Mobile devices, including smart phones and tablets, are capable of performing an ever-increasing array of tasks. 
+Unfortunately, short battery life severely limits the full potential of smart phones. 
+A user may experience erratic power surges based on different applications and might not know if her phone will last until the end of the day. 
+While power analyzing applications exist, most are intended for use by energy-conscious application developers but not for end users \cite{eprof} \cite{energy-aware}. 
+Of the power saving applications available for end users, some complain of the applications being too intrusive. 
+These applications disable important features of the phone without user consent and make practical usage very difficult. 
+Allowing the user to set a target ``no-charge-until" goal time, and then guiding the user towards decisions to achieve this goal, would enable more efficient and productive use of mobile devices.
+
+\section*{Motivation}
+Mobile devices are nearly ubiquitous, and function as an integral part of modern life. 
+As battery technology lags behind the ever-increasing demands applications make, devices need intelligent use of limited resources. 
+Unfortunately, most application developers do not take into account these power limitations, or even realize the power draws of their applications on disparate devices. 
+Compounding this problem, common users remain blissfully unaware of their power use until their phone reaches a minimum battery threshold.
+
+\section*{Proposed Project}
+Intelligently learning a user's standard behavior and performing power-saving adjustments that fit with the user's needs would enable longer battery life. 
+Adjustments could include powering down radios (including gps, wifi, 4g, 3g) automatically, terminating applications that are drawing extreme power without user interaction, 
+and recommending user application termination when the goal may not be achievable based on current usage. 
+The proposed end state is an easy-to-use application that educates the user based on their individual energy use and allows the user to customize their mobile device to extend the battery life on a single charge.
+
+\section*{Specific Tasks}
+\begin{itemize}
+\item Gather battery \& usage information in order to analyze user's usage habits.
+	\begin{itemize}
+	\item Develop initial heuristics for different application radio footprints to advise on previously unseen applications.
+	\end{itemize}
+\item Receive user's usage goal in order to allow ``Watt's Happening'' application to advise user.
+\item Present user with list of recommendations and effects to allow user to manage device power.
+\item Continue monitoring battery \& usage information to dynamically make new recommendations.
+	\begin{itemize}
+	\item Watt's Happening application has whitelist/blacklist of applications and power devices to provide automatic power management.
+	\end{itemize}
+\end{itemize}
+
+\subsection*{Methodology}
+Our goal is to optimize the overall battery usage of the entire device. 
+Therefore, we plan to monitor a variety of usage scenarios, gathering battery and usage snapshots throughout the test period. 
+An approximate duplication of these usage scenarios using our ``Watt's Happening" application should provide information on general power trends. 
+Ideally, the use of ``Watt's Happening" will provide a noticeable extension of battery life without impacting necessary or desired user operations.
+
+Although formal and repeatable testing would provide a consistent and controlled environment to display incontrovertible usage trends, a sterile environment is not the expected use case.
+Therefore, averaging real world usage scenarios will hopefully provide a more realistic, yet still convincing, data set.
+
+\subsection*{Resources}
+\begin{itemize}
+\item Android SDK
+\item Android device. (Nick's Android phone, Professor Banerjee has several tablets that run Android as well)
+\end{itemize}
+
+\begin{thebibliography}{9}
+
+\bibitem{eprof}
+Abhinav Pathak, Y. Charlie Hu, and Ming Zhang,
+  ``Fine Grained Energy Accounting on Smartphones with Eprof,"
+  in \emph{Proc. of EuroSys}, 2012. \\ 
+  URL: \verb https://engineering.purdue.edu/~ychu/publications/eurosys12_eprof.pdf .
+
+\bibitem{energy-aware}
+Hung-Ching Chang, Abhishek R Agrawal, and Kirk W Cameron,
+  ``Energy-Aware Computing for Android Platforms," \\
+  URL: \verb http://scape.cs.vt.edu/wp-content/uploads/2012/08/ITJ12_Android_Energy-Aware.pdf .
+
+\end{thebibliography}
+
+\end{document}

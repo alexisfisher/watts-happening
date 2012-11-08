@@ -1,0 +1,30 @@
+Chang, Agrawal, and Cameron survey the power management techniques employed by Android and how popular applications abuse or take advantage of those techniques\cite{energy-aware}.
+They explore the idea software written for mobile devices to be optimized for efficient power optimization and in many cases, the application developer doesn't necessarily take power into
+consideration.
+They do several case studies of popular applications and analyze how they interact with the CPU, the screen, and other aspects of the mobile devices. 
+They came to the conclusion that even though Android does a great job to aggresively save power, application developers needs to create their software with power consumption in mind.
+The paper is a beneficial overview of the Android power management system as well as several tools that can be used to monitor the power usage of a device's underlying hardware.
+
+Pathak, Hu, and Zhang help application developers create power conserving software through their energy profiling tool called \emph{eprof}\cite{eprof}.
+The tool allows developers to monitor power consumption with multiple granularities and determine which pieces are code consume the most energy.
+This is useful for catching programming bugs, such as holding onto a wakelock too long, as well as directing attention to code that needs to be optimized.
+It also illuminates the fact that large amounts of energy are used in I/O operations. 
+This implies that in order to save energy it is important to only use 3G, GPS, and WiFi when it is truly necessary.
+Therefore, it is clear that disabling these aspects of a mobile device can make profound differences in battery life.
+
+\begin{thebibliography}{9}
+
+\bibitem{eprof}
+Abhinav Pathak, Y. Charlie Hu, and Ming Zhang,
+  ``Fine Grained Energy Accounting on Smartphones with Eprof,"
+  in \emph{Proc. of EuroSys}, 2012. \\ 
+  URL: \verb https://engineering.purdue.edu/~ychu/publications/eurosys12_eprof.pdf .
+
+\bibitem{energy-aware}
+Hung-Ching Chang, Abhishek R Agrawal, and Kirk W Cameron,
+  ``Energy-Aware Computing for Android Platforms," \\
+  URL: \verb http://scape.cs.vt.edu/wp-content/uploads/2012/08/ITJ12_Android_Energy-Aware.pdf .
+
+\end{thebibliography}
+
+

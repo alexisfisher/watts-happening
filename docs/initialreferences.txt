@@ -1,0 +1,33 @@
+https://engineering.purdue.edu/~ychu/publications/eurosys12_eprof.pdf
+	Fine Grained Energy Accounting on Smartphones with Eprof
+		Adam
+http://cseweb.ucsd.edu/~vahdat/papers/usenix03.pdf
+	Currentcy: A Unifying Abstraction for Expressing Energy Management Policies
+		Ben	
+http://www.scs.stanford.edu/cinder/rumble-cinder-mobiheld2009.pdf
+	Apprehending Joule Thieves with Cinder
+		Ben
+http://scape.cs.vt.edu/wp-content/uploads/2012/08/ITJ12_Android_Energy-Aware.pdf
+	Energy-Aware Computing for Android* Platforms 
+		Adam
+
+http://netlab.cs.iitm.ernet.in/publications_files/pub/balaji/IDS.pdf
+	Intrusion Detection through Learning Behavior Model
+		Alexis
+http://www.aaai.org/Papers/KDD/1996/KDD96-002.pdf
+	Combining Data Mining and Machine Learning for Effective User Profiling
+		Nick
+http://www.parc.com/content/attachments/implicit-authentication-through-learning.pdf
+	Implicit Authentication through Learning User Behavior
+				Authenticating users based on usage models
+		Nick
+http://smartech.gatech.edu/xmlui/bitstream/handle/1853/3288/02-27.pdf?sequence=1
+	Learning Signiﬁcant Locations and Predicting User Movement with GPS
+		Alexis
+http://web.media.mit.edu/~lieber/IUI/Goecks/Goecks.pdf
+ 	Learning users' interests by unobtrusively observing their normal behavior
+		Alexis
+
+Task Managers: Nick, Adam
+Sample GUI: Ben
+

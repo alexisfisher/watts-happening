@@ -1,0 +1,19 @@
+1) How does this address our predictability goal?
+	Specific recommendations allow the user to make the necessary tradeoff
+	decisions between current functionality and future battery needs.
+	
+2) Do you say which app to use if there are several?
+	No, we will not. This level of complexity would require monitoring exactly
+	what function each app provides to the user, and maintaining a current
+	list of equivalent applications.  User app selection is complex and may
+	have a variety of factors that we are not aware of.
+
+3) Can you be more specific?
+	We plan to list currently running apps and the predicted change in
+	achievable running time if the app is killed.
+
+4) How does this compare to existing energy monitors?
+	Existing energy monitors look at what you're doing and may provide
+	guidance, but do not appear to allow the user to set a goal of
+	no-charge-until time. Existing apps do not appear to model user behavior
+	to automatically turn on/off radios based on previous experience.

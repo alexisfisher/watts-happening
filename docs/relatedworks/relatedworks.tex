@@ -1,0 +1,63 @@
+\documentclass{article}
+\usepackage{alltt}
+\usepackage{verbatim}
+
+\title{Related Works: Watt's Happening}
+\author{Ben Bramble, Nick Burek, Alexis Fisher, and Adam Vail}
+\begin{document}
+\maketitle
+
+\section*{Related Works}
+Chang, Agrawal, and Cameron survey the power management techniques employed by Android and how popular applications abuse or take advantage of those techniques\cite{energy-aware}. 
+They explore the idea that software written for mobile devices should be optimized for efficient power consumption, but in many cases the application developer doesn't necessarily take power into consideration. 
+They do several case studies of popular applications and analyze how they interact with the CPU, the screen, and other aspects of the mobile devices. 
+They came to the conclusion that even though Android does a great job to aggressively save power, application developers need to create their software with power consumption in mind. 
+The paper is a beneficial overview of the Android power management system as well as several tools that can be used to monitor the power usage of a device's underlying hardware. 
+
+Pathak, Hu, and Zhang help application developers create power conserving software through their energy profiling tool called \emph{eprof}\cite{Pathak:2012:ESI:2168836.2168841}. 
+The tool allows developers to monitor power consumption with multiple granularities and determine which pieces of code consume the most energy. 
+This is useful for catching programming bugs, such as holding onto a wakelock too long, as well as directing attention to code that needs to be optimized. 
+It also illuminates the fact that large amounts of energy are used in I/O operations. 
+This implies that in order to save energy it is important to only use 3G, GPS, and WiFi when it is truly necessary. 
+Therefore, it is clear that disabling these aspects of a mobile device can make profound differences in battery life.
+
+Balajinath and Raghavan discuss learning user behavior to build a model of non-malicious user actions, with the intent to easily identify malicious users\cite{Balajinath:2001:IDT:2294491.2294970}. 
+User activity is recorded, and a newness factor is used to help identify behavior out of the norm. 
+A 500-command history was identified as the amount of history required to ensure maximum prediction accuracy. 
+
+Fawcett et al. use usage profiling to detect cellular cloning fraud \cite{dataMiningFraudDetection}. 
+While the idea of profiling users based on when and where they use services is similar to what we are trying to do, they are using this information for a much different application. 
+
+Ashbrook learns significant locations and predicts user movement from GPS data \cite{Ashbrook:2002:LSL:862896.881068}. 
+Raw location data is analyzed using k-clustering with a variety of radiuses. 
+A building location is inferred from lack of GPS information for an arbitrarily selected ten minute time slice. 
+This is vulnerable to other GPS data issues, including urban canyons or device failure. 
+The location prediction is based on a Markov model built off of observed patterns. 
+First order Markov models are used, as data models beyond that would require a much longer observation period. 
+
+Goecks and Shavlik address unobtrusive observation of user behavior \cite{Goecks:2000:LUI:325737.325806}. 
+Users don't need to necessarily identify successful results, but measurements of success can be inferred from properties of successful predictions. 
+These properties should be observable without user interaction to assess likelihood of success. 
+
+Murmuria et al. develop a system for modeling power consumption on smartphone devices by collecting data on the wakelock drivers for a device's subsystem \cite{mobilePowerUsageMeasurements}. 
+They break down the major subsystems (CPU, display, graphics, GPS, audio, and WiFi) and develop metrics by which power consumption can be determined for each subsystem. 
+This paper provides a good overview of a low impact way of determining power consumption of individual components in a smartphone. 
+
+Rumble et al. discussed a new operating system called Cinder that sought to extend limited energy resources by implementing capacitor objects \cite{Rumble:2009:AJT:1592606.1592618}. 
+The similarities to their work included a desire to reach a goal usage time by dynamically running statistics of application energy consumption. 
+The differences between their OS and our goal is that they built a new OS where as we aim to create an application on top of Android. 
+In addition, Cinder actively limits the energy consumption of various applications where we will create suggestions for the user to implement. 
+
+Zeng et al. established energy as a resource called currentcy and established pricing for using that resource \cite{Zeng:2003:CUA:1247340.1247344}. 
+Both currentcy and Watt's Happening set usage time goals and dynamically adjusts to overspent and underspent energy to allow the application to meet that energy goal. 
+However, currentcy forces all devices on the platform to adopt the energy resource type. 
+This makes application programmers factor currentcy in to their design whereas Watt's Happening aims to be invisible to other applications. 
+
+Shi et al. develop a method of identifying users based on behavior profiling \cite{learningUserBehavior}. 
+Their methods of learning users' typical habits could be applied to power usage as well. 
+If we know that a person uses their GPS when traveling to work every morning then we can account for that required power consumption when modeling usage goals. 
+
+{\footnotesize \bibliographystyle{acm}
+\bibliography{references}}
+
+\end{document}
