@@ -1,8 +1,3 @@
-INDEX VERSION 1.126+C:\cs736repo\src\.metadata\.plugins\org.eclipse.jdt.core
-899541807.index
-1036263767.index
-1729595507.index
+INDEX VERSION 1.126+C:\Users\Nick\Desktop\watts-happening\src\.metadata\.plugins\org.eclipse.jdt.core
 377020185.index
-3961065570.index
-3828901433.index
 2312284309.index
