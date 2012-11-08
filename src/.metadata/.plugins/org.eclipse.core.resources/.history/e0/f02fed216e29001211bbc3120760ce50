@@ -1,0 +1,32 @@
+package com.wattshappening;
+
+import android.os.Bundle;
+import android.app.Activity;
+import android.view.Menu;
+
+/**
+ * @author Nick
+ *
+ */
+public class WattsHappening extends Activity {
+
+	/**
+	 * 
+	 */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_watts_happening);
+        
+        
+    }
+
+	/**
+	 * 
+	 */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_watts_happening, menu);
+        return true;
+    }
+}
