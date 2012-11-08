@@ -1,4 +1,4 @@
-package com.wattshappening;
+package com.wattshappening.db;
 
 import java.util.Calendar;
 import java.sql.Timestamp;
