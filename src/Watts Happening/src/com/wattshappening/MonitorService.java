@@ -4,11 +4,13 @@
 package com.wattshappening;
 
 
+import java.util.Vector;
+
 import android.app.Service;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import com.wattshappening.logevents.*;
 
 /**
  * @author Nick
@@ -20,8 +22,8 @@ import android.util.Log;
  */
 public class MonitorService extends Service {
 
-    Handler h = new Handler();
-    Runnable runMonitor = null;
+    Vector<LogProcess> listOfLogs = new Vector<LogProcess>();
+    
 	/**
 	 * 
 	 */
@@ -37,14 +39,8 @@ public class MonitorService extends Service {
 		Log.i("LocalService", "Service Created");
 		super.onCreate();
 		
-		if (runMonitor == null)
-			runMonitor = new Runnable(){
-				public void run() {
-					// TODO Auto-generated method stub
-					Log.i("LocalService","Received singal to Run the monitor logging thread.");
-					h.postDelayed(runMonitor, 5000);
-				}
-			};
+		//add any needed log processes to the listOfLogs Vector here
+		
     }
 
 	/**
@@ -54,8 +50,9 @@ public class MonitorService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("LocalService", "Received start id " + startId + ": " + intent);
         super.onStartCommand(intent, flags, startId);
-        
-        h.postDelayed(runMonitor, 5000);
+
+        for (int i = 0; i<listOfLogs.size();++i)
+        	listOfLogs.get(i).startLogging();
         
         return START_STICKY;
     }
@@ -66,7 +63,10 @@ public class MonitorService extends Service {
     @Override
     public void onDestroy() {
     	Log.i("LocalService","Received destroy command.");
-    	h.removeCallbacks(runMonitor);
+
+    	for (int i = 0; i<listOfLogs.size();++i)
+        	listOfLogs.get(i).startLogging();
+    	
     	super.onDestroy();
 
     }
