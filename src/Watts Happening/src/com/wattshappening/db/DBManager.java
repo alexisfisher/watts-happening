@@ -45,7 +45,7 @@ public class DBManager extends SQLiteOpenHelper {
 	
 	/* Application Table Info */
 	private static final String TABLE_APPINFO = "app_info";
-	private static final String COLUMN_APP_TIMESTAMP = "timestamp";
+	private static final String COLUMN_APP_TIME = "timestamp";
 	private static final String COLUMN_APP_NAME = "name";
 	private static final String COLUMN_APP_ID = "app_id";
 	private static final String COLUMN_APP_CPU = "cpu";
@@ -53,10 +53,27 @@ public class DBManager extends SQLiteOpenHelper {
 	private static final String CREATE_APP_TABLE = "create table " + 
 			TABLE_APPINFO + "(" +
 			COLUMN_ID + " integer primary key autoincrement, " + 
-			COLUMN_APP_TIMESTAMP + " text not null, " +
+			COLUMN_APP_TIME + " text not null, " +
 			COLUMN_APP_NAME + " text not null, " +
 			COLUMN_APP_ID + " integer, " +
-			COLUMN_APP_CPU + " text);";
+			COLUMN_APP_CPU + " real);";
+	
+	/* Battery Table Info */
+	private static final String TABLE_BATTERY = "battery";
+	private static final String COLUMN_BATTERY_TIME = "timestamp";
+	private static final String COLUMN_BATTERY_VOLTAGE = "voltage";
+	private static final String COLUMN_BATTERY_TEMP = "temperature";
+	private static final String COLUMN_BATTERY_PERCENTAGE = "percentage";
+	private static final String COLUMN_BATTERY_SCALE = "scale";
+	
+	private static final String CREATE_BATTERY_TABLE = "create table " +
+			TABLE_BATTERY + "(" +
+			COLUMN_ID + " integer primary key autoincrement, " +
+			COLUMN_BATTERY_TIME + " text not null, " +
+			COLUMN_BATTERY_VOLTAGE + " real, " +
+			COLUMN_BATTERY_TEMP + " real, " +
+			COLUMN_BATTERY_PERCENTAGE + " real, " +
+			COLUMN_BATTERY_SCALE + " integer);";
 	
 	public DBManager(Context context){
 		super(context, DB_NAME, null, DB_VERSION);
@@ -67,6 +84,7 @@ public class DBManager extends SQLiteOpenHelper {
 		database.execSQL(CREATE_GPS_TABLE);
 		database.execSQL(CREATE_HARDWARE_TABLE);
 		database.execSQL(CREATE_APP_TABLE);
+		database.execSQL(CREATE_BATTERY_TABLE);
 	}
 	
 	@Override
@@ -76,6 +94,7 @@ public class DBManager extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_GPS + ";");
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_HARDWARE + ";");
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_APPINFO + ";");
+		db.execSQL("DROP TABLE IF EXISTS " + TABLE_BATTERY + ";");
 		onCreate(db);
 	}
 	
@@ -159,7 +178,7 @@ public class DBManager extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 		ContentValues values = new ContentValues();
 		
-		values.put(COLUMN_APP_TIMESTAMP, appInfo.getTimestamp());
+		values.put(COLUMN_APP_TIME, appInfo.getTimestamp());
 		values.put(COLUMN_APP_NAME, appInfo.getName());
 		values.put(COLUMN_APP_ID, appInfo.getAppId());
 		values.put(COLUMN_APP_CPU, Double.toString(appInfo.getCPU()));
@@ -177,12 +196,44 @@ public class DBManager extends SQLiteOpenHelper {
 		
 		if(cursor.moveToFirst()){
 			do{
-				AppInfo info = new AppInfo(cursor.getString(1), cursor.getString(2), cursor.getInt(3), cursor.getDouble(4));
+				AppInfo info = new AppInfo(cursor.getString(1), cursor.getString(2), cursor.getInt(3), 
+						cursor.getDouble(4));
 				appInfo.add(info);
 			}while(cursor.moveToNext());
 		}
 		db.close();
 		return appInfo;
+	}
+	
+	public void addBattery(BatteryInfo batInfo){
+		SQLiteDatabase db = this.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		
+		values.put(COLUMN_BATTERY_TIME, batInfo.getTimestamp());
+		values.put(COLUMN_BATTERY_VOLTAGE, batInfo.getVoltage());
+		values.put(COLUMN_BATTERY_TEMP, batInfo.getTemp());
+		values.put(COLUMN_BATTERY_PERCENTAGE, batInfo.getPercentage());
+		values.put(COLUMN_BATTERY_SCALE, batInfo.getScale());
+		
+		db.insert(TABLE_BATTERY, null, values);
+		db.close();
+	}
+	
+	public List<BatteryInfo> getAllBatteryInfo(){
+		List<BatteryInfo> batInfo = new ArrayList<BatteryInfo>();
+		String selectQuery = "SELECT * FROM " + TABLE_BATTERY + ";";
+		
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		
+		if(cursor.moveToFirst()){
+			do{
+				BatteryInfo bi = new BatteryInfo(cursor.getString(1), cursor.getDouble(2), cursor.getDouble(3),
+						cursor.getDouble(4), cursor.getInt(5));
+				batInfo.add(bi);
+			}while(cursor.moveToNext());
+		}
+		return batInfo;
 	}
 }
 
