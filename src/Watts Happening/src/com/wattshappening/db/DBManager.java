@@ -10,6 +10,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 
 public class DBManager extends SQLiteOpenHelper {
+	
+	private static DBManager instance = null;
 
 	private static final String DB_NAME = "wh_log.db";
 	private static final int DB_VERSION = 1;
@@ -75,8 +77,15 @@ public class DBManager extends SQLiteOpenHelper {
 			COLUMN_BATTERY_PERCENTAGE + " real, " +
 			COLUMN_BATTERY_SCALE + " integer);";
 	
-	public DBManager(Context context){
+	protected DBManager(Context context){
 		super(context, DB_NAME, null, DB_VERSION);
+	}
+	
+	public static DBManager getInstance(Context context){
+		if (instance == null)
+			instance = new DBManager(context);
+		
+		return instance;
 	}
 	
 	@Override 

@@ -13,7 +13,7 @@ public class HardwareStatusLogger extends LogProcess {
 	public HardwareStatusLogger(Service parent)
 	{
 		super(parent,10000);
-		dbMan = new DBManager(parent);
+		dbMan = DBManager.getInstance(parent);
 	}
 
 	@Override

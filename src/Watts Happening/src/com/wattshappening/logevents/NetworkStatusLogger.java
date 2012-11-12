@@ -15,7 +15,7 @@ public class NetworkStatusLogger extends LogProcess {
 	public NetworkStatusLogger(Service parent) {
 		super(parent,30000);
 		cM = ((ConnectivityManager) parent.getSystemService(Context.CONNECTIVITY_SERVICE));
-		dbMan = new DBManager(parent);
+		dbMan = DBManager.getInstance(parent);
 	}
 
 	@Override
