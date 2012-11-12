@@ -48,7 +48,7 @@ public class HardwareStatusLogger extends LogProcess {
 				state = "Disabling";
 				break;
 			case WifiManager.WIFI_STATE_ENABLED:
-				state = "Enabled: " + wifiManager.getConnectionInfo().getSupplicantState();
+				state = "Enabled: " + wifiManager.getConnectionInfo().getSupplicantState().toString();
 				break;
 			case WifiManager.WIFI_STATE_ENABLING:
 				state = "Enabling";
