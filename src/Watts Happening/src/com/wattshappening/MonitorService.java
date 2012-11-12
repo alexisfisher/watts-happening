@@ -39,7 +39,7 @@ public class MonitorService extends Service {
 		super.onCreate();
 		
 		//add any needed log processes to the listOfLogs Vector here
-		listOfLogs.add((LogProcess)(new HardwareStatusLogger()));
+		listOfLogs.add((LogProcess)(new HardwareStatusLogger(this)));
     }
 
 	/**

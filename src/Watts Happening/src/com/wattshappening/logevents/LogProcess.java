@@ -3,6 +3,7 @@
  */
 package com.wattshappening.logevents;
 
+import android.app.Service;
 import android.os.Handler;
 
 /**
@@ -13,6 +14,7 @@ public abstract class LogProcess {
 	
     private Handler h = new Handler();
     private Runnable runMonitor = null;
+    protected Service parent;
     
 	protected long logTimeout = 5000;
 	
@@ -22,9 +24,9 @@ public abstract class LogProcess {
 	 * @author Nick
 	 * 
 	 */
-	public LogProcess()
+	public LogProcess(Service parent)
 	{
-		onCreate();
+		onCreate(parent);
 	}
 	
 	/**
@@ -34,10 +36,10 @@ public abstract class LogProcess {
 	 * @param timeout - The amount of time (in milliseconds) to wait between
 	 * logging information. 
 	 */
-	public LogProcess(long timeout)
+	public LogProcess(Service parent, long timeout)
 	{
 		logTimeout = timeout;
-		onCreate();
+		onCreate(parent);
 	}
 	
 	/**
@@ -46,8 +48,9 @@ public abstract class LogProcess {
 	 * @author Nick
 	 * 
 	 */
-	private void onCreate()
+	private void onCreate(Service parent)
 	{
+		this.parent = parent;
 		runMonitor = new Runnable(){
 			public void run() {
 				logInformation();
