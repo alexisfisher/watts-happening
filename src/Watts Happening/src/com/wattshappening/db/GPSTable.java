@@ -4,10 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class GPSTable {
+public class GPSTable extends DBTable {
+
+	public GPSTable(Context context) {
+		super(context);
+	}
 
 	/* GPS Table info */
 	public static final String TABLE_GPS = "gps";
@@ -22,18 +27,38 @@ public class GPSTable {
 			COLUMN_GPS_COORD + " text not null);";
 
 	public static void addGPSCoordinate(SQLiteDatabase db, Gps coordinate){
-		//SQLiteDatabase db = this.getReadableDatabase();
+		
+		//db.close();
+	}
+	
+	@Override
+	public String getCreationQuerry() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void addEntry(DBEntry dbE) throws Exception {
+		// TODO Auto-generated method stub
+		if (!(dbE instanceof Gps))
+			throw new Exception("Wrong type of entry, should be of type Gps");
+		
+		Gps coordinate = (Gps)dbE;
+
+		SQLiteDatabase db = DBManager.getInstance(context).getWritableDatabase();
+		
 		ContentValues values = new ContentValues();
 		
 		values.put(COLUMN_GPS_TIME, coordinate.getTimestamp());
 		values.put(COLUMN_GPS_COORD, coordinate.getCoordinate());
 		
 		db.insert(TABLE_GPS, null, values);
-		//db.close();
 	}
-	
-	public static List<Gps> getAllGPSCoordinates(SQLiteDatabase db){
-		List<Gps> coords = new ArrayList<Gps>();
+
+	@Override
+	public List<DBEntry> fetchAllEntries() {
+		
+		List<DBEntry> coords = new ArrayList<DBEntry>();
 		String selectQuery = "SELECT * FROM " + TABLE_GPS + ";";
 		
 		Cursor cursor = db.rawQuery(selectQuery, null);
@@ -46,5 +71,11 @@ public class GPSTable {
 		}
 		
 		return coords;
+		
+	}
+
+	@Override
+	public String getTableName() {
+		return TABLE_GPS;
 	}
 }

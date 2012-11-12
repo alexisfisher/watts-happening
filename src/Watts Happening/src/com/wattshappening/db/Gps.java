@@ -3,7 +3,7 @@ package com.wattshappening.db;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-public class Gps {
+public class Gps extends DBEntry {
 	int id;
 	private String timestamp;
 	private String coordinate;

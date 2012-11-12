@@ -8,12 +8,12 @@ import android.net.wifi.WifiManager;
 
 public class HardwareStatusLogger extends LogProcess {
 	
-	DBManager dbMan = null;
+	HardwareTable hTable = null;
 	
 	public HardwareStatusLogger(Service parent)
 	{
 		super(parent,10000);
-		dbMan = DBManager.getInstance(parent);
+		hTable = new HardwareTable(parent);
 	}
 
 	@Override
@@ -60,7 +60,11 @@ public class HardwareStatusLogger extends LogProcess {
 		
 		//it would be nice to get all the WiFi locks here as well
 		
-		dbMan.addHardware(new Hardware("WIFI", isEnabled?1:0, state));
+		try {
+			hTable.addEntry(new Hardware("WIFI", isEnabled?1:0, state));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }
