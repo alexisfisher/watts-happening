@@ -28,7 +28,6 @@ public class MonitorService extends Service {
 	 * 
 	 */
 	public MonitorService() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	/**
@@ -40,7 +39,7 @@ public class MonitorService extends Service {
 		super.onCreate();
 		
 		//add any needed log processes to the listOfLogs Vector here
-		
+		listOfLogs.add((LogProcess)(new HardwareStatusLogger()));
     }
 
 	/**
