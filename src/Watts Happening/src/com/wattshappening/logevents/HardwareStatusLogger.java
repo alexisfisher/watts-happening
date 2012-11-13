@@ -12,21 +12,22 @@ import android.net.wifi.WifiManager;
 
 public class HardwareStatusLogger extends LogProcess {
 	
-	DBManager dbMan = null;
+	HardwareTable hTable = null;
 
 	BroadcastReceiver btBR = new BroadcastReceiver(){
 		
 		@Override
 		public void onReceive(Context c, Intent i)
 		{
-			dbMan.addHardware(new Hardware("BLUETOOTH",1,"action: Started a Discovery Scan"));
+			
+			//dbMan.addHardware(new Hardware("BLUETOOTH",1,"action: Started a Discovery Scan"));
 		}
 	};
 	
 	public HardwareStatusLogger(Service parent)
 	{
 		super(parent,10000);
-		dbMan = DBManager.getInstance(parent);
+		hTable = new HardwareTable(parent);
 	}
 
 	@Override
@@ -77,7 +78,11 @@ public class HardwareStatusLogger extends LogProcess {
 		
 		//it would be nice to get all the WiFi locks here as well
 		
-		dbMan.addHardware(new Hardware("WIFI", isEnabled?1:0, state));
+		try {
+			hTable.addEntry(new Hardware("WIFI", isEnabled?1:0, state));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		
 		//Start the Bluetooth stuff here
@@ -120,7 +125,12 @@ public class HardwareStatusLogger extends LogProcess {
 				break;
 		}
 		
-		dbMan.addHardware(new Hardware("BLUETOOTH", isEnabled?1:0, state));
+		try {
+			hTable.addEntry(new Hardware("BLUETOOTH", isEnabled?1:0, state));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		
 	}
 

@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class HardwareTable {
+public class HardwareTable extends DBTable{
 
 	/* Hardware Table Info */
 	public static final String TABLE_HARDWARE = "hardware";
@@ -27,7 +28,22 @@ public class HardwareTable {
 			"CONSTRAINT chk_enabled " +
 			"CHECK ("+ COLUMN_HARDWARE_ENABLED + "= 0 OR " + COLUMN_HARDWARE_ENABLED + " = 1));";
 	
-	public static void addHardware(SQLiteDatabase db, Hardware hardware){
+	public HardwareTable(Context context) {
+		super(context);
+	}
+
+	@Override
+	public String getCreationQuerry() {
+		return CREATE_HARDWARE_TABLE;
+	}
+
+	@Override
+	public void addEntry(DBEntry dbE) throws Exception {
+		SQLiteDatabase db = DBManager.getInstance(context).getWritableDatabase();
+		if (!(dbE instanceof Hardware))
+			throw new Exception("Wrong type of entry, should be of type Hardware");
+		Hardware hardware = (Hardware)dbE;
+		
 		ContentValues values = new ContentValues();
 		
 		values.put(COLUMN_HARDWARE_TIME, hardware.getTimestamp());
@@ -36,10 +52,13 @@ public class HardwareTable {
 		values.put(COLUMN_HARDWARE_STATUS, hardware.getStatus());
 		
 		db.insert(TABLE_HARDWARE, null, values);
+		
 	}
-	
-	public static List<Hardware> getAllHardware(SQLiteDatabase db){
-		List<Hardware> hardware = new ArrayList<Hardware>();
+
+	@Override
+	public List<DBEntry> fetchAllEntries() {
+		SQLiteDatabase db = DBManager.getInstance(context).getWritableDatabase();
+		List<DBEntry> hardware = new ArrayList<DBEntry>();
 		String selectQuery = "SELECT * FROM " + TABLE_HARDWARE + ";";
 		
 		Cursor cursor = db.rawQuery(selectQuery, null);
@@ -52,6 +71,11 @@ public class HardwareTable {
 			}while(cursor.moveToNext());
 		}
 		return hardware;
+	}
+
+	@Override
+	public String getTableName() {
+		return TABLE_HARDWARE;
 	}
 	
 }

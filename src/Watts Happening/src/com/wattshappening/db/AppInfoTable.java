@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class AppInfoTable {
+public class AppInfoTable extends DBTable {
 
 	public static final String TABLE_APPINFO = "app_info";
 	public static final String COLUMN_APP_TIME = "timestamp";
@@ -25,8 +26,14 @@ public class AppInfoTable {
 			COLUMN_APP_ID + " integer, " +
 			COLUMN_APP_CPU + " real);";
 	
-	public static void addAppInfo(SQLiteDatabase db, AppInfo appInfo){
+	@Override
+	public void addEntry(DBEntry dbE) throws Exception{
+		SQLiteDatabase db = DBManager.getInstance(context).getWritableDatabase();
 		ContentValues values = new ContentValues();
+		
+		if (!(dbE instanceof AppInfo))
+			throw new Exception("Wrong type of entry, should be of type Hardware");
+		AppInfo appInfo = (AppInfo)dbE;
 		
 		values.put(COLUMN_APP_TIME, appInfo.getTimestamp());
 		values.put(COLUMN_APP_NAME, appInfo.getName());
@@ -36,8 +43,24 @@ public class AppInfoTable {
 		db.insert(TABLE_APPINFO, null, values);
 	}
 	
-	public static List<AppInfo> getAllAppInfo(SQLiteDatabase db){
-		List<AppInfo> appInfo = new ArrayList<AppInfo>();
+	public AppInfoTable(Context context) {
+		super(context);
+	}
+
+	@Override
+	public String getCreationQuerry() {
+		return CREATE_APP_TABLE;
+	}
+	
+	@Override
+	public String getTableName() {
+		return TABLE_APPINFO;
+	}
+	
+	@Override
+	public List<DBEntry> fetchAllEntries(){
+		SQLiteDatabase db = DBManager.getInstance(context).getWritableDatabase();
+		List<DBEntry> appInfo = new ArrayList<DBEntry>();
 		String selectQuery = "SELECT * FROM " + TABLE_APPINFO + ";";
 		
 		Cursor cursor = db.rawQuery(selectQuery, null);
