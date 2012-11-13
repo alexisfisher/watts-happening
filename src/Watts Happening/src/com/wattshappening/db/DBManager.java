@@ -20,6 +20,8 @@ public class DBManager extends SQLiteOpenHelper {
 		
 		tables.add(new HardwareTable(context));
 		tables.add(new GPSTable(context));
+		//tables.add(new AppInfoTable(context));
+		//tables.add(new BatteryTable(context));
 		//add all table types here
 	}
 	
