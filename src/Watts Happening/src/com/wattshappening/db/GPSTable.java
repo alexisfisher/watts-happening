@@ -18,13 +18,15 @@ public class GPSTable extends DBTable {
 	public static final String TABLE_GPS = "gps";
 	public static final String COLUMN_ID = "id";
 	public static final String COLUMN_GPS_TIME = "timestamp";
-	public static final String COLUMN_GPS_COORD = "coordinates";
+	public static final String COLUMN_GPS_LAT = "latitude";
+	public static final String COLUMN_GPS_LONG = "longitude";
 
 	public static final String CREATE_GPS_TABLE = "create table " + 
 			TABLE_GPS + "(" + 
 			COLUMN_ID + " integer primary key autoincrement, " + 
 			COLUMN_GPS_TIME + " text not null, " + 
-			COLUMN_GPS_COORD + " text not null);";
+			COLUMN_GPS_LAT + " real not null, " + 
+			COLUMN_GPS_LONG + " real not null);";
 
 	public static void addGPSCoordinate(SQLiteDatabase db, Gps coordinate){
 		
@@ -50,7 +52,8 @@ public class GPSTable extends DBTable {
 		ContentValues values = new ContentValues();
 		
 		values.put(COLUMN_GPS_TIME, coordinate.getTimestamp());
-		values.put(COLUMN_GPS_COORD, coordinate.getCoordinate());
+		values.put(COLUMN_GPS_LAT, coordinate.getLatitude());
+		values.put(COLUMN_GPS_LONG, coordinate.getLongitude());
 		
 		db.insert(TABLE_GPS, null, values);
 	}
@@ -65,7 +68,7 @@ public class GPSTable extends DBTable {
 		
 		if(cursor.moveToFirst()){
 			do{
-				Gps coord = new Gps(cursor.getString(1), cursor.getString(2));
+				Gps coord = new Gps(cursor.getString(1), cursor.getDouble(2), cursor.getDouble(3));
 				coords.add(coord);
 			}while(cursor.moveToNext());
 		}

@@ -6,25 +6,32 @@ import java.util.Calendar;
 public class Gps extends DBEntry {
 	int id;
 	private String timestamp;
-	private String coordinate;
+	private double lat;
+	private double longitude;
 
 	/* Use the constructor when making new entries to be inserted into the database */
-	public Gps(String coordinates){
+	public Gps(double lat, double longitude){
 		this.timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
-		this.coordinate = coordinates;
+		this.lat = lat;
+		this.longitude = longitude;
 	}
 	
 	/* Use this constructor when returning rows from the database */
-	public Gps(String timestamp, String coordinates){
+	public Gps(String timestamp, double lat, double longitude){
 		this.timestamp = timestamp;
-		this.coordinate = coordinates;
+		this.lat = lat;
+		this.longitude = longitude;
 	}
 
 	public String getTimestamp(){
 		return timestamp;
 	}
 	
-	public String getCoordinate(){
-		return coordinate;
+	public double getLatitude(){
+		return lat;
+	}
+	
+	public double getLongitude(){
+		return longitude;
 	}
 }
