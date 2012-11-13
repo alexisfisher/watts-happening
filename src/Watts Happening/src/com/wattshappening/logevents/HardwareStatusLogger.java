@@ -19,7 +19,7 @@ public class HardwareStatusLogger extends LogProcess {
 		@Override
 		public void onReceive(Context c, Intent i)
 		{
-			//TODO: Log the bluetooth event
+			dbMan.addHardware(new Hardware("BLUETOOTH",1,"action: Started a Discovery Scan"));
 		}
 	};
 	
@@ -49,7 +49,6 @@ public class HardwareStatusLogger extends LogProcess {
 	@Override
 	protected void logInformation() {
 		
-		//TODO: Add bluetooth logging
 		//TODO: Add gps hardware logging
 		//TODO: Add screen state logging
 		
