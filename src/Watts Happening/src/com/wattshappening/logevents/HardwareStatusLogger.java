@@ -87,50 +87,52 @@ public class HardwareStatusLogger extends LogProcess {
 		
 		//Start the Bluetooth stuff here
 		BluetoothAdapter bAdapter = BluetoothAdapter.getDefaultAdapter();
-		isEnabled = bAdapter.isEnabled();
-		state = "State: ";
-		switch (bAdapter.getScanMode())
+		if (bAdapter != null)
 		{
-			case BluetoothAdapter.STATE_OFF:
-				state += "off";
-				break;
-			case BluetoothAdapter.STATE_TURNING_ON:
-				state += "turning on";
-				break;
-			case BluetoothAdapter.STATE_ON:
-				state += "on";
-				break;
-			case BluetoothAdapter.STATE_TURNING_OFF:
-				state += "turning off";
-				break;
+			isEnabled = bAdapter.isEnabled();
+			state = "State: ";
+			switch (bAdapter.getScanMode())
+			{
+				case BluetoothAdapter.STATE_OFF:
+					state += "off";
+					break;
+				case BluetoothAdapter.STATE_TURNING_ON:
+					state += "turning on";
+					break;
+				case BluetoothAdapter.STATE_ON:
+					state += "on";
+					break;
+				case BluetoothAdapter.STATE_TURNING_OFF:
+					state += "turning off";
+					break;
+			}
+			
+			state = ", ScanMode: ";
+			switch (bAdapter.getScanMode())
+			{
+				case BluetoothAdapter.SCAN_MODE_NONE:
+					state += "none";
+					break;
+				case BluetoothAdapter.STATE_TURNING_ON:
+					state += "turning on";
+					break;
+				case BluetoothAdapter.STATE_TURNING_OFF:
+					state += "turning off";
+					break;
+				case BluetoothAdapter.STATE_ON:
+					state += "on";
+					break;
+				case BluetoothAdapter.STATE_OFF:
+					state += "none";
+					break;
+			}
+			
+			try {
+				hTable.addEntry(new Hardware("BLUETOOTH", isEnabled?1:0, state));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-		
-		state = ", ScanMode: ";
-		switch (bAdapter.getScanMode())
-		{
-			case BluetoothAdapter.SCAN_MODE_NONE:
-				state += "none";
-				break;
-			case BluetoothAdapter.STATE_TURNING_ON:
-				state += "turning on";
-				break;
-			case BluetoothAdapter.STATE_TURNING_OFF:
-				state += "turning off";
-				break;
-			case BluetoothAdapter.STATE_ON:
-				state += "on";
-				break;
-			case BluetoothAdapter.STATE_OFF:
-				state += "none";
-				break;
-		}
-		
-		try {
-			hTable.addEntry(new Hardware("BLUETOOTH", isEnabled?1:0, state));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
 		
 	}
 
