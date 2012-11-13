@@ -3,7 +3,7 @@ package com.wattshappening.db;
 import java.util.Calendar;
 import java.sql.Timestamp;
 
-public class Hardware {
+public class Hardware extends DBEntry{
 
 	int _id;
 	//SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

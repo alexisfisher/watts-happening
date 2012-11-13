@@ -3,7 +3,7 @@ package com.wattshappening.db;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-public class AppInfo {
+public class AppInfo extends DBEntry{
 	
 	private String timestamp;
 	private String name;

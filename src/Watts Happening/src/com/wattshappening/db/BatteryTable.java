@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-public class BatteryTable {
+public class BatteryTable extends DBTable{
 
 	/* Battery Table Info */
 	public static final String TABLE_BATTERY = "battery";
@@ -27,7 +28,26 @@ public class BatteryTable {
 			COLUMN_BATTERY_PERCENTAGE + " real, " +
 			COLUMN_BATTERY_SCALE + " integer);";
 	
-	public static void addBattery(SQLiteDatabase db, BatteryInfo batInfo){
+	public BatteryTable(Context context) {
+		super(context);
+	}
+
+	@Override
+	public String getCreationQuerry() {
+		return CREATE_BATTERY_TABLE;
+	}
+	
+	@Override
+	public String getTableName() {
+		return TABLE_BATTERY;
+	}
+	
+	public void addEntry(DBEntry dbE) throws Exception{
+		SQLiteDatabase db = DBManager.getInstance(context).getWritableDatabase();
+		if (!(dbE instanceof BatteryInfo))
+			throw new Exception("Wrong type of entry, should be of type Hardware");
+		BatteryInfo batInfo = (BatteryInfo)dbE;
+		
 		ContentValues values = new ContentValues();
 		
 		values.put(COLUMN_BATTERY_TIME, batInfo.getTimestamp());
@@ -39,8 +59,9 @@ public class BatteryTable {
 		db.insert(TABLE_BATTERY, null, values);
 	}
 	
-	public static List<BatteryInfo> getAllBatteryInfo(SQLiteDatabase db){
-		List<BatteryInfo> batInfo = new ArrayList<BatteryInfo>();
+	public List<DBEntry> fetchAllEntries(){
+		SQLiteDatabase db = DBManager.getInstance(context).getWritableDatabase();
+		List<DBEntry> batInfo = new ArrayList<DBEntry>();
 		String selectQuery = "SELECT * FROM " + TABLE_BATTERY + ";";
 		
 		Cursor cursor = db.rawQuery(selectQuery, null);
