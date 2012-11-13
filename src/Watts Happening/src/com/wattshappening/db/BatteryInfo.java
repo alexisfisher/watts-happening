@@ -1,5 +1,8 @@
 package com.wattshappening.db;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
+
 public class BatteryInfo extends DBEntry{
 
 	private String timestamp;
@@ -9,6 +12,7 @@ public class BatteryInfo extends DBEntry{
 	private int scale;
 	
 	public BatteryInfo(double voltage, double temp, double percentage, int scale){
+		this.timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
 		this.voltage = voltage;
 		this.temp = temp;
 		this.percentage = percentage;
