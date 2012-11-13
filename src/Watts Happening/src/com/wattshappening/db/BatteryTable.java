@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class BatteryTable extends DBTable{
 
@@ -55,6 +56,10 @@ public class BatteryTable extends DBTable{
 		values.put(COLUMN_BATTERY_TEMP, batInfo.getTemp());
 		values.put(COLUMN_BATTERY_PERCENTAGE, batInfo.getPercentage());
 		values.put(COLUMN_BATTERY_SCALE, batInfo.getScale());
+		
+		Log.i("BatteryTable: ", "TIME: " + batInfo.getTimestamp() + " VOLTAGE: " + 
+				batInfo.getVoltage() + " TEMP: " + batInfo.getTemp() + " PERCENTAGE: " +
+				batInfo.getPercentage());
 		
 		db.insert(TABLE_BATTERY, null, values);
 	}
