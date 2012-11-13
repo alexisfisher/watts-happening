@@ -16,8 +16,6 @@ public class WattsHappening extends Activity {
 
 	Button startButton;
 	Button stopButton;
-	Button startGPS;
-	Button stopGPS;
 	/**
 	 * 
 	 */
@@ -46,22 +44,8 @@ public class WattsHappening extends Activity {
         	}
         });
 
-        final Intent GPSIntent = new Intent(this,GPSService.class);
-        startGPS = (Button) findViewById(R.id.button3);
-        startGPS.setOnClickListener(new View.OnClickListener(){
-        	public void onClick(View v){
-        		Log.i("LocalService", "Start Button Clicked");
-        		startService(GPSIntent);
-        	}
-        });
+        
 
-        stopGPS = (Button) findViewById(R.id.button4);
-        stopGPS.setOnClickListener(new View.OnClickListener(){
-        	public void onClick(View v){
-        		Log.i("LocalService", "Stop Button Clicked");
-        		stopService(GPSIntent);
-        	}
-        });
         
         
     }

@@ -40,6 +40,9 @@ public class MonitorService extends Service {
 		
 		//add any needed log processes to the listOfLogs Vector here
 		listOfLogs.add((LogProcess)(new HardwareStatusLogger(this)));
+		listOfLogs.add((LogProcess)(new BatteryStatusLogger(this)));
+		listOfLogs.add((LogProcess)(new GPSLocationLogger(this)));
+		listOfLogs.add((LogProcess)(new NetworkStatusLogger(this)));
     }
 
 	/**
@@ -64,7 +67,7 @@ public class MonitorService extends Service {
     	Log.i("LocalService","Received destroy command.");
 
     	for (int i = 0; i<listOfLogs.size();++i)
-        	listOfLogs.get(i).startLogging();
+        	listOfLogs.get(i).stopLogging();
     	
     	super.onDestroy();
 
