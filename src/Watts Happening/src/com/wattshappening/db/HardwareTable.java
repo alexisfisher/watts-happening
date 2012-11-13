@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class HardwareTable extends DBTable{
 
@@ -52,6 +53,11 @@ public class HardwareTable extends DBTable{
 		values.put(COLUMN_HARDWARE_STATUS, hardware.getStatus());
 		
 		db.insert(TABLE_HARDWARE, null, values);
+		
+		Log.i("HardwareTable","Timestamp: " + hardware.getTimestamp() + 
+				", Name: " + hardware.getName() + 
+				", Enabled: " + hardware.getEnabled() + 
+				", Status: " + hardware.getStatus());
 		
 	}
 
