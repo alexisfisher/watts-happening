@@ -20,12 +20,14 @@ public class DBManager extends SQLiteOpenHelper {
 		
 		tables.add(new HardwareTable(context));
 		tables.add(new GPSTable(context));
-		//tables.add(new AppInfoTable(context));
-		//tables.add(new BatteryTable(context));
-		//add all table types here
+		tables.add(new AppInfoTable(context));
+		tables.add(new BatteryTable(context));
 	}
 	
 	public static DBManager getInstance(Context context){
+		if(context == null && instance == null){
+			System.err.println("CAN'T MAKE DB WITH NULL INSTANCE");
+		}
 		if (instance == null)
 			instance = new DBManager(context);
 		
@@ -37,8 +39,7 @@ public class DBManager extends SQLiteOpenHelper {
 		for (int i = 0; i<tables.size(); ++i)
 			database.execSQL(tables.get(i).getCreationQuerry());
 	}
-	
-	
+		
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
 		System.out.println("Upgrading database from version " + oldVersion +
@@ -48,8 +49,6 @@ public class DBManager extends SQLiteOpenHelper {
 			db.execSQL("DROP TABLE IF EXISTS " + tables.get(i).getTableName() + ";");
 		
 		onCreate(db);
-	}
-	
-	
+	}	
 }
 

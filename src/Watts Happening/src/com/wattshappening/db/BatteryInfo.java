@@ -1,6 +1,6 @@
 package com.wattshappening.db;
 
-public class BatteryInfo {
+public class BatteryInfo extends DBEntry{
 
 	private String timestamp;
 	private double voltage;
