@@ -15,12 +15,12 @@ public class DBTester {
 		Log.d("Test: ", "Begin testing database functions...");
 		
 		if(testAll){
-			testGPS();
-			testHardware();
-			testAppInfo();
+//			testGPS();
+	//		testHardware();
+		//	testAppInfo();
 		}
 	}
-	
+/*	
 	public void testGPS(){
 		Log.d("Insert: ", "Inserting GPS..");
         db.addGPSCoordinate(new Gps("132,132"));
@@ -64,5 +64,5 @@ public class DBTester {
         	Log.d("Name: ", log);
         }
 	}
-	
+*/
 }

@@ -30,13 +30,16 @@ import com.wattshappening.logevents.*;
 public class GPSService extends Service {
 
 	public GPSService() {
+		private DBManager db = DBManager.getInstance(this);
 		
 		// Acquire a reference to the system Location Manager
 		LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 		// Define a listener that responds to location updates
 	    LocationListener locationListener = new LocationListener() { 
 	        public void onLocationChanged(Location location) {
-	        	DBManager.addGPSCoordinate(location);
+	        	String latLong = location.getLatitude() + "," + location.getLongitude();
+	        	db.addGPSCoordinate(new Gps(latLong));
+	        	
 	        }
 
 	        public void onStatusChanged(String provider, int status, Bundle extras) {}
@@ -65,6 +68,7 @@ public class GPSService extends Service {
 	/**
 	 * 
 	 */
+	/*
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("LocalService", "Received start id " + startId + ": " + intent);
@@ -76,9 +80,7 @@ public class GPSService extends Service {
         return START_STICKY;
     }
 
-    /**
-	 * 
-	 */
+ 
     @Override
     public void onDestroy() {
     	Log.i("LocalService","Received destroy command.");
@@ -90,9 +92,7 @@ public class GPSService extends Service {
 
     }
 
-	/* (non-Javadoc)
-	 * @see android.app.Service#onBind(android.content.Intent)
-	 */
+	*/
 	@Override
 	public IBinder onBind(Intent arg0) {
 		// TODO Auto-generated method stub
