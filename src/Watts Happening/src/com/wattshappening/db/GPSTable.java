@@ -34,7 +34,7 @@ public class GPSTable extends DBTable {
 	@Override
 	public String getCreationQuerry() {
 		// TODO Auto-generated method stub
-		return null;
+		return CREATE_GPS_TABLE;
 	}
 
 	@Override
