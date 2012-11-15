@@ -41,13 +41,15 @@ public class AppLogger extends LogProcess {
 		if(procs != null){
 			for(ActivityManager.RunningAppProcessInfo proc : procs){
 				ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo)(proc);
-				String name = null;
+				String name = info.processName;
+				Log.i("AppLogging", name);
 				try {
 					CharSequence c = pm.getApplicationLabel(pm.getApplicationInfo(
 							info.processName, PackageManager.GET_META_DATA));
 					name = c.toString();
+					Log.i("AppLogging", c.toString());
 				} catch (NameNotFoundException e) {
-					Log.e("App Logging: ", e.getMessage());
+					Log.e("AppLogging: ", e.getMessage());
 				}				
 				int pid = info.pid;
 				try {
@@ -59,28 +61,6 @@ public class AppLogger extends LogProcess {
 				}
 			}
 		}
-/*		if(procs != null){
-			Iterator<ActivityManager.RunningAppProcessInfo> i = procs.iterator();
-			while(i.hasNext()){
-				ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo)(i.next());
-				String name = null;
-				try {
-					CharSequence c = pm.getApplicationLabel(pm.getApplicationInfo(
-							info.processName, PackageManager.GET_META_DATA));
-					name = c.toString();
-				} catch (NameNotFoundException e) {
-					Log.e("App Logging: ", e.getMessage());
-				}				
-				int pid = info.pid;
-				try {
-					// for now don't put cpu info in, decide if we want to parse
-					// top to figure this out, might be too heavy for what we're doing
-					ait.addEntry(new AppInfo(name, pid, 0));
-				} catch (Exception e) {
-					Log.e("App Logging: ", e.getMessage());
-				}
-			}
-		}*/
 	}
 
 }
