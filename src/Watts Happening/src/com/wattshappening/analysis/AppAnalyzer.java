@@ -55,6 +55,7 @@ public class AppAnalyzer extends Analyzer {
 		double cpuPercent = curra.getCPU();
 		Double prevbattery = getBattery(currtime, battinfo);
 		Double currbattery = prevbattery;
+		Double battDelta = 0.0;
 		
 		while(ai.hasNext()){
 			//get next appinfo
