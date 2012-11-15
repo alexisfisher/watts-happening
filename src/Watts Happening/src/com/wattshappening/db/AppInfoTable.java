@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class AppInfoTable extends DBTable {
 
@@ -39,6 +40,9 @@ public class AppInfoTable extends DBTable {
 		values.put(COLUMN_APP_NAME, appInfo.getName());
 		values.put(COLUMN_APP_ID, appInfo.getAppId());
 		values.put(COLUMN_APP_CPU, Double.toString(appInfo.getCPU()));
+		
+		Log.i("App Info", "Timestamp: " + appInfo.getTimestamp() + " Name: " + appInfo.getName() +
+				" ID: " + appInfo.getAppId() + " CPU: " + appInfo.getCPU());
 		
 		db.insert(TABLE_APPINFO, null, values);
 	}
