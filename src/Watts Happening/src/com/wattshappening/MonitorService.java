@@ -43,6 +43,7 @@ public class MonitorService extends Service {
 		listOfLogs.add((LogProcess)(new BatteryStatusLogger(this)));
 		listOfLogs.add((LogProcess)(new GPSLocationLogger(this)));
 		listOfLogs.add((LogProcess)(new NetworkStatusLogger(this)));
+		listOfLogs.add((LogProcess)(new AppLogger(this)));
     }
 
 	/**
