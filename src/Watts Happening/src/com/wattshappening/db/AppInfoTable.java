@@ -41,8 +41,11 @@ public class AppInfoTable extends DBTable {
 		values.put(COLUMN_APP_ID, appInfo.getAppId());
 		values.put(COLUMN_APP_CPU, Double.toString(appInfo.getCPU()));
 		
-		Log.i("App Info", "Timestamp: " + appInfo.getTimestamp() + " Name: " + appInfo.getName() +
-				" ID: " + appInfo.getAppId() + " CPU: " + appInfo.getCPU());
+		Log.i("AppTable", 
+				"Timestamp: " + appInfo.getTimestamp() + 
+				" Name: " + appInfo.getName() +
+				" ID: " + appInfo.getAppId() + 
+				" CPU: " + appInfo.getCPU());
 		
 		db.insert(TABLE_APPINFO, null, values);
 	}

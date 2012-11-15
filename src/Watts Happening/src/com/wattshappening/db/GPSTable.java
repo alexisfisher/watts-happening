@@ -56,8 +56,10 @@ public class GPSTable extends DBTable {
 		values.put(COLUMN_GPS_LAT, coordinate.getLatitude());
 		values.put(COLUMN_GPS_LONG, coordinate.getLongitude());
 
-		Log.i("GPSTable: ", "TIME: " + coordinate.getTimestamp() + " Latitude: " +
-				coordinate.getLatitude() + " Longitude: " + coordinate.getLongitude());
+		Log.i("GPSTable: ", 
+				"TIME: " + coordinate.getTimestamp() + 
+				" Latitude: " + coordinate.getLatitude() + 
+				" Longitude: " + coordinate.getLongitude());
 			
 		db.insert(TABLE_GPS, null, values);
 	}
