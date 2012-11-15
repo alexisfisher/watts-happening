@@ -35,7 +35,7 @@ public class HardwareStatusLogger extends LogProcess {
 	
 	public HardwareStatusLogger(Service parent)
 	{
-		super(parent,10000);
+		super(parent,150000);
 		hTable = new HardwareTable(parent);
 		wifiManager = (WifiManager) parent.getSystemService(Context.WIFI_SERVICE);
 		gpsManager = (LocationManager) parent.getSystemService(Context.LOCATION_SERVICE);

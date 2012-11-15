@@ -40,7 +40,7 @@ public class GPSLocationLogger extends LogProcess {
     };
     
 	public GPSLocationLogger(Service parent) {
-		super(parent);
+		super(parent,60000);
 		locationManager = (LocationManager) parent.getSystemService(Context.LOCATION_SERVICE);
 		gpsT = new GPSTable(parent);
 	}
