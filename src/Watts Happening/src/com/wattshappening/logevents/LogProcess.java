@@ -16,7 +16,7 @@ public abstract class LogProcess {
     private Runnable runMonitor = null;
     protected Service parent;
     
-	protected long logTimeout = 5000;
+	protected long logTimeout = 120000;
 	
 	/**
 	 * Initializes the LogProcess class and sets the default timeout to

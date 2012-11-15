@@ -9,10 +9,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.location.LocationProvider;
 
 public class GPSLocationLogger extends LogProcess {
 
@@ -40,7 +36,7 @@ public class GPSLocationLogger extends LogProcess {
     };
     
 	public GPSLocationLogger(Service parent) {
-		super(parent);
+		super(parent,60000);
 		locationManager = (LocationManager) parent.getSystemService(Context.LOCATION_SERVICE);
 		gpsT = new GPSTable(parent);
 	}
