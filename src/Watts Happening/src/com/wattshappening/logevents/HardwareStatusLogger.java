@@ -8,19 +8,28 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.LocationManager;
 import android.net.wifi.WifiManager;
+import android.os.PowerManager;
 
 public class HardwareStatusLogger extends LogProcess {
 	
 	HardwareTable hTable = null;
+	
+	WifiManager wifiManager = null;
+	LocationManager gpsManager = null;
+	PowerManager powerManager = null;
 
 	BroadcastReceiver btBR = new BroadcastReceiver(){
 		
 		@Override
 		public void onReceive(Context c, Intent i)
 		{
-			
-			//dbMan.addHardware(new Hardware("BLUETOOTH",1,"action: Started a Discovery Scan"));
+			try {
+				hTable.addEntry(new Hardware("BLUETOOTH",1,"action: Started a Discovery Scan"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	};
 	
@@ -28,6 +37,9 @@ public class HardwareStatusLogger extends LogProcess {
 	{
 		super(parent,10000);
 		hTable = new HardwareTable(parent);
+		wifiManager = (WifiManager) parent.getSystemService(Context.WIFI_SERVICE);
+		gpsManager = (LocationManager) parent.getSystemService(Context.LOCATION_SERVICE);
+		powerManager = (PowerManager) parent.getSystemService(Context.POWER_SERVICE);
 	}
 
 	@Override
@@ -35,9 +47,7 @@ public class HardwareStatusLogger extends LogProcess {
 		//If you want to log hardware events, insert them here
 		
 		//look for bluetooth ACTION_DISCOVERY_STARTED
-		parent.registerReceiver(btBR, 
-								new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED)
-		);
+		parent.registerReceiver(btBR, new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED));
 	}
 
 	@Override
@@ -50,11 +60,9 @@ public class HardwareStatusLogger extends LogProcess {
 	@Override
 	protected void logInformation() {
 		
-		//TODO: Add gps hardware logging
-		//TODO: Add screen state logging
+		//TODO: Try to determine how to get the list of active wake locks
 		
 		//Start the WiFi stuff here
-		WifiManager wifiManager = (WifiManager) parent.getSystemService(Context.WIFI_SERVICE);
 		boolean isEnabled = wifiManager.isWifiEnabled();
 		String state = "";
 		switch (wifiManager.getWifiState())
@@ -132,6 +140,23 @@ public class HardwareStatusLogger extends LogProcess {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
+		
+		
+		//Start the GPS stuff here
+		try {
+			hTable.addEntry(new Hardware("GPS", gpsManager.isProviderEnabled(LocationManager.GPS_PROVIDER)?1:0,	state));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		//start the screen stuff here
+		try {
+			hTable.addEntry(new Hardware("SCREEN", powerManager.isScreenOn()?1:0, ""));
+		} catch (Exception e) {
+			
 		}
 		
 	}
