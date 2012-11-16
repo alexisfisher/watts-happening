@@ -6,12 +6,14 @@ import java.util.Calendar;
 public class AppInfo extends DBEntry{
 	
 	private String timestamp;
+	private int timestampID;
 	private String name;
 	private int appId;
 	private double cpu;
 
 	/* Use this constructor when creating new entries to be inserted into the database */
-	public AppInfo(String name, int appId, double cpu){
+	public AppInfo(int timestampID ,String name, int appId, double cpu){
+		this.timestampID = timestampID;
 		this.timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
 		this.name = name;
 		this.appId = appId;
@@ -26,7 +28,8 @@ public class AppInfo extends DBEntry{
 	}
 	
 	/* Use this constructor when returning rows from the database */
-	public AppInfo(String timestamp, String name, int appId, double cpu){
+	public AppInfo(int timestampID, String timestamp, String name, int appId, double cpu){
+		this.timestampID = timestampID;
 		this.timestamp = timestamp;
 		this.name = name;
 		this.appId = appId;
@@ -54,6 +57,10 @@ public class AppInfo extends DBEntry{
 	
 	public double getCPU(){
 		return cpu;
+	}
+
+	public int getTimestampID() {
+		return timestampID;
 	}
 
 }

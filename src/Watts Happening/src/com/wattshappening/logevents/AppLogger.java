@@ -78,6 +78,9 @@ public class AppLogger extends LogProcess {
 		ActivityManager am = (ActivityManager)parent.getSystemService(Context.ACTIVITY_SERVICE);
 		PackageManager pm = parent.getPackageManager();
 		List<ActivityManager.RunningAppProcessInfo> procs = am.getRunningAppProcesses();
+		
+		int timestampID = ait.getNextTimestampID();
+		
 		if(procs != null){
 			HashMap<String, Double> usage = parseTop();
 			for(ActivityManager.RunningAppProcessInfo proc : procs){
@@ -104,7 +107,7 @@ public class AppLogger extends LogProcess {
 				try {
 					// for now don't put cpu info in, decide if we want to parse
 					// top to figure this out, might be too heavy for what we're doing
-					ait.addEntry(new AppInfo(name, pid, cpu));
+					ait.addEntry(new AppInfo(timestampID,name, pid, cpu));
 				} catch (Exception e) {
 					Log.e("AppLogging: ", e.getMessage());
 				}
