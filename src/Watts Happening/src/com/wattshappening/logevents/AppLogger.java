@@ -22,7 +22,7 @@ public class AppLogger extends LogProcess {
 	AppInfoTable ait = null;
 	
 	public AppLogger(Service parent){
-		super(parent, 37000);
+		super(parent, 5000);
 		ait = new AppInfoTable(parent);
 	}
 	
