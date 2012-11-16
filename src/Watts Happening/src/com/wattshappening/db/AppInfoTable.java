@@ -78,7 +78,7 @@ public class AppInfoTable extends DBTable {
 		if(cursor.moveToFirst()){
 			do{
 				AppInfo info = new AppInfo(cursor.getInt(1), cursor.getString(2), 
-						cursor.getString(3), cursor.getInt(4),  cursor.getDouble(5));
+						cursor.getString(3), cursor.getInt(4),  cursor.getLong(5));
 				appInfo.add(info);
 			}while(cursor.moveToNext());
 		}
