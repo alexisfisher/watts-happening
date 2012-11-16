@@ -81,5 +81,6 @@ public class AppInfoTable extends DBTable {
 		}
 		return appInfo;
 	}
+	//TODO add fetchAppEntries() that fetches all entries of a single app
 	
 }
