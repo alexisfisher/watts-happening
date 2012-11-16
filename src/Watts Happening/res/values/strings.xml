@@ -8,5 +8,7 @@
     <string name="stop_button">Stop Monitor</string>
     <string name="start_GPS_button">Start GPS</string>
     <string name="stop_GPS_button">Stop GPS</string>
+    <string name="db_flush_button">Flush &amp; Rebuild DB</string>
+    <string name="db_export_button">Export DB</string>
 
 </resources>
