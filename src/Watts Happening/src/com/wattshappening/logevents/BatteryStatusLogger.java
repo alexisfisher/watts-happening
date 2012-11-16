@@ -37,10 +37,12 @@ public class BatteryStatusLogger extends LogProcess {
 	@Override
 	protected void logInformation(){	
 		Intent batteryStatus = parent.registerReceiver(null, ifilter);
+		// Voltage milli volts
 		int voltage = batteryStatus.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1);
+		// Temperature in tenth of a degree centigrade
 		int temp = batteryStatus.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1);
-		int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
-		int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+		double level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+		double scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
 		double percentage = 0;
 		if(level != -1 && scale != -1){
 			percentage = level / scale;
