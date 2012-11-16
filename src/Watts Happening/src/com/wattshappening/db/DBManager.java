@@ -50,5 +50,11 @@ public class DBManager extends SQLiteOpenHelper {
 		
 		onCreate(db);
 	}	
+	
+	public void dropTables(SQLiteDatabase db){
+		for (int i = 0; i< tables.size(); ++i){
+			db.execSQL("DROP TABLE IF EXISTS " + tables.get(i).getTableName() + ";");
+		}
+	}
 }
 
