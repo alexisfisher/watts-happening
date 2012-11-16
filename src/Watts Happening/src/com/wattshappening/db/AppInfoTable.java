@@ -23,7 +23,7 @@ public class AppInfoTable extends DBTable {
 	public static final String CREATE_APP_TABLE = "create table " + 
 			TABLE_APPINFO + "(" +
 			COLUMN_ID + " integer primary key autoincrement, " + 
-			COLUMN_TIMESTAMP_ID + " integer not null" +
+			COLUMN_TIMESTAMP_ID + " integer not null, " +
 			COLUMN_APP_TIME + " text not null, " +
 			COLUMN_APP_NAME + " text not null, " +
 			COLUMN_APP_ID + " integer, " +
@@ -78,7 +78,7 @@ public class AppInfoTable extends DBTable {
 		if(cursor.moveToFirst()){
 			do{
 				AppInfo info = new AppInfo(cursor.getInt(1), cursor.getString(2), 
-						cursor.getString(3), cursor.getInt(4),  cursor.getDouble(5));
+						cursor.getString(3), cursor.getInt(4),  cursor.getLong(5));
 				appInfo.add(info);
 			}while(cursor.moveToNext());
 		}
@@ -92,7 +92,7 @@ public class AppInfoTable extends DBTable {
 		
 		Cursor cursor = db.rawQuery(selectQuery, null);
 		
-		if (cursor.isAfterLast()) //there are no entries yet
+		if (!cursor.moveToFirst()) //there are no entries yet
 			return 0; 
 		else
 			return cursor.getInt(0) + 1;

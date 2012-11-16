@@ -9,38 +9,24 @@ public class AppInfo extends DBEntry{
 	private int timestampID;
 	private String name;
 	private int appId;
-	private double cpu;
+	private long cpu;
 
 	/* Use this constructor when creating new entries to be inserted into the database */
-	public AppInfo(int timestampID ,String name, int appId, double cpu){
+	public AppInfo(int timestampID ,String name, int appId, long cpu){
 		this.timestampID = timestampID;
 		this.timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
 		this.name = name;
 		this.appId = appId;
-		if(cpu >= 0 && cpu <= 100){
-			this.cpu = cpu;
-		}
-		else{
-			// TODO throw exception instead of just exiting
-			System.err.println("CPU usage must be between 0 - 100");
-			System.exit(1);
-		}
+		this.cpu = cpu;
 	}
 	
 	/* Use this constructor when returning rows from the database */
-	public AppInfo(int timestampID, String timestamp, String name, int appId, double cpu){
+	public AppInfo(int timestampID, String timestamp, String name, int appId, long cpu){
 		this.timestampID = timestampID;
 		this.timestamp = timestamp;
 		this.name = name;
 		this.appId = appId;
-		if(cpu >= 0 && cpu <= 100){
-			this.cpu = cpu;
-		}
-		else{
-			// TODO throw exception instead of just exiting
-			System.err.println("CPU usage must be between 0 - 100");
-			System.exit(1);
-		}
+		this.cpu = cpu;
 	}
 	
 	public String getTimestamp(){
@@ -55,7 +41,7 @@ public class AppInfo extends DBEntry{
 		return appId;
 	}
 	
-	public double getCPU(){
+	public long getCPU(){
 		return cpu;
 	}
 
