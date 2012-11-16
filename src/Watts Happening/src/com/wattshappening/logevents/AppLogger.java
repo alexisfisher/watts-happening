@@ -1,6 +1,8 @@
 package com.wattshappening.logevents;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -72,6 +74,31 @@ public class AppLogger extends LogProcess {
 		}
 		return cpuInfo;
 	}
+	
+	private long getPIDTicks(int pid){
+		
+		String filename = "/proc/" + pid + "/stat";
+		try{
+			InputStreamReader inputStreamReader = new InputStreamReader(parent.openFileInput(filename));
+			BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+			
+			String[] contents = bufferedReader.readLine().trim().split(" ");
+			
+			Log.i("PIDTICKS", "Utime: " + contents[13]);
+			Log.i("PIDTICKS", "Stime: " + contents[14]);
+			
+			// Be careful taking a unsigned long and making it into a long!
+			
+			long utime = Long.parseLong(contents[13]);
+			long stime = Long.parseLong(contents[14]);		
+			return utime + stime;
+		}catch(FileNotFoundException e){
+			Log.e("AppLogging", e.getMessage());
+		}catch(IOException e){
+			Log.e("AppLogging", e.getMessage());
+		}
+		return -1;
+	}
 
 	@Override
 	protected void logInformation() {
@@ -95,10 +122,10 @@ public class AppLogger extends LogProcess {
 				}				
 				int pid = info.pid;
 				
-				Double cpu = usage.get(info.processName);
-				if(cpu == null){
+				long cpu = getPIDTicks(pid);
+				if(cpu == -1){
 					//Log.e("AppLogging", info.processName + " not found in dumpsys!");
-					cpu = 0.0;
+					cpu = 0;
 				}
 				
 				try {
