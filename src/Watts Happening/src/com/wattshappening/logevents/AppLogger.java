@@ -38,35 +38,38 @@ public class AppLogger extends LogProcess {
 
 	}
 	
-	private HashMap<String, Double> parseDumpSys(){
+	private HashMap<String, Double> parseTop(){
 		BufferedReader in = null;
 		HashMap<String, Double> cpuInfo = new HashMap<String, Double>();
 		Process process = null;
 		try{
-			process = Runtime.getRuntime().exec("dumpsys cpuinfo");
+			process = Runtime.getRuntime().exec("top -d 1 -n 1 -m 10");
 			in = new BufferedReader(new InputStreamReader(process.getInputStream()));
 			String line = "";
 			while((line = in.readLine()) != null){
-				String [] contents = line.split(" ");
-				String processName = contents[1].substring(contents[1].indexOf('/') + 1);
+				String [] contents = line.trim().split(" ");
+				String processName = contents[contents.length - 1];
+				//Log.i("Top", line.trim());
+				Double usage = 0.0;
 				for(String s : contents){
-					Log.i("AppLogging", "Contents: " + s);
+					if(s.indexOf("%") != -1 && s.charAt(0) != 'C'){
+						Log.i("top", s.substring(0, s.indexOf("%")));
+						usage = Double.parseDouble(s.substring(0, s.indexOf("%")));
+						break;
+					}
 				}
-				Double usage = Double.parseDouble(contents[0].substring(0, contents[0].indexOf('%')));
 				cpuInfo.put(processName, usage);
 			}
-			
 		}catch(IOException e){
-			Log.e("AppLoggingDumpSys", e.getMessage());
+			Log.e("AppLogging", e.getMessage());
 		}finally {
 			try{
 				in.close();
 				process.destroy();
 			} catch(IOException e){
-				Log.e("AppLoggingDumpSys", e.getMessage());
+				Log.e("AppLogging", e.getMessage());
 			}
 		}
-		
 		return cpuInfo;
 	}
 
@@ -76,7 +79,7 @@ public class AppLogger extends LogProcess {
 		PackageManager pm = parent.getPackageManager();
 		List<ActivityManager.RunningAppProcessInfo> procs = am.getRunningAppProcesses();
 		if(procs != null){
-			HashMap<String, Double> usage = parseDumpSys();
+			HashMap<String, Double> usage = parseTop();
 			for(ActivityManager.RunningAppProcessInfo proc : procs){
 				ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo)(proc);
 				String name = info.processName;
@@ -94,7 +97,7 @@ public class AppLogger extends LogProcess {
 				
 				Double cpu = usage.get(info.processName);
 				if(cpu == null){
-					Log.e("AppLogging", info.processName + " not found in dumpsys!");
+					//Log.e("AppLogging", info.processName + " not found in dumpsys!");
 					cpu = 0.0;
 				}
 				
