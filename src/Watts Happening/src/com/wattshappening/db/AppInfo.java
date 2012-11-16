@@ -8,10 +8,10 @@ public class AppInfo extends DBEntry{
 	private String timestamp;
 	private String name;
 	private int appId;
-	private double cpu;
+	private long cpu;
 
 	/* Use this constructor when creating new entries to be inserted into the database */
-	public AppInfo(String name, int appId, double cpu){
+	public AppInfo(String name, int appId, long cpu){
 		this.timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
 		this.name = name;
 		this.appId = appId;
@@ -26,7 +26,7 @@ public class AppInfo extends DBEntry{
 	}
 	
 	/* Use this constructor when returning rows from the database */
-	public AppInfo(String timestamp, String name, int appId, double cpu){
+	public AppInfo(String timestamp, String name, int appId, long cpu){
 		this.timestamp = timestamp;
 		this.name = name;
 		this.appId = appId;
@@ -52,7 +52,7 @@ public class AppInfo extends DBEntry{
 		return appId;
 	}
 	
-	public double getCPU(){
+	public long getCPU(){
 		return cpu;
 	}
 
