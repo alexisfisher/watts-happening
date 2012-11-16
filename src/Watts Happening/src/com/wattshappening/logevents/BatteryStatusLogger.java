@@ -50,7 +50,7 @@ public class BatteryStatusLogger extends LogProcess {
 		}
 		
 		try{
-			batteryTable.addEntry(new BatteryInfo(voltage, temp, percentage, scale));
+			batteryTable.addEntry(new BatteryInfo(voltage, temp, percentage));
 		}catch(Exception e){
 			Log.e("BatteryService: ", "Must insert object of type BatteryInfo into the database");
 		}
