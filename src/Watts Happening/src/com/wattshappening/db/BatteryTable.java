@@ -17,7 +17,6 @@ public class BatteryTable extends DBTable{
 	public static final String COLUMN_BATTERY_VOLTAGE = "voltage";
 	public static final String COLUMN_BATTERY_TEMP = "temperature";
 	public static final String COLUMN_BATTERY_PERCENTAGE = "percentage";
-	public static final String COLUMN_BATTERY_SCALE = "scale";
 	public static final String COLUMN_ID = "id";
 	
 	public static final String CREATE_BATTERY_TABLE = "create table " +
@@ -26,8 +25,7 @@ public class BatteryTable extends DBTable{
 			COLUMN_BATTERY_TIME + " text not null, " +
 			COLUMN_BATTERY_VOLTAGE + " real, " +
 			COLUMN_BATTERY_TEMP + " real, " +
-			COLUMN_BATTERY_PERCENTAGE + " real, " +
-			COLUMN_BATTERY_SCALE + " integer);";
+			COLUMN_BATTERY_PERCENTAGE + " real);";
 	
 	public BatteryTable(Context context) {
 		super(context);
@@ -55,7 +53,6 @@ public class BatteryTable extends DBTable{
 		values.put(COLUMN_BATTERY_VOLTAGE, batInfo.getVoltage());
 		values.put(COLUMN_BATTERY_TEMP, batInfo.getTemp());
 		values.put(COLUMN_BATTERY_PERCENTAGE, batInfo.getPercentage());
-		values.put(COLUMN_BATTERY_SCALE, batInfo.getScale());
 		
 		Log.i("BatteryTable: ", 
 				"TIME: " + batInfo.getTimestamp() + 
@@ -75,8 +72,8 @@ public class BatteryTable extends DBTable{
 		
 		if(cursor.moveToFirst()){
 			do{
-				BatteryInfo bi = new BatteryInfo(cursor.getString(1), cursor.getDouble(2), cursor.getDouble(3),
-						cursor.getDouble(4), cursor.getInt(5));
+				BatteryInfo bi = new BatteryInfo(cursor.getString(1), cursor.getDouble(2), 
+												cursor.getDouble(3), cursor.getDouble(4));
 				batInfo.add(bi);
 			}while(cursor.moveToNext());
 		}

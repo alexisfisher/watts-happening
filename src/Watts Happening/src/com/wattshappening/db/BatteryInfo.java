@@ -9,22 +9,19 @@ public class BatteryInfo extends DBEntry{
 	private double voltage;
 	private double temp;
 	private double percentage;
-	private int scale;
 	
-	public BatteryInfo(double voltage, double temp, double percentage, int scale){
+	public BatteryInfo(double voltage, double temp, double percentage){
 		this.timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
 		this.voltage = voltage;
 		this.temp = temp;
 		this.percentage = percentage;
-		this.scale = scale;
 	}
 	
-	public BatteryInfo(String timestamp, double voltage, double temp, double percentage, int scale){
+	public BatteryInfo(String timestamp, double voltage, double temp, double percentage){
 		this.timestamp = timestamp;
 		this.voltage = voltage;
 		this.temp = temp;
 		this.percentage = percentage;
-		this.scale = scale;
 	}
 	
 	public String getTimestamp(){
@@ -43,7 +40,4 @@ public class BatteryInfo extends DBEntry{
 		return percentage;
 	}
 	
-	public int getScale(){
-		return scale;
-	}
 }
