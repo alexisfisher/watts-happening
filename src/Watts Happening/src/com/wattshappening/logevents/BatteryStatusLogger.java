@@ -16,7 +16,7 @@ public class BatteryStatusLogger extends LogProcess {
 	BatteryTable batteryTable = null;
 
 	public BatteryStatusLogger(Service parent){
-		super(parent, 60000);
+		super(parent, 30000);
 		dbMan = DBManager.getInstance(parent);
 		batteryTable = new BatteryTable(parent);
 		ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
