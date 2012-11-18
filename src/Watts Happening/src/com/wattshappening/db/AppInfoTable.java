@@ -47,6 +47,8 @@ public class AppInfoTable extends DBTable {
 		values.put(COLUMN_APP_NAME, appInfo.getName());
 		values.put(COLUMN_APP_ID, appInfo.getAppId());
 		values.put(COLUMN_APP_CPU, Double.toString(appInfo.getCPU()));
+		values.put(COLUMN_RX_BYTES, Double.toString(appInfo.getRXBytes()));
+		values.put(COLUMN_TX_BYTES, Double.toString(appInfo.getTXBytes()));
 		
 		Log.i("AppTable", 
 				"Timestamp: " + appInfo.getTimestamp() + 
