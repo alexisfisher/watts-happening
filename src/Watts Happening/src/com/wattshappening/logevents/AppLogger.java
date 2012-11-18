@@ -101,11 +101,13 @@ public class AppLogger extends LogProcess {
 	}
 
 	private long getTXBytes(int uid) {
-		return TrafficStats.getUidTxBytes(uid);
+		long data = TrafficStats.getUidTxBytes(uid);
+		return (data==TrafficStats.UNSUPPORTED)?0:data;
 	}
 
 	private long getRXBytes(int uid) {
-		return TrafficStats.getUidRxBytes(uid);
+		long data = TrafficStats.getUidRxBytes(uid);
+		return (data==TrafficStats.UNSUPPORTED)?0:data;
 	}
 
 }
