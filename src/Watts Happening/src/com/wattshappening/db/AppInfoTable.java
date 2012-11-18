@@ -16,6 +16,8 @@ public class AppInfoTable extends DBTable {
 	public static final String COLUMN_APP_NAME = "name";
 	public static final String COLUMN_APP_ID = "app_id";
 	public static final String COLUMN_APP_CPU = "cpu";
+	public static final String COLUMN_RX_BYTES = "rx_bytes";
+	public static final String COLUMN_TX_BYTES = "tx_bytes";
 	public static final String COLUMN_ID = "id";
 	public static final String COLUMN_TIMESTAMP_ID = "time_stamp_id";
 	
@@ -27,7 +29,9 @@ public class AppInfoTable extends DBTable {
 			COLUMN_APP_TIME + " text not null, " +
 			COLUMN_APP_NAME + " text not null, " +
 			COLUMN_APP_ID + " integer, " +
-			COLUMN_APP_CPU + " real);";
+			COLUMN_APP_CPU + " real, " + 
+			COLUMN_RX_BYTES + " real, " +
+			COLUMN_RX_BYTES + " real);";
 	
 	@Override
 	public void addEntry(DBEntry dbE) throws Exception{
@@ -48,7 +52,9 @@ public class AppInfoTable extends DBTable {
 				"Timestamp: " + appInfo.getTimestamp() + 
 				" Name: " + appInfo.getName() +
 				" ID: " + appInfo.getAppId() + 
-				" CPU: " + appInfo.getCPU());
+				" CPU: " + appInfo.getCPU() + 
+				" RX: " + appInfo.getRXBytes() + 
+				" TX: " + appInfo.getTXBytes());
 		
 		db.insert(TABLE_APPINFO, null, values);
 	}
@@ -71,14 +77,24 @@ public class AppInfoTable extends DBTable {
 	public List<DBEntry> fetchAllEntries(){
 		SQLiteDatabase db = DBManager.getInstance(context).getWritableDatabase();
 		List<DBEntry> appInfo = new ArrayList<DBEntry>();
-		String selectQuery = "SELECT * FROM " + TABLE_APPINFO + ";";
+		String selectQuery = "SELECT " + 
+									COLUMN_TIMESTAMP_ID  + ", " + 
+									COLUMN_APP_TIME  + ", " + 
+									COLUMN_APP_NAME  + ", " + 
+									COLUMN_APP_ID  + ", " + 
+									COLUMN_APP_CPU  + ", " + 
+									COLUMN_RX_BYTES  + ", " + 
+									COLUMN_TX_BYTES  + 
+							 " FROM " + TABLE_APPINFO + ";";
 		
 		Cursor cursor = db.rawQuery(selectQuery, null);
 		
 		if(cursor.moveToFirst()){
 			do{
-				AppInfo info = new AppInfo(cursor.getInt(1), cursor.getString(2), 
-						cursor.getString(3), cursor.getInt(4),  cursor.getLong(5));
+				//AppInfo(int timestampID, String timestamp, String name, int appId, long cpu, long rxBytes, long txBytes)
+				AppInfo info = new AppInfo(cursor.getInt(0), cursor.getString(1), 
+						cursor.getString(2), cursor.getInt(3),  cursor.getLong(4),
+						cursor.getLong(5), cursor.getLong(6));
 				appInfo.add(info);
 			}while(cursor.moveToNext());
 		}

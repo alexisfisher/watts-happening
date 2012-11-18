@@ -11,6 +11,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.TrafficStats;
 import android.util.Log;
 
 import com.wattshappening.db.AppInfo;
@@ -80,19 +81,31 @@ public class AppLogger extends LogProcess {
 					//Log.e("AppLogging: ", e.getMessage());
 				}				
 				int pid = info.pid;
+				int uid = info.uid;
 				
 				long cpu = getPIDTicks(pid);
+				long rxBytes = getRXBytes(uid);
+				long txBytes = getTXBytes(uid);
+				
 				if(cpu == -1){
 					cpu = 0;
 				}
 				
 				try {
-					ait.addEntry(new AppInfo(timestampID,name, pid, cpu));
+					ait.addEntry(new AppInfo(timestampID,name, pid, cpu, rxBytes, txBytes));
 				} catch (Exception e) {
 					Log.e("AppLogging: ", e.getMessage());
 				}
 			}
 		}
+	}
+
+	private long getTXBytes(int uid) {
+		return TrafficStats.getUidTxBytes(uid);
+	}
+
+	private long getRXBytes(int uid) {
+		return TrafficStats.getUidRxBytes(uid);
 	}
 
 }
