@@ -31,7 +31,7 @@ public class AppInfoTable extends DBTable {
 			COLUMN_APP_ID + " integer, " +
 			COLUMN_APP_CPU + " real, " + 
 			COLUMN_RX_BYTES + " real, " +
-			COLUMN_RX_BYTES + " real);";
+			COLUMN_TX_BYTES + " real);";
 	
 	@Override
 	public void addEntry(DBEntry dbE) throws Exception{
