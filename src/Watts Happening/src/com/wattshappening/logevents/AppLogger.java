@@ -80,10 +80,10 @@ public class AppLogger extends LogProcess {
 					// used for testing initially, doesn't really matter to see this now
 					//Log.e("AppLogging: ", e.getMessage());
 				}				
-				int pid = info.pid;
+
 				int uid = info.uid;
 				
-				long cpu = getPIDTicks(pid);
+				long cpu = getPIDTicks(info.pid);
 				long rxBytes = getRXBytes(uid);
 				long txBytes = getTXBytes(uid);
 				
@@ -92,7 +92,7 @@ public class AppLogger extends LogProcess {
 				}
 				
 				try {
-					ait.addEntry(new AppInfo(timestampID,name, pid, cpu, rxBytes, txBytes));
+					ait.addEntry(new AppInfo(timestampID,name, uid, cpu, rxBytes, txBytes));
 				} catch (Exception e) {
 					Log.e("AppLogging: ", e.getMessage());
 				}
