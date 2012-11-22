@@ -19,6 +19,7 @@ public class HardwareStatusLogger extends LogProcess {
 	WifiManager wifiManager = null;
 	LocationManager gpsManager = null;
 	PowerManager powerManager = null;
+	int lastTimesliceID = -1;
 
 	BroadcastReceiver btBR = new BroadcastReceiver(){
 		
@@ -26,7 +27,11 @@ public class HardwareStatusLogger extends LogProcess {
 		public void onReceive(Context c, Intent i)
 		{
 			try {
-				hTable.addEntry(new Hardware("BLUETOOTH",1,"action: Started a Discovery Scan"));
+				//TODO: Come up with a better way to handle this, ideally it would be in a different 
+				//table, but I don't want to create a table just for it.
+				
+				//since this could get called at any time, we'll just associate it with the last timeslice
+				hTable.addEntry(new Hardware(lastTimesliceID,"BLUETOOTH",1,"action: Started a Discovery Scan"));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -35,7 +40,7 @@ public class HardwareStatusLogger extends LogProcess {
 	
 	public HardwareStatusLogger(Service parent)
 	{
-		super(parent,150000);
+		super(parent);
 		hTable = new HardwareTable(parent);
 		wifiManager = (WifiManager) parent.getSystemService(Context.WIFI_SERVICE);
 		gpsManager = (LocationManager) parent.getSystemService(Context.LOCATION_SERVICE);
@@ -43,7 +48,7 @@ public class HardwareStatusLogger extends LogProcess {
 	}
 
 	@Override
-	protected void startLoggingEvents() {
+	public void startLoggingEvents() {
 		//If you want to log hardware events, insert them here
 		
 		//look for bluetooth ACTION_DISCOVERY_STARTED
@@ -51,14 +56,15 @@ public class HardwareStatusLogger extends LogProcess {
 	}
 
 	@Override
-	protected void stopLoggingEvents() {
+	public void stopLoggingEvents() {
 		//if logging hardware events then remove the handlers here
 		
 		parent.unregisterReceiver(btBR);//remove bluetooth
 	}
 
 	@Override
-	protected void logInformation() {
+	public void logInformation(int timesliceID) {
+		lastTimesliceID = timesliceID;
 		
 		//TODO: Try to determine how to get the list of active wake locks
 		
@@ -87,7 +93,7 @@ public class HardwareStatusLogger extends LogProcess {
 		//it would be nice to get all the WiFi locks here as well
 		
 		try {
-			hTable.addEntry(new Hardware("WIFI", isEnabled?1:0, state));
+			hTable.addEntry(new Hardware(timesliceID, "WIFI", isEnabled?1:0, state));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -136,7 +142,7 @@ public class HardwareStatusLogger extends LogProcess {
 			}
 			
 			try {
-				hTable.addEntry(new Hardware("BLUETOOTH", isEnabled?1:0, state));
+				hTable.addEntry(new Hardware(timesliceID, "BLUETOOTH", isEnabled?1:0, state));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -145,7 +151,7 @@ public class HardwareStatusLogger extends LogProcess {
 		
 		//Start the GPS stuff here
 		try {
-			hTable.addEntry(new Hardware("GPS", gpsManager.isProviderEnabled(LocationManager.GPS_PROVIDER)?1:0,	state));
+			hTable.addEntry(new Hardware(timesliceID, "GPS", gpsManager.isProviderEnabled(LocationManager.GPS_PROVIDER)?1:0,	state));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -154,7 +160,7 @@ public class HardwareStatusLogger extends LogProcess {
 		
 		//start the screen stuff here
 		try {
-			hTable.addEntry(new Hardware("SCREEN", powerManager.isScreenOn()?1:0, ""));
+			hTable.addEntry(new Hardware(timesliceID, "SCREEN", powerManager.isScreenOn()?1:0, ""));
 		} catch (Exception e) {
 			
 		}

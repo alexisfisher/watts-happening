@@ -13,7 +13,7 @@ public class BatteryTable extends DBTable{
 
 	/* Battery Table Info */
 	public static final String TABLE_BATTERY = "battery";
-	public static final String COLUMN_BATTERY_TIME = "timestamp";
+	public static final String COLUMN_TIMESLICE_ID = "timeslice_id";
 	public static final String COLUMN_BATTERY_VOLTAGE = "voltage";
 	public static final String COLUMN_BATTERY_TEMP = "temperature";
 	public static final String COLUMN_BATTERY_PERCENTAGE = "percentage";
@@ -22,7 +22,7 @@ public class BatteryTable extends DBTable{
 	public static final String CREATE_BATTERY_TABLE = "create table " +
 			TABLE_BATTERY + "(" +
 			COLUMN_ID + " integer primary key autoincrement, " +
-			COLUMN_BATTERY_TIME + " text not null, " +
+			COLUMN_TIMESLICE_ID + " integer, " +
 			COLUMN_BATTERY_VOLTAGE + " real, " +
 			COLUMN_BATTERY_TEMP + " real, " +
 			COLUMN_BATTERY_PERCENTAGE + " real);";
@@ -49,13 +49,13 @@ public class BatteryTable extends DBTable{
 		
 		ContentValues values = new ContentValues();
 		
-		values.put(COLUMN_BATTERY_TIME, batInfo.getTimestamp());
+		values.put(COLUMN_TIMESLICE_ID, batInfo.getTimesliceID());
 		values.put(COLUMN_BATTERY_VOLTAGE, batInfo.getVoltage());
 		values.put(COLUMN_BATTERY_TEMP, batInfo.getTemp());
 		values.put(COLUMN_BATTERY_PERCENTAGE, batInfo.getPercentage());
 		
 		Log.i("BatteryTable: ", 
-				"TIME: " + batInfo.getTimestamp() + 
+				"TIME: " + batInfo.getTimesliceID() + 
 				" VOLTAGE: " + batInfo.getVoltage() + 
 				" TEMP: " + batInfo.getTemp() + 
 				" PERCENTAGE: " + batInfo.getPercentage());
@@ -66,14 +66,19 @@ public class BatteryTable extends DBTable{
 	public List<DBEntry> fetchAllEntries(){
 		SQLiteDatabase db = DBManager.getInstance(context).getWritableDatabase();
 		List<DBEntry> batInfo = new ArrayList<DBEntry>();
-		String selectQuery = "SELECT * FROM " + TABLE_BATTERY + ";";
+		String selectQuery = 	"SELECT " +
+									COLUMN_TIMESLICE_ID + ", " + 
+									COLUMN_BATTERY_VOLTAGE + ", " + 
+									COLUMN_BATTERY_TEMP + ", " + 
+									COLUMN_BATTERY_PERCENTAGE + 
+								" FROM " + TABLE_BATTERY + ";";
 		
 		Cursor cursor = db.rawQuery(selectQuery, null);
 		
 		if(cursor.moveToFirst()){
 			do{
-				BatteryInfo bi = new BatteryInfo(cursor.getString(1), cursor.getDouble(2), 
-												cursor.getDouble(3), cursor.getDouble(4));
+				BatteryInfo bi = new BatteryInfo(cursor.getInt(0), cursor.getDouble(1), 
+												cursor.getDouble(4), cursor.getDouble(3));
 				batInfo.add(bi);
 			}while(cursor.moveToNext());
 		}

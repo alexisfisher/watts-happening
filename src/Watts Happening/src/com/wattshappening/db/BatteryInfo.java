@@ -5,27 +5,21 @@ import java.util.Calendar;
 
 public class BatteryInfo extends DBEntry{
 
-	private String timestamp;
+	private int timesliceID;
 	private double voltage;
 	private double temp;
 	private double percentage;
 	
-	public BatteryInfo(double voltage, double temp, double percentage){
-		this.timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
+	
+	public BatteryInfo(int timesliceID, double voltage, double temp, double percentage){
+		this.timesliceID = timesliceID;
 		this.voltage = voltage;
 		this.temp = temp;
 		this.percentage = percentage;
 	}
 	
-	public BatteryInfo(String timestamp, double voltage, double temp, double percentage){
-		this.timestamp = timestamp;
-		this.voltage = voltage;
-		this.temp = temp;
-		this.percentage = percentage;
-	}
-	
-	public String getTimestamp(){
-		return timestamp;
+	public int getTimesliceID(){
+		return timesliceID;
 	}
 	
 	public double getVoltage(){

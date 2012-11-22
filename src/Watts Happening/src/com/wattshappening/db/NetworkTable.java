@@ -12,7 +12,7 @@ import android.util.Log;
 public class NetworkTable extends DBTable {
 	
 	public static final String TABLE_NETWORK = "network";
-	public static final String COLUMN_NETWORK_TIME = "timestamp";
+	public static final String COLUMN_TIMESLICE_ID = "timeslice_id";
 	public static final String COLUMN_NETWORK_NAME = "name";
 	public static final String COLUMN_NETWORK_STATE = "state";
 	public static final String COLUMN_NETWORK_CONNECTION = "connection";
@@ -21,7 +21,7 @@ public class NetworkTable extends DBTable {
 	public static final String CREATE_HARDWARE_TABLE = "create table " + 
 			TABLE_NETWORK + "(" + 
 			COLUMN_ID + " integer primary key autoincrement, " + 
-			COLUMN_NETWORK_TIME + " text not null, " + 
+			COLUMN_TIMESLICE_ID + " integer, " + 
 			COLUMN_NETWORK_NAME + " text not null, " + 
 			COLUMN_NETWORK_STATE + " text not null, " +
 			COLUMN_NETWORK_CONNECTION + " text not null); ";
@@ -45,14 +45,14 @@ public class NetworkTable extends DBTable {
 		
 		ContentValues values = new ContentValues();
 		
-		values.put(COLUMN_NETWORK_TIME, network.getTimestamp());
+		values.put(COLUMN_TIMESLICE_ID, network.getTimesliceID());
 		values.put(COLUMN_NETWORK_NAME, network.getName());
 		values.put(COLUMN_NETWORK_STATE, network.getState());
 		values.put(COLUMN_NETWORK_CONNECTION, network.getConnection());
 		
 		db.insert(TABLE_NETWORK, null, values);
 		
-		Log.i("HardwareTable","Timestamp: " + network.getTimestamp() + 
+		Log.i("HardwareTable","Timestamp: " + network.getTimesliceID() + 
 				", Name: " + network.getName() + 
 				", Enabled: " + network.getState() + 
 				", Status: " + network.getConnection());
@@ -63,13 +63,19 @@ public class NetworkTable extends DBTable {
 	public List<DBEntry> fetchAllEntries() {
 		SQLiteDatabase db = DBManager.getInstance(context).getWritableDatabase();
 		List<DBEntry> network = new ArrayList<DBEntry>();
-		String selectQuery = "SELECT * FROM " + TABLE_NETWORK + ";";
+		String selectQuery = 	"SELECT " + 
+									COLUMN_TIMESLICE_ID + ", " +
+									COLUMN_NETWORK_NAME + ", " +
+									COLUMN_NETWORK_STATE + ", " +
+									COLUMN_NETWORK_CONNECTION + ", " +
+								" FROM " + TABLE_NETWORK + ";";
 		
 		Cursor cursor = db.rawQuery(selectQuery, null);
 		
 		if(cursor.moveToFirst()){
 			do{
-				NetworkEntry net = new NetworkEntry(cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
+				NetworkEntry net = new NetworkEntry(cursor.getInt(0), cursor.getString(1), 
+													cursor.getString(2), cursor.getString(3));
 				network.add(net);
 			}while(cursor.moveToNext());
 		}

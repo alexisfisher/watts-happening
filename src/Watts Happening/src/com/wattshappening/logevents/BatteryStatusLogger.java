@@ -16,26 +16,26 @@ public class BatteryStatusLogger extends LogProcess {
 	BatteryTable batteryTable = null;
 
 	public BatteryStatusLogger(Service parent){
-		super(parent, 30000);
+		super(parent);
 		dbMan = DBManager.getInstance(parent);
 		batteryTable = new BatteryTable(parent);
 		ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
 	}
 	
 	@Override
-	protected void startLoggingEvents() {
+	public void startLoggingEvents() {
 		//If you want to log hardware events, insert them here
 				
 	}
 
 	@Override
-	protected void stopLoggingEvents() {
+	public void stopLoggingEvents() {
 		//if logging hardware events then remove the handlers here
 
 	}
 	
 	@Override
-	protected void logInformation(){	
+	public void logInformation(int timesliceID){	
 		Intent batteryStatus = parent.registerReceiver(null, ifilter);
 		// Voltage milli volts
 		int voltage = batteryStatus.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1);
@@ -52,7 +52,7 @@ public class BatteryStatusLogger extends LogProcess {
 		}
 		
 		try{
-			batteryTable.addEntry(new BatteryInfo(voltage, temp, percentage));
+			batteryTable.addEntry(new BatteryInfo(timesliceID, voltage, temp, percentage));
 		}catch(Exception e){
 			Log.e("BatteryService: ", "Must insert object of type BatteryInfo into the database");
 		}

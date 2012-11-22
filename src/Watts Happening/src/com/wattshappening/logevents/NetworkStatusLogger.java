@@ -15,23 +15,23 @@ public class NetworkStatusLogger extends LogProcess {
 	private NetworkTable nTable = null;
 	
 	public NetworkStatusLogger(Service parent) {
-		super(parent,30000);
+		super(parent);
 		cM = ((ConnectivityManager) parent.getSystemService(Context.CONNECTIVITY_SERVICE));
 		nTable = new NetworkTable(parent);
 	}
 
 	@Override
-	protected void startLoggingEvents() {
+	public void startLoggingEvents() {
 
 	}
 
 	@Override
-	protected void stopLoggingEvents() {
+	public void stopLoggingEvents() {
 
 	}
 
 	@Override
-	protected void logInformation() {
+	public void logInformation(int timesliceID) {
 		NetworkInfo[] nI = cM.getAllNetworkInfo();
 		
 		for (int i = 0; i<nI.length; ++i)
@@ -41,7 +41,7 @@ public class NetworkStatusLogger extends LogProcess {
 			String connection = "isAvailable: " + (nI[i].isAvailable()?1:0) + ", isConnected: " + (nI[i].isConnected()?1:0);
 			
 			try {
-				nTable.addEntry(new NetworkEntry(name,state,connection));
+				nTable.addEntry(new NetworkEntry(timesliceID, name,state,connection));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

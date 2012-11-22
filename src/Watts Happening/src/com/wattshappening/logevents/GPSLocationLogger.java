@@ -36,31 +36,25 @@ public class GPSLocationLogger extends LogProcess {
     };
     
 	public GPSLocationLogger(Service parent) {
-		super(parent,60000);
+		super(parent);
 		locationManager = (LocationManager) parent.getSystemService(Context.LOCATION_SERVICE);
 		gpsT = new GPSTable(parent);
 	}
-
-	public GPSLocationLogger(Service parent, long timeout) {
-		super(parent, timeout);
-		locationManager = (LocationManager) parent.getSystemService(Context.LOCATION_SERVICE);
-		gpsT = new GPSTable(parent);
-	}
-
+	
 	@Override
-	protected void startLoggingEvents() {
+	public void startLoggingEvents() {
 		locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 0, locationListener);
 
 	}
 
 	@Override
-	protected void stopLoggingEvents() {
+	public void stopLoggingEvents() {
 		locationManager.removeUpdates(locationListener);
 		
 	}
 
 	@Override
-	protected void logInformation() {
+	public void logInformation(int timesliceID) {
 		// TODO Auto-generated method stub
 
 	}

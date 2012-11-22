@@ -22,17 +22,17 @@ public class AppLogger extends LogProcess {
 	AppInfoTable ait = null;
 	
 	public AppLogger(Service parent){
-		super(parent, 30000);
+		super(parent);
 		ait = new AppInfoTable(parent);
 	}
 	
 	@Override
-	protected void startLoggingEvents() {
+	public void startLoggingEvents() {
 		
 	}
 
 	@Override
-	protected void stopLoggingEvents() {
+	public void stopLoggingEvents() {
 
 	}
 	
@@ -59,12 +59,11 @@ public class AppLogger extends LogProcess {
 	}
 
 	@Override
-	protected void logInformation() {
+	public void logInformation(int timesliceID) {
 		ActivityManager am = (ActivityManager)parent.getSystemService(Context.ACTIVITY_SERVICE);
 		PackageManager pm = parent.getPackageManager();
 		List<ActivityManager.RunningAppProcessInfo> procs = am.getRunningAppProcesses();
 		
-		int timestampID = ait.getNextTimestampID();
 		
 		if(procs != null){
 			for(ActivityManager.RunningAppProcessInfo proc : procs){
@@ -92,7 +91,7 @@ public class AppLogger extends LogProcess {
 				}
 				
 				try {
-					ait.addEntry(new AppInfo(timestampID,name, pid, cpu, rxBytes, txBytes));
+					ait.addEntry(new AppInfo(timesliceID,name, pid, cpu, rxBytes, txBytes));
 				} catch (Exception e) {
 					Log.e("AppLogging: ", e.getMessage());
 				}

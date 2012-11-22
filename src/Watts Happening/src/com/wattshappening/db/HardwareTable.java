@@ -13,7 +13,7 @@ public class HardwareTable extends DBTable{
 
 	/* Hardware Table Info */
 	public static final String TABLE_HARDWARE = "hardware";
-	public static final String COLUMN_HARDWARE_TIME = "timestamp";
+	public static final String COLUMN_TIMESLICE_ID = "timeslice_id";
 	public static final String COLUMN_HARDWARE_NAME = "name";
 	public static final String COLUMN_HARDWARE_ENABLED = "enabled";
 	public static final String COLUMN_HARDWARE_STATUS = "status";
@@ -22,7 +22,7 @@ public class HardwareTable extends DBTable{
 	public static final String CREATE_HARDWARE_TABLE = "create table " + 
 			TABLE_HARDWARE + "(" + 
 			COLUMN_ID + " integer primary key autoincrement, " + 
-			COLUMN_HARDWARE_TIME + " text not null, " + 
+			COLUMN_TIMESLICE_ID + " integer, " + 
 			COLUMN_HARDWARE_NAME + " text not null, " + 
 			COLUMN_HARDWARE_ENABLED + " integer, " +
 			COLUMN_HARDWARE_STATUS + " integer, " +
@@ -47,14 +47,14 @@ public class HardwareTable extends DBTable{
 		
 		ContentValues values = new ContentValues();
 		
-		values.put(COLUMN_HARDWARE_TIME, hardware.getTimestamp());
+		values.put(COLUMN_TIMESLICE_ID, hardware.getTimesliceID());
 		values.put(COLUMN_HARDWARE_NAME, hardware.getName());
 		values.put(COLUMN_HARDWARE_ENABLED, hardware.getEnabled());
 		values.put(COLUMN_HARDWARE_STATUS, hardware.getStatus());
 		
 		db.insert(TABLE_HARDWARE, null, values);
 		
-		Log.i("HardwareTable","Timestamp: " + hardware.getTimestamp() + 
+		Log.i("HardwareTable","Timeslice: " + hardware.getTimesliceID() + 
 				", Name: " + hardware.getName() + 
 				", Enabled: " + hardware.getEnabled() + 
 				", Status: " + hardware.getStatus());
@@ -65,14 +65,19 @@ public class HardwareTable extends DBTable{
 	public List<DBEntry> fetchAllEntries() {
 		SQLiteDatabase db = DBManager.getInstance(context).getWritableDatabase();
 		List<DBEntry> hardware = new ArrayList<DBEntry>();
-		String selectQuery = "SELECT * FROM " + TABLE_HARDWARE + ";";
+		String selectQuery = 	"SELECT " + 
+									COLUMN_TIMESLICE_ID + ", " +
+									COLUMN_HARDWARE_NAME + ", " +
+									COLUMN_HARDWARE_ENABLED + ", " +
+									COLUMN_HARDWARE_STATUS + ", " +
+								" FROM " + TABLE_HARDWARE + ";";
 		
 		Cursor cursor = db.rawQuery(selectQuery, null);
 		
 		if(cursor.moveToFirst()){
 			do{
-				Hardware hw = new Hardware(cursor.getString(1), cursor.getString(2), cursor.getInt(3), 
-						cursor.getString(4));
+				Hardware hw = new Hardware(cursor.getInt(0), cursor.getString(1), cursor.getInt(2), 
+						cursor.getString(3));
 				hardware.add(hw);
 			}while(cursor.moveToNext());
 		}

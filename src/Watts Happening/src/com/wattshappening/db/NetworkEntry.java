@@ -5,27 +5,20 @@ import java.util.Calendar;
 
 public class NetworkEntry extends DBEntry {
 
-	private String timestamp;
+	private int timesliceID;
 	private String name;
 	private String state;
 	private String connection;
 	
-	public NetworkEntry(String timestamp, String name, String state, String connection) {
-		this.timestamp = timestamp;
+	public NetworkEntry(int timesliceID, String name, String state, String connection) {
+		this.timesliceID = timesliceID;
 		this.name = name;
 		this.state = state;
 		this.connection = connection;
 	}
 	
-	public NetworkEntry( String name, String state, String connection) {
-		this.timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();;
-		this.name = name;
-		this.state = state;
-		this.connection = connection;
-	}
-
-	public String getTimestamp() {
-		return timestamp;
+	public int getTimesliceID() {
+		return timesliceID;
 	}
 
 	public String getName() {
