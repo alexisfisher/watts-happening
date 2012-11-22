@@ -10,6 +10,8 @@ import java.util.Vector;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.BatteryManager;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
@@ -97,8 +99,12 @@ public class MonitorService extends Service {
     {
     	int timesliceID = genInfoTable.getNextTimesliceID();
     	String timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
-    	//TODO: figure out isCharging
-    	int isCharging = 0;
+    	
+    	//determine if the device is charging
+    	Intent intent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
+        int isCharging = (plugged== BatteryManager.BATTERY_PLUGGED_AC || 
+        				plugged == BatteryManager.BATTERY_PLUGGED_USB)?1:0;
     	
     	try {
 			genInfoTable.addEntry(new GeneralTimesliceInfo(timesliceID,timestamp,isCharging));
