@@ -56,5 +56,9 @@ public class DBManager extends SQLiteOpenHelper {
 			db.execSQL("DROP TABLE IF EXISTS " + tables.get(i).getTableName() + ";");
 		}
 	}
+	
+	public Vector<AppInfoBat> getAppInfo(String name, int slices){
+		return null;
+	}
 }
 
