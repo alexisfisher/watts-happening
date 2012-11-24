@@ -78,6 +78,8 @@ public class MonitorService extends Service {
         for (int i = 0; i<listOfLogs.size();++i)
         	listOfLogs.get(i).startLoggingEvents();
         
+		h.postDelayed(runMonitor, logTimeout);
+        
         return START_STICKY;
     }
 
@@ -90,6 +92,8 @@ public class MonitorService extends Service {
 
     	for (int i = 0; i<listOfLogs.size();++i)
         	listOfLogs.get(i).stopLoggingEvents();
+    	
+    	h.removeCallbacks(runMonitor);
     	
     	super.onDestroy();
 
