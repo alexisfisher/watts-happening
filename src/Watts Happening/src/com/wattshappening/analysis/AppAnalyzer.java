@@ -20,7 +20,7 @@ public class AppAnalyzer extends Analyzer {
 		double prevtimediff = 100.0;
 		double timediff = 0.0;
 		while (go){
-			Double batttime = Double.valueOf(currb.getTimestamp());
+			Double batttime = Double.valueOf(currb.getTimesliceID());
 			timediff = currtime - batttime;
 			if (prevtimediff < timediff) {
 				go = false;
@@ -50,7 +50,7 @@ public class AppAnalyzer extends Analyzer {
 		
 		//initialize by grabbing first appinfo
 		curra = (AppInfo) ai.next();
-		prevtime =  Double.valueOf(curra.getTimestamp());
+		prevtime =  Double.valueOf(curra.getTimesliceID());
 		currtime = prevtime;
 		double cpuPercent = curra.getCPU();
 		Double prevbattery = getBattery(currtime, battinfo);
@@ -65,7 +65,7 @@ public class AppAnalyzer extends Analyzer {
 			curra = ai.next(); 
 			//now we grab the cpu %, weights our claim. 
 			cpuPercent = curra.getCPU();
-			currtime = Double.valueOf(curra.getTimestamp());
+			currtime = Double.valueOf(curra.getTimesliceID());
 			currbattery = getBattery(currtime, battinfo);
 			battDelta = prevbattery - currbattery; 
 			use += battDelta * cpuPercent;
