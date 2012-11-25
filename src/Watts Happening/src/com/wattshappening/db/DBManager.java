@@ -24,6 +24,7 @@ public class DBManager extends SQLiteOpenHelper {
 		tables.add(new AppInfoTable(context));
 		tables.add(new BatteryTable(context));
 		tables.add(new NetworkTable(context));
+		tables.add(new GeneralInfoTable(context));
 	}
 	
 	public static DBManager getInstance(Context context){
@@ -61,37 +62,65 @@ public class DBManager extends SQLiteOpenHelper {
 	
 	public Vector<AppInfoBat> getAppInfo(String name, int slices){
 		Vector<AppInfoBat> results = new Vector<AppInfoBat>();
-		String getTimestampID = "SELECT MAX(timestamp_id) FROM " + AppInfoTable.TABLE_APPINFO +
+		String getTimestampID = "SELECT MAX(" + AppInfoTable.COLUMN_APP_TIMESLICE + ") FROM "
+				+ AppInfoTable.TABLE_APPINFO +
 				" where name='" + name + "'";
-		int maxTimestamp = -1;
+		int maxTimeslice = -1;
 		Cursor cursor = instance.getReadableDatabase().rawQuery(getTimestampID, null);
 		
 		if(cursor.moveToFirst()){
-			maxTimestamp = cursor.getInt(0);
-			Log.i("DBManager", "MaxTimestamp: " + maxTimestamp);
+			maxTimeslice = cursor.getInt(0);
 		}
 		else {
 			Log.e("DBManager", "COULD NOT GET MAX TIMESTAMP ID");
 			return null;
 		}
 		
-		String sqlQuery = "SELECT * FROM" + AppInfoTable.TABLE_APPINFO + " join " + 
-				BatteryTable.TABLE_BATTERY + " on " + AppInfoTable.COLUMN_APP_TIMESLICE + 
-				" where name='" + name + "' and " + AppInfoTable.COLUMN_APP_TIMESLICE + " > " +
-				(maxTimestamp - slices) + ";";
+		int startTimeslice = maxTimeslice - slices;
+		// If there isn't enough data for the request, then return all we have
+		if(startTimeslice < 1){
+			startTimeslice = 0;
+		}
+		
+		String sqlQuery = "SELECT DISTINCT " + 
+				AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_TIMESLICE + ", " +
+				AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_NAME + ", " + 
+				AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_ID + ", " +
+				AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_CPU + ", " +
+				AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_RX_BYTES + ", " +
+				AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_TX_BYTES + ", " +
+				BatteryTable.TABLE_BATTERY + "." + BatteryTable.COLUMN_BATTERY_PERCENTAGE +
+				" FROM " + AppInfoTable.TABLE_APPINFO + ", " + 
+				BatteryTable.TABLE_BATTERY + " where " + 
+				AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_TIMESLICE + ">" + startTimeslice + 
+				" and " + BatteryTable.TABLE_BATTERY + "." + BatteryTable.COLUMN_TIMESLICE_ID + ">" + startTimeslice +
+				" and " + AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_NAME + "='" + name + "';";
+
 		cursor = instance.getReadableDatabase().rawQuery(sqlQuery, null);
 		
 		if(cursor.moveToFirst()){
-			// cycle through and make all the AppInfoBat objects
-			for(int i = 0; i < cursor.getColumnCount(); i++){
-				Log.i("DBManager", cursor.getColumnName(i));
-			}
+			do {
+				results.add(new AppInfoBat(
+						cursor.getInt(cursor.getColumnIndex(AppInfoTable.COLUMN_APP_TIMESLICE)),
+						cursor.getString(cursor.getColumnIndex(AppInfoTable.COLUMN_APP_NAME)),
+						cursor.getInt(cursor.getColumnIndex(AppInfoTable.COLUMN_APP_ID)),
+						cursor.getLong(cursor.getColumnIndex(AppInfoTable.COLUMN_APP_CPU)),
+						cursor.getLong(cursor.getColumnIndex(AppInfoTable.COLUMN_RX_BYTES)),
+						cursor.getLong(cursor.getColumnIndex(AppInfoTable.COLUMN_TX_BYTES)),
+						cursor.getDouble(cursor.getColumnIndex(BatteryTable.COLUMN_BATTERY_PERCENTAGE))
+						));
+			}while(cursor.moveToNext());
 		}
 		else {
 			Log.e("DBManager", "NO ROWS RETURNED FOR getAppInfo");
 			return null;
 		}
-		
+	
+		// print out the result set as AppInfoBat objects
+/*		for(int i = 0; i < results.size(); i++){
+			Log.i("DBManager", results.get(i).toString());
+		}
+*/		
 		return results;
 	}
 }

@@ -12,4 +12,10 @@ public class AppInfoBat extends AppInfo {
 	public double getBatteryPercentage(){
 		return batteryPercentage;
 	}
+	
+	@Override
+	public String toString(){
+		return "Timeslice: " + this.getTimesliceID() + " Name: " + this.getName() + " ID: " + this.getAppId() +
+				" CPU: " + this.getCPU() + " Percentage: " + this.getBatteryPercentage();
+	}
 }
