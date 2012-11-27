@@ -10,5 +10,6 @@
     <string name="stop_GPS_button">Stop GPS</string>
     <string name="db_flush_button">Flush &amp; Rebuild DB</string>
     <string name="db_export_button">Export DB</string>
+    <string name="analysis_button">Run Analysis</string>
 
 </resources>
