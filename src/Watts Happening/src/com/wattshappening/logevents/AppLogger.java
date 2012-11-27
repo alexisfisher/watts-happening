@@ -74,7 +74,7 @@ public class AppLogger extends LogProcess {
 					CharSequence c = pm.getApplicationLabel(pm.getApplicationInfo(
 							info.processName, PackageManager.GET_META_DATA));
 					name = c.toString();
-					//Log.i("AppLogging", c.toString());
+					Log.i("AppLogging", c.toString());
 				} catch (NameNotFoundException e) {
 					// used for testing initially, doesn't really matter to see this now
 					//Log.e("AppLogging: ", e.getMessage());
