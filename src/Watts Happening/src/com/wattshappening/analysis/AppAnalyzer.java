@@ -13,7 +13,13 @@ import com.wattshappening.db.AppInfoBat;
 
 public class AppAnalyzer {
 	
-	public double analyzeApp(List<AppInfoBat> aib){
+	/**
+	 * @author 
+	 * @param aib A list of AppInfoBat for a single application
+	 * @return A double that's related to the usage of the app
+	 * 
+	 */
+	public static double analyzeApp(List<AppInfoBat> aib){
 		//we're given a list of appinfobat's about a single application
 		
 		double use = 0.0;
@@ -22,9 +28,9 @@ public class AppAnalyzer {
 		AppInfoBat current = aibIter.next();
 		prevtime = current.getTimesliceID();
 		long prevCPUPercent = current.getCPU();
-		double prevBattLevel = current.getBatteryPercentage();
-		double battDelta = 0.0;
-		double cpuDelta = 0.0;
+		double prevBattLevel = current.getBatteryPercentage(); //the battery level during the last slice
+		double battDelta = 0.0; //The change in battery level between slices
+		double cpuDelta = 0.0; //How many CPU ticks were used during the last tick
 		
 		while (aibIter.hasNext()){
 			current = aibIter.next();

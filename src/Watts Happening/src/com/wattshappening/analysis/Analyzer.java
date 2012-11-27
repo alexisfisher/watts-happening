@@ -32,6 +32,8 @@ public class Analyzer{
 		this.parent = parent;
 		this.runAnalysis();
 	}
+	
+	
 	/*
 	 * When called, should cycle through all apps in the currently running list
 	 */
@@ -39,12 +41,16 @@ public class Analyzer{
 		ActivityManager am = (ActivityManager)parent.getSystemService(Context.ACTIVITY_SERVICE);
 		PackageManager pm = parent.getPackageManager();
 		List<ActivityManager.RunningAppProcessInfo> procs = am.getRunningAppProcesses();
-		AppAnalyzer aa = new AppAnalyzer();
 		DBManager db =  DBManager.getInstance(parent.getBaseContext());
 		if(procs != null){
+			
+			//for every running app
 			for(ActivityManager.RunningAppProcessInfo proc : procs){
+				
+				//get the apps info
 				ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo)(proc);
 				String name = info.processName;
+				int uid = info.uid;
 
 				try {
 					CharSequence c = pm.getApplicationLabel(pm.getApplicationInfo(
@@ -56,9 +62,10 @@ public class Analyzer{
 
 				}
 
+				//TODO: getAppInfo should probably be based on UID instead of name - Nick
 				//timeslices should be configurable but assume 30 is good for now
-				double out = aa.analyzeApp(db.getAppInfo(name, timeslices));
-				Log.i("LocalService", "App "+ name + "has usage value " +out);
+				double out = AppAnalyzer.analyzeApp(db.getAppInfo(name, timeslices));
+				Log.i("LocalService", "App "+ name + " has usage value " +out);
 			}
 
 		}
