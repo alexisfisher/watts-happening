@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.wattshappening.analysis.Analyzer;
 import com.wattshappening.db.GeneralInfoTable;
 import com.wattshappening.db.GeneralTimesliceInfo;
 import com.wattshappening.logevents.*;
@@ -120,6 +121,10 @@ public class MonitorService extends Service {
     		listOfLogs.get(i).logInformation(timesliceID);
     }
 
+//    public void analyzeInformation(){
+//    	Analyzer a = new Analyzer(this);
+//		a.runAnalysis();
+//    }
 	/* (non-Javadoc)
 	 * @see android.app.Service#onBind(android.content.Intent)
 	 */

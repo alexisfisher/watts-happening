@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.wattshappening.analysis.Analyzer;
 import com.wattshappening.db.DBManager;
 /**
  * @author Nick
@@ -27,6 +28,7 @@ public class WattsHappening extends Activity {
 	Button stopButton;
 	Button dbFlushButton;
 	Button dbExportButton;
+	Button analysisButton;
 	/**
 	 * 
 	 */
@@ -103,7 +105,15 @@ public class WattsHappening extends Activity {
 			}
 		});
         
-
+        analysisButton = (Button) findViewById(R.id.button5);
+        analysisButton.setOnClickListener(new View.OnClickListener(){
+        	public void onClick(View v){
+        		Log.i("LocalService", "Analysis Button Clicked");
+        		//start the analyzer
+        		
+        		
+        	}
+        });
         
         
     }
