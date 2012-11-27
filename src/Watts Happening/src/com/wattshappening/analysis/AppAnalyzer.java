@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 //import com.wattshappening.db.AppInfo;
+import android.util.Log;
+
 import com.wattshappening.db.AppInfoBat;
 
 
@@ -38,6 +40,7 @@ public class AppAnalyzer {
 			
 				battDelta = prevBattLevel - current.getBatteryPercentage();
 				cpuDelta = current.getCPU() - prevCPUPercent;
+				//Log.i("LocalService", "battdelta:"+battDelta + " cpuDelta: "+cpuDelta);
 				use += battDelta * cpuDelta; 	//does CPU need to be a delta, as well? 
 														//... yes  
 			}
