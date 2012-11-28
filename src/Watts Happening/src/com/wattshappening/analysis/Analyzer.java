@@ -64,7 +64,7 @@ public class Analyzer{
 
 				//TODO: getAppInfo should probably be based on UID instead of name - Nick
 				//timeslices should be configurable but assume 30 is good for now
-				double out = AppAnalyzer.analyzeApp(db.getAppInfo(name, timeslices));
+				double out = AppAnalyzer.analyzeApp(db.getAppInfo(uid, timeslices));
 				Log.i("LocalService", "App "+ name + " has usage value " +out);
 			}
 
