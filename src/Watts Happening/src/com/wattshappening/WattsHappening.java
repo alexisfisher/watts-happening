@@ -111,7 +111,8 @@ public class WattsHappening extends Activity {
         		Log.i("LocalService", "Analysis Button Clicked");
         		//start the analyzer
         		
-        		
+        		Analyzer a = new Analyzer();
+        		a.runAnalysis(v.getContext());
         	}
         });
         
