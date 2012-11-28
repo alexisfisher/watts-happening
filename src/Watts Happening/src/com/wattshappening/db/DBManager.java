@@ -60,11 +60,17 @@ public class DBManager extends SQLiteOpenHelper {
 		}
 	}
 	
-	public Vector<AppInfoBat> getAppInfo(String name, int slices){
+	/**
+	 * 
+	 * @param uid: uid of the app needed
+	 * @param slices: how many time slices of information needed
+	 * @return Vector containing AppInfoBat objects for the uid specified. On error empty vector is returned.
+	 */
+	public Vector<AppInfoBat> getAppInfo(int uid, int slices){
 		Vector<AppInfoBat> results = new Vector<AppInfoBat>();
 		String getTimestampID = "SELECT MAX(" + AppInfoTable.COLUMN_APP_TIMESLICE + ") FROM "
 				+ AppInfoTable.TABLE_APPINFO +
-				" where name='" + name + "'";
+				" where " + AppInfoTable.COLUMN_APP_ID +"=" + uid + ";";
 		int maxTimeslice = -1;
 		Cursor cursor = instance.getReadableDatabase().rawQuery(getTimestampID, null);
 		
@@ -94,7 +100,7 @@ public class DBManager extends SQLiteOpenHelper {
 				BatteryTable.TABLE_BATTERY + " where " + 
 				AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_TIMESLICE + ">" + startTimeslice + 
 				" and " + BatteryTable.TABLE_BATTERY + "." + BatteryTable.COLUMN_TIMESLICE_ID + ">" + startTimeslice +
-				" and " + AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_NAME + "='" + name + "';";
+				" and " + AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_ID + "=" + uid + ";";
 
 		cursor = instance.getReadableDatabase().rawQuery(sqlQuery, null);
 		
@@ -113,14 +119,14 @@ public class DBManager extends SQLiteOpenHelper {
 		}
 		else {
 			Log.e("DBManager", "NO ROWS RETURNED FOR getAppInfo");
-			return null;
+			/* Empty result Vector will be returned on error */
 		}
 	
 		// print out the result set as AppInfoBat objects
 /*		for(int i = 0; i < results.size(); i++){
 			Log.i("DBManager", results.get(i).toString());
 		}
-*/		
+	*/	
 		return results;
 	}
 }
