@@ -13,13 +13,22 @@ public class GeneralInfoTable extends DBTable {
 	public static final String COLUMN_GEN_TIME = "timestamp";
 	public static final String COLUMN_TIMESLICE_ID = "timeslice_id";
 	public static final String COLUMN_IS_CHARGING = "is_charging";
+	public static final String COLUMN_TICKS_USER = "ticks_user";
+	public static final String COLUMN_TICKS_SYSTEM = "ticks_system";
+	public static final String COLUMN_TICKS_IDLE = "ticks_idle";
+	public static final String COLUMN_TICKS_TOTAL = "ticks_total";
 	public static final String COLUMN_ID = "id";
+	
 	public static final String CREATE_GEN_TABLE = "create table " + 
 			TABLE_GENINFO + "(" +
 			COLUMN_ID + " integer primary key autoincrement, " + 
 			COLUMN_TIMESLICE_ID + " integer not null, " +
 			COLUMN_GEN_TIME + " text not null, " +
-			COLUMN_IS_CHARGING + " integer " +
+			COLUMN_IS_CHARGING + " integer, " +
+			COLUMN_TICKS_USER + " integer, " +
+			COLUMN_TICKS_SYSTEM + " integer, " +
+			COLUMN_TICKS_IDLE + " integer, " +
+			COLUMN_TICKS_TOTAL + " integer " +
 			"CONSTRAINT chk_charging " +
 			"CHECK ("+ COLUMN_IS_CHARGING + "= 0 OR " + COLUMN_IS_CHARGING + " = 1));";
 
@@ -45,6 +54,10 @@ public class GeneralInfoTable extends DBTable {
 		values.put(COLUMN_GEN_TIME, genTimeInfo.getTimestamp());
 		values.put(COLUMN_TIMESLICE_ID, genTimeInfo.getTimesliceID());
 		values.put(COLUMN_IS_CHARGING, genTimeInfo.getIsCharging());
+		values.put(COLUMN_TICKS_USER, genTimeInfo.getTicksUser());
+		values.put(COLUMN_TICKS_SYSTEM, genTimeInfo.getTicksSystem());
+		values.put(COLUMN_TICKS_IDLE, genTimeInfo.getTicksIdle());
+		values.put(COLUMN_TICKS_TOTAL, genTimeInfo.getTicksTotal());
 		
 		db.insert(TABLE_GENINFO, null, values);
 		

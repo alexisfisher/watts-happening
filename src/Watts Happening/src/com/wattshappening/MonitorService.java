@@ -4,6 +4,10 @@
 package com.wattshappening;
 
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Vector;
@@ -110,9 +114,44 @@ public class MonitorService extends Service {
         int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
         int isCharging = (plugged== BatteryManager.BATTERY_PLUGGED_AC || 
         				plugged == BatteryManager.BATTERY_PLUGGED_USB)?1:0;
+
+        int ticksUser = 0;
+        int ticksSystem = 0;
+        int ticksIdle = 0;
+        int ticksTotal = 0;
+        
+        try{
+        	String filename = "/proc/stat";
+			BufferedReader bufferedReader = new BufferedReader(new FileReader(filename));
+			
+			String[] contents = bufferedReader.readLine().trim().split("[ ]+");
+			
+			// Be careful taking a unsigned long and making it into a long!
+			
+			ticksUser = Integer.parseInt(contents[1]);
+			ticksSystem = Integer.parseInt(contents[3]);
+			ticksIdle = Integer.parseInt(contents[4]);
+			ticksTotal = ticksUser + ticksSystem + ticksIdle +
+						Integer.parseInt(contents[2]) + Integer.parseInt(contents[5]) + 
+						Integer.parseInt(contents[6]) + Integer.parseInt(contents[7]);
+			
+			bufferedReader.close();
+
+		}catch(FileNotFoundException e){
+			Log.e("AppLogging", e.getMessage());
+		}catch(IOException e){
+			Log.e("AppLogging", e.getMessage());
+		}
+        
     	
     	try {
-			genInfoTable.addEntry(new GeneralTimesliceInfo(timesliceID,timestamp,isCharging));
+			genInfoTable.addEntry(new GeneralTimesliceInfo(	timesliceID,
+															timestamp,
+															isCharging,
+															ticksUser,
+															ticksSystem,
+															ticksIdle,
+															ticksTotal));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
