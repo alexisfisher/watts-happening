@@ -70,7 +70,7 @@ public class AggregateAppInfoTable extends DBTable {
 	 * 		most recent aggregation. If there is not one yet it will return null.
 	 * @author Nick
 	 */
-	public AggregateAppInfo fetchMostRecent(){
+	public AggregateAppInfo fetchMostRecent(int uid){
 		SQLiteDatabase db = DBManager.getInstance(context).getWritableDatabase();
 		AggregateAppInfo aggAppInfo = null;
 		
@@ -81,7 +81,8 @@ public class AggregateAppInfoTable extends DBTable {
 									COLUMN_APP_HISTORIC_HARDWARE  + ", " + //3
 									COLUMN_NUM_UPDATES  + //4
 							 " FROM " + TABLE_AGG_APP_INFO + 
-							 "WHERE " + COLUMN_ID + "=MAX(" + COLUMN_ID+ ");";
+							 "WHERE " + COLUMN_ID + "=MAX(" + COLUMN_ID+ ") " + 
+							 "AND " + COLUMN_APP_UID + "=" + uid + ";";
 		
 		Cursor cursor = db.rawQuery(selectQuery, null);
 		
