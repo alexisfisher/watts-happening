@@ -107,7 +107,7 @@ public class MonitorService extends Service {
     public void logInformation()
     {
     	int timesliceID = genInfoTable.getNextTimesliceID();
-    	String timestamp = new Timestamp(Calendar.getInstance().getTimeInMillis()).toString();
+    	long timestamp = Calendar.getInstance().getTimeInMillis();
     	
     	//determine if the device is charging
     	Intent intent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
