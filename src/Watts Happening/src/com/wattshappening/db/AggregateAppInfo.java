@@ -18,6 +18,10 @@ public class AggregateAppInfo extends DBEntry {
 		this.numUpdates = numUpdates;
 	}
 
+	public AggregateAppInfo() {
+		// TODO Auto-generated constructor stub
+	}
+
 	/**
 	 * @return the appUID
 	 */

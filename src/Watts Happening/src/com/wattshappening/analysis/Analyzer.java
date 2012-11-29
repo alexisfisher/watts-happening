@@ -69,9 +69,30 @@ public class Analyzer{
 				//TODO: getAppInfo should probably be based on UID instead of name - Nick
 				//timeslices should be configurable but assume 30 is good for now
 				long cpuout = AppAnalyzer.analyzeApp(db.getAppInfo(uid, timeslices));
-				AggregateAppInfo aggInfo = new AggregateAppInfo(uid, cpuout, 0,0,0);
+				
+				AggregateAppInfo oldInfo = aggTable.fetchMostRecent(uid);
+				//AggregateAppInfo oldInfo = new AggregateAppInfo(); 
+				//oldInfo = aggTable.fetchMostRecent(uid);
+				int numUpdates = 1;
+				long cpuAve = 0;
+				if (oldInfo != null) {
+				
+					numUpdates =oldInfo.getNumUpdates();
+					cpuAve = (oldInfo.getHistoricCPU() * numUpdates + cpuout) / numUpdates + 1;
+					numUpdates++;
+					//Log.i("LocalService", "numupdates: " + numUpdates);
+				}else{
+					Log.i("LocalService", "oldInfo is null");
+					cpuAve = cpuout;
+				}
+				AggregateAppInfo aggInfo = new AggregateAppInfo(uid, cpuAve, 0,0, numUpdates);
 
-				//aggTable.addEntry(aggInfo);
+				try {
+					aggTable.addEntry(aggInfo);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				Log.i("LocalService", "App "+ name + " has usage value " +cpuout);
 			}
 

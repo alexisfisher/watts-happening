@@ -81,8 +81,12 @@ public class AggregateAppInfoTable extends DBTable {
 									COLUMN_APP_HISTORIC_HARDWARE  + ", " + //3
 									COLUMN_NUM_UPDATES  + //4
 							 " FROM " + TABLE_AGG_APP_INFO + 
-							 "WHERE " + COLUMN_ID + "=MAX(" + COLUMN_ID+ ") " + 
-							 "AND " + COLUMN_APP_UID + "=" + uid + ";";
+							 //" WHERE " + COLUMN_ID + "=MAX(" + COLUMN_ID+ ") " + 
+							 " WHERE " + COLUMN_ID + "= (SELECT MAX(" + COLUMN_ID+ ") " +
+							 " FROM "+ TABLE_AGG_APP_INFO + " WHERE " + COLUMN_APP_UID +
+							 
+							 		" = " + uid +")"+
+							 " AND " + COLUMN_APP_UID + "=" + uid + ";";
 		
 		Cursor cursor = db.rawQuery(selectQuery, null);
 		
