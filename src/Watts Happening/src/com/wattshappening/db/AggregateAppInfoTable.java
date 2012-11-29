@@ -20,7 +20,7 @@ public class AggregateAppInfoTable extends DBTable {
 	public static final String COLUMN_ID = "id";
 	
 	
-	public static final String CREATE_AGG_APP_INFO_TABLE = "create table " + 
+	public static final String CREATE_AGG_APP_INFO_TABLE = "create table if not exists " + 
 			TABLE_AGG_APP_INFO + "(" +
 			COLUMN_ID + " integer primary key autoincrement, " + 
 			COLUMN_APP_UID + " integer, " +
