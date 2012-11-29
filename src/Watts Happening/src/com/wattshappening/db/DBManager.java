@@ -25,6 +25,7 @@ public class DBManager extends SQLiteOpenHelper {
 		tables.add(new BatteryTable(context));
 		tables.add(new NetworkTable(context));
 		tables.add(new GeneralInfoTable(context));
+		tables.add(new AggregateAppInfoTable(context));
 	}
 	
 	public static DBManager getInstance(Context context){
@@ -55,7 +56,11 @@ public class DBManager extends SQLiteOpenHelper {
 	}	
 	
 	public void dropTables(SQLiteDatabase db){
+		//don't want to drop if table name is "agg_app_info"
 		for (int i = 0; i< tables.size(); ++i){
+			if (tables.get(i).getTableName() == "agg_app_info"){ //check if we're flushing all
+				continue;
+			}
 			db.execSQL("DROP TABLE IF EXISTS " + tables.get(i).getTableName() + ";");
 		}
 	}

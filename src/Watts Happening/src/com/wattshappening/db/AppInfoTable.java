@@ -37,7 +37,7 @@ public class AppInfoTable extends DBTable {
 		ContentValues values = new ContentValues();
 		
 		if (!(dbE instanceof AppInfo))
-			throw new Exception("Wrong type of entry, should be of type Hardware");
+			throw new Exception("Wrong type of entry, should be of type AppInfo");
 		AppInfo appInfo = (AppInfo)dbE;
 		
 		values.put(COLUMN_APP_TIMESLICE, appInfo.getTimesliceID());

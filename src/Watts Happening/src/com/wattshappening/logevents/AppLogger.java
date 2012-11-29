@@ -47,7 +47,7 @@ public class AppLogger extends LogProcess {
 			// Be careful taking a unsigned long and making it into a long!
 			
 			long utime = Long.parseLong(contents[13]);
-			long stime = Long.parseLong(contents[14]);	
+			long stime = Long.parseLong(contents[14]);
 			bufferedReader.close();
 			return utime + stime;
 		}catch(FileNotFoundException e){
