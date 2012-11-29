@@ -71,6 +71,7 @@ public class Analyzer{
 			}
 
 		}
+		TimeLeft.getTimeLeft(con);
 	}
 		
 }

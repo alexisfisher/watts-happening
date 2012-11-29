@@ -129,5 +129,39 @@ public class DBManager extends SQLiteOpenHelper {
 	*/	
 		return results;
 	}
+	
+	public Vector<BatteryTime> getBatteryInformation(){
+		Vector<BatteryTime> results = new Vector<BatteryTime>();
+		
+		String sqlGetAllBatteryInfo = "SELECT " +
+				BatteryTable.TABLE_BATTERY + "." + BatteryTable.COLUMN_BATTERY_PERCENTAGE + ", " +
+				GeneralInfoTable.TABLE_GENINFO + "." + GeneralInfoTable.COLUMN_GEN_TIME + 
+				" FROM " + 
+				BatteryTable.TABLE_BATTERY +
+				" JOIN " +
+				GeneralInfoTable.TABLE_GENINFO + 
+				" ON " +
+				BatteryTable.TABLE_BATTERY + "." + BatteryTable.COLUMN_TIMESLICE_ID + "=" +
+				GeneralInfoTable.TABLE_GENINFO + "." + GeneralInfoTable.COLUMN_TIMESLICE_ID +
+				";";
+		
+		Cursor cursor = instance.getReadableDatabase().rawQuery(sqlGetAllBatteryInfo, null);
+		
+		if(cursor.moveToFirst()){
+			do{
+			results.add(new BatteryTime(
+					cursor.getDouble(cursor.getColumnIndex(BatteryTable.COLUMN_BATTERY_PERCENTAGE)),
+					cursor.getLong(cursor.getColumnIndex(GeneralInfoTable.COLUMN_GEN_TIME))
+					));
+			}while(cursor.moveToNext());
+		}
+		
+		for(int i = 0; i < results.size(); i++){
+			Log.i("DBManager", results.get(i).toString());
+		}
+		
+		return results;
+	}
+	
 }
 
