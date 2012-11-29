@@ -21,27 +21,29 @@ import com.wattshappening.db.DBManager;
 //public class Analyzer extends Service{
 public class Analyzer{
 	private int timeslices = 30;
-	protected Service parent;
+	//protected Service parent;
 	
-	public Analyzer(Service parent){
-		onCreate(parent);
+	public Analyzer(){
+		onCreate();
 	}
 	
-	public void onCreate(Service parent) {
-		super.onCreate();
-		this.parent = parent;
-		this.runAnalysis();
+	public void onCreate() {
+		//super.onCreate();
+		//this.parent = parent;
+		//this.runAnalysis();
 	}
 	
 	
 	/*
 	 * When called, should cycle through all apps in the currently running list
 	 */
-	public void runAnalysis(){
-		ActivityManager am = (ActivityManager)parent.getSystemService(Context.ACTIVITY_SERVICE);
-		PackageManager pm = parent.getPackageManager();
+	public void runAnalysis(Context con){
+		//ActivityManager am = (ActivityManager)parent.getSystemService(Context.ACTIVITY_SERVICE);
+		ActivityManager am = (ActivityManager)con.getSystemService(Context.ACTIVITY_SERVICE);
+		PackageManager pm = con.getPackageManager();
 		List<ActivityManager.RunningAppProcessInfo> procs = am.getRunningAppProcesses();
-		DBManager db =  DBManager.getInstance(parent.getBaseContext());
+		//DBManager db =  DBManager.getInstance(parent.getBaseContext());
+		DBManager db =  DBManager.getInstance(con);
 		if(procs != null){
 			
 			//for every running app
@@ -64,7 +66,7 @@ public class Analyzer{
 
 				//TODO: getAppInfo should probably be based on UID instead of name - Nick
 				//timeslices should be configurable but assume 30 is good for now
-				double out = AppAnalyzer.analyzeApp(db.getAppInfo(name, timeslices));
+				double out = AppAnalyzer.analyzeApp(db.getAppInfo(uid, timeslices));
 				Log.i("LocalService", "App "+ name + " has usage value " +out);
 			}
 
