@@ -23,7 +23,7 @@ public class GeneralInfoTable extends DBTable {
 			TABLE_GENINFO + "(" +
 			COLUMN_ID + " integer primary key autoincrement, " + 
 			COLUMN_TIMESLICE_ID + " integer not null, " +
-			COLUMN_GEN_TIME + " text not null, " +
+			COLUMN_GEN_TIME + " real not null, " +
 			COLUMN_IS_CHARGING + " integer, " +
 			COLUMN_TICKS_USER + " integer, " +
 			COLUMN_TICKS_SYSTEM + " integer, " +

@@ -1,9 +1,11 @@
 package com.wattshappening.db;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -60,6 +62,35 @@ public class AggregateAppInfoTable extends DBTable {
 	public List<DBEntry> fetchAllEntries() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	/**
+	 * 
+	 * @return Will return an instance of AggregateAppInfo containing the info for the
+	 * 		most recent aggregation. If there is not one yet it will return null.
+	 * @author Nick
+	 */
+	public AggregateAppInfo fetchMostRecent(){
+		SQLiteDatabase db = DBManager.getInstance(context).getWritableDatabase();
+		AggregateAppInfo aggAppInfo = null;
+		
+		String selectQuery = "SELECT " + 
+									COLUMN_APP_UID  + ", " + //0
+									COLUMN_APP_HISTORIC_CPU  + ", " +  //1
+									COLUMN_APP_HISTORIC_NETWORK  + ", " +  //2
+									COLUMN_APP_HISTORIC_HARDWARE  + ", " + //3
+									COLUMN_NUM_UPDATES  + //4
+							 " FROM " + TABLE_AGG_APP_INFO + 
+							 "WHERE " + COLUMN_ID + "=MAX(" + COLUMN_ID+ ");";
+		
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		
+		//int appUID, long histCPU, long histNet, long histHard, int numUpdates)
+		if(cursor.moveToFirst()){
+			aggAppInfo = new AggregateAppInfo(cursor.getInt(0), cursor.getLong(1), cursor.getLong(2), cursor.getLong(3),  cursor.getInt(4));
+		}
+		
+		return aggAppInfo;
 	}
 
 	@Override

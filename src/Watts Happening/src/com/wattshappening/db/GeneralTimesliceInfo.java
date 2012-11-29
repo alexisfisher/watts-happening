@@ -2,7 +2,7 @@ package com.wattshappening.db;
 
 public class GeneralTimesliceInfo extends DBEntry {
 	
-	private String timestamp;
+	private long timestamp;
 	private int timesliceID;
 	private int isCharging;
 	private int ticksUser;
@@ -10,7 +10,7 @@ public class GeneralTimesliceInfo extends DBEntry {
 	private int ticksIdle;
 	private int ticksTotal;
 
-	public GeneralTimesliceInfo(int timesliceID, String timestamp, int isCharging, int ticksUser, int ticksSystem, int ticksIdle, int ticksTotal) {
+	public GeneralTimesliceInfo(int timesliceID, long timestamp, int isCharging, int ticksUser, int ticksSystem, int ticksIdle, int ticksTotal) {
 		this.timesliceID = timesliceID;
 		this.timestamp = timestamp;
 		this.isCharging = isCharging;
@@ -28,7 +28,7 @@ public class GeneralTimesliceInfo extends DBEntry {
 		return timesliceID;
 	}
 	
-	public String getTimestamp() {
+	public long getTimestamp() {
 		return timestamp;
 	}
 	
