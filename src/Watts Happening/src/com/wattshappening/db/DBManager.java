@@ -68,30 +68,10 @@ public class DBManager extends SQLiteOpenHelper {
 	/**
 	 * 
 	 * @param uid: uid of the app needed
-	 * @param slices: how many time slices of information needed
 	 * @return Vector containing AppInfoBat objects for the uid specified. On error empty vector is returned.
 	 */
-	public Vector<AppInfoBat> getAppInfo(int uid, int slices){
+	public Vector<AppInfoBat> getAppInfo(int uid){
 		Vector<AppInfoBat> results = new Vector<AppInfoBat>();
-		String getTimestampID = "SELECT MAX(" + AppInfoTable.COLUMN_APP_TIMESLICE + ") FROM "
-				+ AppInfoTable.TABLE_APPINFO +
-				" where " + AppInfoTable.COLUMN_APP_ID +"=" + uid + ";";
-		int maxTimeslice = -1;
-		Cursor cursor = instance.getReadableDatabase().rawQuery(getTimestampID, null);
-		
-		if(cursor.moveToFirst()){
-			maxTimeslice = cursor.getInt(0);
-		}
-		else {
-			Log.e("DBManager", "COULD NOT GET MAX TIMESTAMP ID");
-			return null;
-		}
-		
-		int startTimeslice = maxTimeslice - slices;
-		// If there isn't enough data for the request, then return all we have
-		if(startTimeslice < 1){
-			startTimeslice = 0;
-		}
 		
 		String sqlQuery = "SELECT DISTINCT " + 
 				AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_TIMESLICE + ", " +
@@ -101,13 +81,17 @@ public class DBManager extends SQLiteOpenHelper {
 				AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_RX_BYTES + ", " +
 				AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_TX_BYTES + ", " +
 				BatteryTable.TABLE_BATTERY + "." + BatteryTable.COLUMN_BATTERY_PERCENTAGE +
-				" FROM " + AppInfoTable.TABLE_APPINFO + ", " + 
-				BatteryTable.TABLE_BATTERY + " where " + 
-				AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_TIMESLICE + ">" + startTimeslice + 
-				" and " + BatteryTable.TABLE_BATTERY + "." + BatteryTable.COLUMN_TIMESLICE_ID + ">" + startTimeslice +
+				" FROM " + AppInfoTable.TABLE_APPINFO + 
+				" LEFT JOIN " + BatteryTable.TABLE_BATTERY + 
+				" ON " + AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_TIMESLICE + "=" + BatteryTable.TABLE_BATTERY + "." + BatteryTable.COLUMN_TIMESLICE_ID +
+				" WHERE " + 
+				AppInfoTable.COLUMN_APP_TIMESLICE + " IN (SELECT " + 
+															GeneralInfoTable.COLUMN_TIMESLICE_ID + 
+														" FROM " + GeneralInfoTable.TABLE_GENINFO + 
+														" WHERE " + GeneralInfoTable.COLUMN_HAS_BEEN_ANALYZED + "=0)" +
 				" and " + AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_ID + "=" + uid + ";";
 
-		cursor = instance.getReadableDatabase().rawQuery(sqlQuery, null);
+		Cursor cursor = instance.getReadableDatabase().rawQuery(sqlQuery, null);
 		
 		if(cursor.moveToFirst()){
 			do {
