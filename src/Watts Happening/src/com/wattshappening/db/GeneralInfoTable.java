@@ -1,6 +1,7 @@
 package com.wattshappening.db;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
@@ -77,12 +78,12 @@ public class GeneralInfoTable extends DBTable {
 	/**
 	 * Will return the list of timeslices that have not yet been analyzed
 	 * @author Nick
-	 * @return A vector containing the list of GeneralTimesliceInfo objects that represent that
-	 * 		the timeslices that have not yet been analyzed.
+	 * @return A HashMap containing the list of GeneralTimesliceInfo objects that represent that
+	 * 		the timeslices that have not yet been analyzed. The key field wil contain the timesliceID.
 	 */
-	public Vector<GeneralTimesliceInfo> fetchAllNewEntries(){
+	public HashMap<Integer,GeneralTimesliceInfo> fetchAllNewEntries(){
 		SQLiteDatabase db = DBManager.getInstance(context).getWritableDatabase();
-		Vector<GeneralTimesliceInfo> timesliceInfo = new Vector<GeneralTimesliceInfo>();
+		HashMap<Integer,GeneralTimesliceInfo> timesliceInfo = new HashMap<Integer,GeneralTimesliceInfo>();
 		String selectQuery = 	"SELECT " + 
 									COLUMN_TIMESLICE_ID + "	, " +
 									COLUMN_GEN_TIME + "		, " +
@@ -96,7 +97,7 @@ public class GeneralInfoTable extends DBTable {
 		
 		Cursor cursor = db.rawQuery(selectQuery, null);
 		
-		if(cursor.moveToFirst()){
+		if(cursor.moveToFirst()){ //if there were entries returned
 			do{
 				
 				//GeneralTimesliceInfo(int timesliceID, long timestamp, int isCharging, int ticksUser, int ticksSystem, int ticksIdle, int ticksTotal)
@@ -107,8 +108,8 @@ public class GeneralInfoTable extends DBTable {
 																	cursor.getInt(cursor.getColumnIndex(COLUMN_TICKS_SYSTEM)), 
 																	cursor.getInt(cursor.getColumnIndex(COLUMN_TICKS_IDLE)), 
 																	cursor.getInt(cursor.getColumnIndex(COLUMN_TICKS_TOTAL)));
-				timesliceInfo.add(ts);
-			}while(cursor.moveToNext());
+				timesliceInfo.put(Integer.valueOf(ts.getTimesliceID()),ts);
+			}while(cursor.moveToNext()); //keep going while there is still more data
 		}
 		
 		return timesliceInfo;

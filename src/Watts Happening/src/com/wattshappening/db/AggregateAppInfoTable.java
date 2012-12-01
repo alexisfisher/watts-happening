@@ -65,7 +65,8 @@ public class AggregateAppInfoTable extends DBTable {
 	}
 	
 	/**
-	 * 
+	 * @param uid - The uid for the application you want to retrieve the most recent 
+	 * 		entry for
 	 * @return Will return an instance of AggregateAppInfo containing the info for the
 	 * 		most recent aggregation. If there is not one yet it will return null.
 	 * @author Nick
@@ -74,19 +75,19 @@ public class AggregateAppInfoTable extends DBTable {
 		SQLiteDatabase db = DBManager.getInstance(context).getWritableDatabase();
 		AggregateAppInfo aggAppInfo = null;
 		
-		String selectQuery = "SELECT " + 
-									COLUMN_APP_UID  + ", " + //0
-									COLUMN_APP_HISTORIC_CPU  + ", " +  //1
-									COLUMN_APP_HISTORIC_NETWORK  + ", " +  //2
-									COLUMN_APP_HISTORIC_HARDWARE  + ", " + //3
-									COLUMN_NUM_UPDATES  + //4
-							 " FROM " + TABLE_AGG_APP_INFO + 
-							 //" WHERE " + COLUMN_ID + "=MAX(" + COLUMN_ID+ ") " + 
-							 " WHERE " + COLUMN_ID + "= (SELECT MAX(" + COLUMN_ID+ ") " +
-							 " FROM "+ TABLE_AGG_APP_INFO + " WHERE " + COLUMN_APP_UID +
-							 
-							 		" = " + uid +")"+
-							 " AND " + COLUMN_APP_UID + "=" + uid + ";";
+		String selectQuery = "" +
+				"SELECT " + COLUMN_APP_UID + "              , " +
+				"       " + COLUMN_APP_HISTORIC_CPU + "     , " +
+				"       " + COLUMN_APP_HISTORIC_NETWORK + " , " +
+				"       " + COLUMN_APP_HISTORIC_HARDWARE + ", " +
+				"       " + COLUMN_NUM_UPDATES + " " +
+				"FROM   " + TABLE_AGG_APP_INFO + " " +
+				"WHERE  " + COLUMN_ID + " = " +
+				"       (SELECT MAX( " + COLUMN_ID + " ) " +
+				"       FROM    " + TABLE_AGG_APP_INFO + " " +
+				"       WHERE   " + COLUMN_APP_UID + " = " + uid + " " +
+				"       ) " +
+				"AND    " + COLUMN_APP_UID + " = " + uid + ";";
 		
 		Cursor cursor = db.rawQuery(selectQuery, null);
 		

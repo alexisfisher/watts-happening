@@ -67,11 +67,11 @@ public class DBManager extends SQLiteOpenHelper {
 	
 	/**
 	 * 
-	 * @param uid: uid of the app needed
+	 * @param uid - the UID of the app needed
 	 * @return Vector containing AppInfoBat objects for the uid specified. On error empty vector is returned.
 	 */
-	public Vector<AppInfoBat> getAppInfo(int uid){
-		Vector<AppInfoBat> results = new Vector<AppInfoBat>();
+	public Vector<AppDetailedInfo> getAppInfo(int uid){
+		Vector<AppDetailedInfo> results = new Vector<AppDetailedInfo>();
 		
 		String sqlQuery = "SELECT DISTINCT " + 
 				AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_TIMESLICE + ", " +
@@ -95,7 +95,7 @@ public class DBManager extends SQLiteOpenHelper {
 		
 		if(cursor.moveToFirst()){
 			do {
-				results.add(new AppInfoBat(
+				results.add(new AppDetailedInfo(
 						cursor.getInt(cursor.getColumnIndex(AppInfoTable.COLUMN_APP_TIMESLICE)),
 						cursor.getString(cursor.getColumnIndex(AppInfoTable.COLUMN_APP_NAME)),
 						cursor.getInt(cursor.getColumnIndex(AppInfoTable.COLUMN_APP_ID)),
