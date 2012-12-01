@@ -12,7 +12,7 @@ import android.util.Log;
 public class GPSTable extends DBTable {
 
 	public GPSTable(Context context) {
-		super(context);
+		super(context, DBTable.FLUSH_ALL | DBTable.FLUSH_ONLY_NONPERSISTANT);
 	}
 
 	/* GPS Table info */

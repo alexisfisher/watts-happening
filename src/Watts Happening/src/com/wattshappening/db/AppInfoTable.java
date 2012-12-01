@@ -59,7 +59,7 @@ public class AppInfoTable extends DBTable {
 	}
 	
 	public AppInfoTable(Context context) {
-		super(context);
+		super(context, DBTable.FLUSH_ALL | DBTable.FLUSH_ONLY_NONPERSISTANT);
 	}
 
 	@Override

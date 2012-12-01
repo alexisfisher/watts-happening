@@ -88,7 +88,6 @@ public class Analyzer{
 						//we should always have timeslice data for both of these, but just in case
 						if (timesliceInfo.containsKey(appHist.get(i).getTimesliceID()) && timesliceInfo.containsKey(appHist.get(i+1).getTimesliceID()))
 						{
-							double temp;
 							GeneralTimesliceInfo t1 = timesliceInfo.get(Integer.valueOf(appHist.get(i).getTimesliceID()));
 							AppDetailedInfo a1 = appHist.get(i);
 							AppDetailedInfo a2 = appHist.get(i+1);

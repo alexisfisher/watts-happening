@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.wattshappening.analysis.Analyzer;
 import com.wattshappening.db.DBManager;
+import com.wattshappening.db.DBTable;
 /**
  * @author Nick
  *
@@ -61,11 +62,9 @@ public class WattsHappening extends Activity {
 			public void onClick(View v) {
 				Log.i("LocalService", "Flush Button Clicked");
 				stopService(monitorIntent);
-				DBManager db =  DBManager.getInstance(v.getContext());
-				SQLiteDatabase s = db.getWritableDatabase(); 
-				db.dropTables(s);
-				db.onCreate(s);
-				
+				DBManager dbMan =  DBManager.getInstance(v.getContext());
+				SQLiteDatabase db = dbMan.getWritableDatabase(); 
+				dbMan.flushTables(db, DBTable.FLUSH_ONLY_NONPERSISTANT);
 				
 			}
 		});

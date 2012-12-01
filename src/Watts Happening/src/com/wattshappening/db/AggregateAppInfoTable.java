@@ -30,7 +30,7 @@ public class AggregateAppInfoTable extends DBTable {
 			COLUMN_NUM_UPDATES + " integer);";
 	
 	public AggregateAppInfoTable(Context context) {
-		super(context);
+		super(context,DBTable.FLUSH_ALL);
 	}
 
 	@Override

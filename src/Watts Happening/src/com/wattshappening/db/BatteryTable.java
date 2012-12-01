@@ -28,7 +28,7 @@ public class BatteryTable extends DBTable{
 			COLUMN_BATTERY_PERCENTAGE + " real);";
 	
 	public BatteryTable(Context context) {
-		super(context);
+		super(context, DBTable.FLUSH_ALL | DBTable.FLUSH_ONLY_NONPERSISTANT);
 	}
 
 	@Override

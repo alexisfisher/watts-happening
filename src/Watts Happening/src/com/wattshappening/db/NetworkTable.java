@@ -27,7 +27,7 @@ public class NetworkTable extends DBTable {
 			COLUMN_NETWORK_CONNECTION + " text not null); ";
 
 	public NetworkTable(Context context) {
-		super(context);
+		super(context, DBTable.FLUSH_ALL | DBTable.FLUSH_ONLY_NONPERSISTANT);
 	}
 
 	@Override

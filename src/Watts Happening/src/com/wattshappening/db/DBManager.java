@@ -40,8 +40,7 @@ public class DBManager extends SQLiteOpenHelper {
 	
 	@Override 
 	public void onCreate(SQLiteDatabase database){
-		for (int i = 0; i<tables.size(); ++i)
-			database.execSQL(tables.get(i).getCreationQuerry());
+		createDatabaseTables(database,DBTable.FLUSH_ALL);
 	}
 		
 	@Override
@@ -49,21 +48,9 @@ public class DBManager extends SQLiteOpenHelper {
 		System.out.println("Upgrading database from version " + oldVersion +
 				" to " + newVersion + ", ALL CURRENT DATA WILL BE LOST!");
 		
-		for (int i = 0; i<tables.size(); ++i)
-			db.execSQL("DROP TABLE IF EXISTS " + tables.get(i).getTableName() + ";");
+		flushTables(db, DBTable.FLUSH_ALL);
 		
-		onCreate(db);
 	}	
-	
-	public void dropTables(SQLiteDatabase db){
-		//don't want to drop if table name is "agg_app_info"
-		for (int i = 0; i< tables.size(); ++i){
-			if (tables.get(i).getTableName() == "agg_app_info"){ //check if we're flushing all
-				continue;
-			}
-			db.execSQL("DROP TABLE IF EXISTS " + tables.get(i).getTableName() + ";");
-		}
-	}
 	
 	/**
 	 * 
@@ -117,6 +104,43 @@ public class DBManager extends SQLiteOpenHelper {
 		}
 	*/	
 		return results;
+	}
+	
+	/**
+	 * Call this function to flush the data from the tables. You should pass it 
+	 * a flush level and all tables that match that level will be flushed, 
+	 * tables that do not match that flush level will not be flushed. To flush 
+	 * the data this function will drop and recreate the tables that match the
+	 * flush level, which also makes it useful if you just want to recreate the
+	 * tables.
+	 * 
+	 * @author Nick
+	 * @param flushLevel - The level of flush you want to perform (see DBTable 
+	 * 		for the available flush levels)
+	 */
+	public void flushTables(SQLiteDatabase db,int flushLevel)
+	{
+		for (int i = 0; i<tables.size(); ++i)
+			if (tables.get(i).shouldIBeFlushed(flushLevel))
+				db.execSQL("DROP TABLE IF EXISTS " + tables.get(i).getTableName() + ";");
+		
+		createDatabaseTables(db,flushLevel);
+	}
+	
+	/**
+	 * This function will handle creating the tables for a given flush level. It should
+	 * really only be called if you know that the tables don't exist (which would be from
+	 * onCreate() or from flushTables.
+	 * 
+	 * @author Nick
+	 * @param db - The database object to use when performing the queries 
+	 * @param flushLevel
+	 */
+	private void createDatabaseTables(SQLiteDatabase db, int flushLevel)
+	{
+		for (int i = 0; i<tables.size(); ++i)
+			if (tables.get(i).shouldIBeFlushed(flushLevel))
+				db.execSQL(tables.get(i).getCreationQuerry());
 	}
 }
 
