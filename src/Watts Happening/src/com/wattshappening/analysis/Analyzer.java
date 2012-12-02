@@ -118,7 +118,7 @@ public class Analyzer{
 		}
 		
 		double time = TimeLeft.getTimeLeft(con);		
-		Toast.makeText(con, "Minutes left: " + time, Toast.LENGTH_SHORT).show();
+		Toast.makeText(con, "Minutes left: " + time, Toast.LENGTH_LONG).show();
 		Log.i("TimeLeft" , "Minutes: " + time);
 	}
 		
