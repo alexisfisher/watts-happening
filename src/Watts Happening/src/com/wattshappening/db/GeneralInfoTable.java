@@ -33,9 +33,9 @@ public class GeneralInfoTable extends DBTable {
 			COLUMN_TICKS_SYSTEM + " integer, " +
 			COLUMN_TICKS_IDLE + " integer, " +
 			COLUMN_TICKS_TOTAL + " integer, " +
-			COLUMN_HAS_BEEN_ANALYZED + " integer default 0" +
-			"CONSTRAINT chk_charging " +
-			"CHECK ("+ COLUMN_IS_CHARGING + "= 0 OR " + COLUMN_IS_CHARGING + " = 1));";
+			COLUMN_HAS_BEEN_ANALYZED + " integer default 0 " +
+			" CONSTRAINT chk_charging " +
+			" CHECK ("+ COLUMN_IS_CHARGING + "= 0 OR " + COLUMN_IS_CHARGING + " = 1));";
 
 	public GeneralInfoTable(Context context) {
 		super(context, DBTable.FLUSH_ALL | DBTable.FLUSH_ONLY_NONPERSISTANT);
@@ -122,7 +122,7 @@ public class GeneralInfoTable extends DBTable {
 	
 	public int getNextTimesliceID()
 	{
-		SQLiteDatabase db = DBManager.getInstance(context).getReadableDatabase();
+		SQLiteDatabase db = DBManager.getInstance(context).getWritableDatabase();
 		String selectQuery = "SELECT MAX(" + COLUMN_TIMESLICE_ID + ") FROM " + TABLE_GENINFO;
 		
 		Cursor cursor = db.rawQuery(selectQuery, null);
