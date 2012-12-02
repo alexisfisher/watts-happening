@@ -21,7 +21,8 @@
             <LinearLayout
                 android:id="@+id/tab1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent" 
+                android:orientation="vertical" >
 
                 <Button
                     android:id="@+id/button1"
@@ -30,26 +31,27 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginLeft="22dp"
-                    android:layout_marginTop="21dp"
+                    android:layout_marginTop="22dp"
                     android:text="@string/start_button" />
 
                 <Button
                     android:id="@+id/button2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/button1"
-                    android:layout_alignBottom="@+id/button1"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="23dp"
+                    android:layout_alignLeft="@+id/button1"
+                    android:layout_below="@+id/button1"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginTop="22dp"
                     android:text="@string/stop_button" />
 
                 <Button
                     android:id="@+id/button3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignLeft="@+id/button1"
-                    android:layout_below="@+id/button1"
-                    android:layout_marginTop="23dp"
+                    android:layout_alignLeft="@+id/button2"
+                    android:layout_below="@+id/button2"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginLeft="22dp"
                     android:text="@string/db_flush_button" />
 
                 <Button
@@ -58,7 +60,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@+id/button3"
                     android:layout_below="@+id/button3"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginLeft="22dp"
                     android:text="@string/db_export_button" />
 
                 <Button
@@ -67,7 +70,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@+id/button4"
                     android:layout_below="@+id/button4"
-                    android:layout_marginTop="27dp"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginLeft="22dp"
                     android:text="@string/analysis_button" />
             </LinearLayout>
 
@@ -82,7 +86,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignLeft="@+id/button4"
                     android:layout_below="@+id/button4"
-                    android:layout_marginTop="27dp"
+                    android:layout_marginTop="22dp"
+                    android:layout_marginLeft="22dp"
                     android:text="sample tab2 button" />
             </LinearLayout>
         </FrameLayout>

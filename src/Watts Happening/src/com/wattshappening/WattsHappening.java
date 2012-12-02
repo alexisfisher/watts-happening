@@ -33,6 +33,7 @@ public class WattsHappening extends Activity {
 	Button dbFlushButton;
 	Button dbExportButton;
 	Button analysisButton;
+	Button toastButton;
 	/**
 	 * 
 	 */
@@ -48,17 +49,12 @@ public class WattsHappening extends Activity {
         //stupid tab stuff now
         TabHost tabs=(TabHost)findViewById(R.id.tabhost);
 	    tabs.setup();
-	    
 	    TabHost.TabSpec spec=tabs.newTabSpec("tag1");
-	    
 	    spec.setContent(R.id.tab1);
 	    spec.setIndicator("Actions");
 	    tabs.addTab(spec);
-	    
 	    spec=tabs.newTabSpec("tag2");
-	    
 	    spec.setContent(R.id.tab2);
-	    //spec.setContent(R.id.tab2_b2);
 	    spec.setIndicator("Analysis");
 	    tabs.addTab(spec);
         
@@ -135,7 +131,12 @@ public class WattsHappening extends Activity {
         	}
         });
         
-        
+        toastButton = (Button) findViewById(R.id.button6);
+        toastButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Toast.makeText(getBaseContext(), "button 6", Toast.LENGTH_SHORT).show();
+			}
+		});
     }
     
 
