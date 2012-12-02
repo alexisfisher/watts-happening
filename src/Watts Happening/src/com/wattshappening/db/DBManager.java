@@ -140,7 +140,8 @@ public class DBManager extends SQLiteOpenHelper {
 		
 		String sqlGetAllBatteryInfo = "SELECT " +
 				BatteryTable.TABLE_BATTERY + "." + BatteryTable.COLUMN_BATTERY_PERCENTAGE + ", " +
-				GeneralInfoTable.TABLE_GENINFO + "." + GeneralInfoTable.COLUMN_GEN_TIME + 
+				GeneralInfoTable.TABLE_GENINFO + "." + GeneralInfoTable.COLUMN_GEN_TIME + ", " +
+				GeneralInfoTable.TABLE_GENINFO + "." + GeneralInfoTable.COLUMN_IS_CHARGING +
 				" FROM " + 
 				BatteryTable.TABLE_BATTERY +
 				" JOIN " +
@@ -156,15 +157,16 @@ public class DBManager extends SQLiteOpenHelper {
 			do{
 			results.add(new BatteryTime(
 					cursor.getDouble(cursor.getColumnIndex(BatteryTable.COLUMN_BATTERY_PERCENTAGE)),
-					cursor.getLong(cursor.getColumnIndex(GeneralInfoTable.COLUMN_GEN_TIME))
+					cursor.getLong(cursor.getColumnIndex(GeneralInfoTable.COLUMN_GEN_TIME)),
+					cursor.getInt(cursor.getColumnIndex(GeneralInfoTable.COLUMN_IS_CHARGING))
 					));
 			}while(cursor.moveToNext());
 		}
 		
-		for(int i = 0; i < results.size(); i++){
+/*		for(int i = 0; i < results.size(); i++){
 			Log.i("DBManager", results.get(i).toString());
 		}
-		
+	*/	
 		return results;
 	}
 	

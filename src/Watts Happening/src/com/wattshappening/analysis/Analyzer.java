@@ -76,7 +76,8 @@ public class Analyzer{
 			}
 
 		}
-		TimeLeft.getTimeLeft(con);
+		double time = TimeLeft.getTimeLeft(con);
+		Log.i("TimeLeft" , "Minutes: " + time);
 	}
 		
 }
