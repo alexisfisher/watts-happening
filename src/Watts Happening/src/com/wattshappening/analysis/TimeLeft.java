@@ -4,6 +4,7 @@ import java.util.Vector;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.wattshappening.db.BatteryTime;
 import com.wattshappening.db.DBManager;
@@ -51,7 +52,7 @@ public class TimeLeft {
 			}
 		}
 		
-		Log.i("TimeLeft", "StartIndex: " + startIndex);
+		//Log.i("TimeLeft", "StartIndex: " + startIndex);
 		
 		double longTermTime = results.get(results.size() - 1).getTimestamp() - 
 				results.get(startIndex).getTimestamp();
@@ -93,9 +94,15 @@ public class TimeLeft {
 		Log.i("TimeLeft", "shortTermUsage / shortTermTime = " + shortTermUsage + " / " + shortTermTime + " = " + shortTermUsage / shortTermTime);
 		
 		// battery percentage / percentPerMillisecond		
+		// If percentPerMillisecond is zero, return infinity, this is fine since phone is idle
 		double millisecLeft = results.get(results.size() - 1).getPercentage() / percentPerMillisecond;
 		
 		Log.i("TimeLeft" , "Milliseconds Left: " + millisecLeft);
+		Toast.makeText(context, "Longterm Usage: " + longTermUsage, Toast.LENGTH_LONG).show();
+		Toast.makeText(context, "Longterm Time: " + longTermTime, Toast.LENGTH_LONG).show();
+		Toast.makeText(context, "Shortterm Usage: " + shortTermUsage, Toast.LENGTH_LONG).show();
+		Toast.makeText(context, "Shortterm Time: " + shortTermTime, Toast.LENGTH_LONG).show();
+
 		// flip to minutes and return
 		return millisecLeft / msInMin;
 	}
