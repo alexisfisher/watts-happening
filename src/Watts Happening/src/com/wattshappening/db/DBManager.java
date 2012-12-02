@@ -26,6 +26,7 @@ public class DBManager extends SQLiteOpenHelper {
 		tables.add(new NetworkTable(context));
 		tables.add(new GeneralInfoTable(context));
 		tables.add(new AggregateAppInfoTable(context));
+		tables.add(new TimeLeftTable(context));
 	}
 	
 	public static DBManager getInstance(Context context){
