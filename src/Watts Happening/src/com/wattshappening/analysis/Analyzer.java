@@ -14,6 +14,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 //import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.wattshappening.analysis.AppAnalyzer;
 import com.wattshappening.db.AppDetailedInfo;
@@ -120,6 +121,8 @@ public class Analyzer{
 
 		}
 		double time = TimeLeft.getTimeLeft(con);
+		
+		Toast.makeText(con, "Minutes left: " + time, Toast.LENGTH_SHORT).show();
 		Log.i("TimeLeft" , "Minutes: " + time);
 	}
 		
