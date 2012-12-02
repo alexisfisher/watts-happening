@@ -14,8 +14,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TabHost;
 import android.widget.Toast;
 
+
+import com.wattshappening.R;
 import com.wattshappening.analysis.Analyzer;
 import com.wattshappening.db.DBManager;
 import com.wattshappening.db.DBTable;
@@ -41,7 +44,24 @@ public class WattsHappening extends Activity {
         setContentView(R.layout.activity_watts_happening);
         
         final Intent monitorIntent = new Intent(this,MonitorService.class);
-
+        
+        //stupid tab stuff now
+        TabHost tabs=(TabHost)findViewById(R.id.tabhost);
+	    tabs.setup();
+	    
+	    TabHost.TabSpec spec=tabs.newTabSpec("tag1");
+	    
+	    spec.setContent(R.id.tab1);
+	    spec.setIndicator("Actions");
+	    tabs.addTab(spec);
+	    
+	    spec=tabs.newTabSpec("tag2");
+	    
+	    spec.setContent(R.id.tab2);
+	    //spec.setContent(R.id.tab2_b2);
+	    spec.setIndicator("Analysis");
+	    tabs.addTab(spec);
+        
         startButton = (Button) findViewById(R.id.button1);
         startButton.setOnClickListener(new View.OnClickListener(){
         	public void onClick(View v){
