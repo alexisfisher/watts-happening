@@ -35,10 +35,10 @@ public class Analyzer{
 	 * When called, should cycle through all apps in the currently running list
 	 */
 	public void runAnalysis(Context con){
-		ActivityManager am = (ActivityManager)con.getSystemService(Context.ACTIVITY_SERVICE);
-		PackageManager pm = con.getPackageManager();
-		List<ActivityManager.RunningAppProcessInfo> procs = am.getRunningAppProcesses();
 		DBManager db =  DBManager.getInstance(con);
+		
+		String uidList[] = new String[0];
+		uidList = db.getFreshUIDList().toArray(uidList);
 		
 		if (aggTable == null)
 			aggTable = new AggregateAppInfoTable(con);
@@ -46,15 +46,13 @@ public class Analyzer{
 			genInfoTable = new GeneralInfoTable(con);
 		
 		
-		if(procs != null){
+		if(uidList.length>0){
 			
 			//for every running app
-			for(ActivityManager.RunningAppProcessInfo proc : procs){
+			for(String uidStr : uidList){
 				
 				//get the apps info
-				ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo)(proc);
-				String name = info.processName;
-				int uid = info.uid;
+				int uid = Integer.parseInt(uidStr);
 				
 
 				double cpuUsage = 0.0;
@@ -108,7 +106,7 @@ public class Analyzer{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				Log.i("LocalService", "App "+ name + " has usage value " +cpuUsage/numUpdates);
+				//Log.i("LocalService", "App "+ name + " has usage value " +cpuUsage/numUpdates);
 			}
 			
 			
