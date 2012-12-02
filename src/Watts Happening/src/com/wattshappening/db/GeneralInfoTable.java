@@ -139,7 +139,7 @@ public class GeneralInfoTable extends DBTable {
 		
 		ContentValues args = new ContentValues();
 		args.put(GeneralInfoTable.COLUMN_HAS_BEEN_ANALYZED, "1");
-		db.update(GeneralInfoTable.CREATE_GEN_TABLE, args, null, null);
+		db.update(GeneralInfoTable.TABLE_GENINFO, args, null, null);
 	}
 
 }
