@@ -5,14 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
-//import android.app.Service;
 import android.app.ActivityManager;
-//import android.app.Service;
 import android.content.Context;
-//import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
-//import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
