@@ -26,6 +26,7 @@ public class DBManager extends SQLiteOpenHelper {
 		tables.add(new NetworkTable(context));
 		tables.add(new GeneralInfoTable(context));
 		tables.add(new AggregateAppInfoTable(context));
+		tables.add(new TimeLeftTable(context));
 	}
 	
 	public static DBManager getInstance(Context context){
@@ -51,6 +52,38 @@ public class DBManager extends SQLiteOpenHelper {
 		flushTables(db, DBTable.FLUSH_ALL);
 		
 	}	
+	
+	/**
+	 * This function is going to fetch the list of UIDs from the database of applications
+	 * that have new data available to analyze
+	 * @return A vector of strings containing distinct UIDs left to be analyzed
+	 */
+	public Vector<String> getFreshUIDList()
+	{
+		Vector<String> results = new Vector<String>();
+		
+		String sqlQuery = "SELECT DISTINCT " + 
+				AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_ID + 
+				" FROM " + AppInfoTable.TABLE_APPINFO + 
+				" LEFT JOIN " + BatteryTable.TABLE_BATTERY + 
+				" ON " + AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_TIMESLICE + "=" + BatteryTable.TABLE_BATTERY + "." + BatteryTable.COLUMN_TIMESLICE_ID +
+				" WHERE " + 
+				AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_TIMESLICE + " IN " + 
+														" (SELECT " + 
+																GeneralInfoTable.COLUMN_TIMESLICE_ID + 
+														" FROM " + GeneralInfoTable.TABLE_GENINFO + 
+														" WHERE " + GeneralInfoTable.COLUMN_HAS_BEEN_ANALYZED + "=0);";
+
+		Cursor cursor = instance.getReadableDatabase().rawQuery(sqlQuery, null);
+		
+		if(cursor.moveToFirst()){
+			do {
+				results.add(cursor.getString(cursor.getColumnIndex(AppInfoTable.COLUMN_APP_ID)));
+			}while(cursor.moveToNext());
+		}
+		return results;
+		
+	}
 	
 	/**
 	 * 

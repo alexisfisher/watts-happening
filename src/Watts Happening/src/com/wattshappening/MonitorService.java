@@ -8,19 +8,21 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Vector;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
-import android.os.Handler;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.util.Log;
 
-import com.wattshappening.analysis.Analyzer;
 import com.wattshappening.db.GeneralInfoTable;
 import com.wattshappening.db.GeneralTimesliceInfo;
 import com.wattshappening.logevents.*;
@@ -35,17 +37,24 @@ import com.wattshappening.logevents.*;
  */
 public class MonitorService extends Service {
 
-    Vector<LogProcess> listOfLogs = new Vector<LogProcess>();
 
     private final long logTimeout = 5000; //1 minute
-    private Handler h = new Handler();
-    private Runnable runMonitor = null;
-    private GeneralInfoTable genInfoTable = null;
+    private AlarmManager am = null;
+    
+    //may God have mercy on my soul for making this static so I can access it in the Alarm class
+    public static Vector<LogProcess> listOfLogs = new Vector<LogProcess>();
     
 	/**
 	 * 
 	 */
 	public MonitorService() {
+
+		//add any needed log processes to the listOfLogs Vector here
+		listOfLogs.add((LogProcess)(new HardwareStatusLogger(this)));
+		listOfLogs.add((LogProcess)(new BatteryStatusLogger(this)));
+		listOfLogs.add((LogProcess)(new GPSLocationLogger(this)));
+		listOfLogs.add((LogProcess)(new NetworkStatusLogger(this)));
+		listOfLogs.add((LogProcess)(new AppLogger(this)));
 	}
 	
 	/**
@@ -55,21 +64,10 @@ public class MonitorService extends Service {
     public void onCreate() {
 		super.onCreate();
 		
-		//add any needed log processes to the listOfLogs Vector here
-		listOfLogs.add((LogProcess)(new HardwareStatusLogger(this)));
-		listOfLogs.add((LogProcess)(new BatteryStatusLogger(this)));
-		listOfLogs.add((LogProcess)(new GPSLocationLogger(this)));
-		listOfLogs.add((LogProcess)(new NetworkStatusLogger(this)));
-		listOfLogs.add((LogProcess)(new AppLogger(this)));
 		
-		genInfoTable = new GeneralInfoTable(this);
 		
-		runMonitor = new Runnable(){
-			public void run() {
-				logInformation();
-				h.postDelayed(runMonitor, logTimeout);
-			}
-		};
+		am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+		
     }
 
 	/**
@@ -83,7 +81,11 @@ public class MonitorService extends Service {
         for (int i = 0; i<listOfLogs.size();++i)
         	listOfLogs.get(i).startLoggingEvents();
         
-		h.postDelayed(runMonitor, logTimeout);
+		//start the timer
+        Intent i = new Intent(this, Alarm.class);
+        PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), logTimeout, pi); // Millisec * Second * Minute
+        
         
         return START_STICKY;
     }
@@ -97,20 +99,69 @@ public class MonitorService extends Service {
 
     	for (int i = 0; i<listOfLogs.size();++i)
         	listOfLogs.get(i).stopLoggingEvents();
-    	
-    	h.removeCallbacks(runMonitor);
+
+    	//stop the timer
+    	Intent intent = new Intent(this, Alarm.class);
+        PendingIntent sender = PendingIntent.getBroadcast(this, 0, intent, 0);
+        am.cancel(sender);
     	
     	super.onDestroy();
 
     }
     
-    public void logInformation()
+    
+	/* (non-Javadoc)
+	 * @see android.app.Service#onBind(android.content.Intent)
+	 */
+	@Override
+	public IBinder onBind(Intent arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+    
+}
+
+class Alarm extends BroadcastReceiver
+{
+
+    private GeneralInfoTable genInfoTable = null;
+    
+    boolean isInitialized = false;
+    
+	public Alarm()
+	{
+		super();
+	}
+	
+    
+	@Override
+	public void onReceive(Context context, Intent intent) {
+		if (isInitialized == false)
+		{
+			genInfoTable = new GeneralInfoTable(context);
+			isInitialized = true;
+		}
+		
+		PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
+        wl.acquire();
+
+        // Put here YOUR code.
+        logInformation(context);
+
+        wl.release();
+		
+	}
+	
+	public void logInformation(Context context)
     {
+		
     	int timesliceID = genInfoTable.getNextTimesliceID();
     	long timestamp = Calendar.getInstance().getTimeInMillis();
     	
     	//determine if the device is charging
-    	Intent intent = registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+    	Intent intent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
         int plugged = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1);
         int isCharging = (plugged== BatteryManager.BATTERY_PLUGGED_AC || 
         				plugged == BatteryManager.BATTERY_PLUGGED_USB)?1:0;
@@ -156,22 +207,8 @@ public class MonitorService extends Service {
 			e.printStackTrace();
 		}
     	
-    	for (int i = 0; i<listOfLogs.size(); ++i)
-    		listOfLogs.get(i).logInformation(timesliceID);
+    	for (int i = 0; i<MonitorService.listOfLogs.size(); ++i)
+    		MonitorService.listOfLogs.get(i).logInformation(timesliceID);
     }
-
-//    public void analyzeInformation(){
-//    	Analyzer a = new Analyzer(this);
-//		a.runAnalysis();
-//    }
-	/* (non-Javadoc)
-	 * @see android.app.Service#onBind(android.content.Intent)
-	 */
-	@Override
-	public IBinder onBind(Intent arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
-    
 }

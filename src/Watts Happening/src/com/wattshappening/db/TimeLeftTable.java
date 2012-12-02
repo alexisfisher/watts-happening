@@ -10,7 +10,7 @@ import android.util.Log;
 public class TimeLeftTable extends DBTable{
 
 	public static final String TABLE_TIMELEFT = "timeleft";
-	public static final String COLUMN_TL_TIMESLICE = "timeslice_id";
+	public static final String COLUMN_TL_TIMESLICE = "timeslice";
 	public static final String COLUMN_TL_SHORT = "short";
 	public static final String COLUMN_TL_LONG = "long";
 	public static final String COLUMN_TL_CPU = "cpu";
@@ -20,7 +20,7 @@ public class TimeLeftTable extends DBTable{
 	public static final String CREATE_TL_TABLE = "create table " + 
 			TABLE_TIMELEFT + "(" +
 			COLUMN_ID + " integer primary key autoincrement, " + 
-			COLUMN_TL_TIMESLICE + " integer not null, " +
+			COLUMN_TL_TIMESLICE + " real not null, " +
 			COLUMN_TL_SHORT + " real, " +
 			COLUMN_TL_LONG + " real, " +
 			COLUMN_TL_CPU + " real); ";
@@ -34,13 +34,13 @@ public class TimeLeftTable extends DBTable{
 			throw new Exception("Wrong type of entry, should be of type AppInfo");
 		TL timeleft = (TL)dbE;
 		
-		values.put(COLUMN_TL_TIMESLICE, timeleft.getTimesliceID());
+		values.put(COLUMN_TL_TIMESLICE, timeleft.getTimeslice());
 		values.put(COLUMN_TL_SHORT, Double.toString(timeleft.getShortTermRemaining()));
 		values.put(COLUMN_TL_LONG, Double.toString(timeleft.getLongTermRemaining()));
 		values.put(COLUMN_TL_CPU, Double.toString(timeleft.getPercentage()));
 		
 		Log.i("TimeLeftTable", 
-				"Timeslice: " + timeleft.getTimesliceID() + 
+				"Timeslice: " + timeleft.getTimeslice() + 
 				" Short: " + timeleft.getShortTermRemaining() +
 				" Long: " + timeleft.getLongTermRemaining() + 
 				" Percentage: " + timeleft.getPercentage());

@@ -2,20 +2,20 @@ package com.wattshappening.db;
 
 public class TL extends DBEntry{
 	
-	int timeslice_id;
+	long timeslice;
 	double shortTermRemaining;
 	double longTermRemaining;
 	double percentage;
 	
-	public TL(int timeslice_id, double shortTermRemaining, double longTermRemaining, double percentage){
-		this.timeslice_id = timeslice_id;
+	public TL(long timeslice, double shortTermRemaining, double longTermRemaining, double percentage){
+		this.timeslice = timeslice;
 		this.shortTermRemaining = shortTermRemaining;
 		this.longTermRemaining = longTermRemaining;
 		this.percentage = percentage;
 	}
 
-	public int getTimesliceID(){
-		return timeslice_id;
+	public long getTimeslice(){
+		return timeslice;
 	}
 	
 	public double getShortTermRemaining(){
