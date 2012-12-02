@@ -72,8 +72,9 @@ public class DBManager extends SQLiteOpenHelper {
 				" LEFT JOIN " + BatteryTable.TABLE_BATTERY + 
 				" ON " + AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_TIMESLICE + "=" + BatteryTable.TABLE_BATTERY + "." + BatteryTable.COLUMN_TIMESLICE_ID +
 				" WHERE " + 
-				AppInfoTable.COLUMN_APP_TIMESLICE + " IN (SELECT " + 
-															GeneralInfoTable.COLUMN_TIMESLICE_ID + 
+				AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_TIMESLICE + " IN " + 
+														" (SELECT " + 
+																GeneralInfoTable.COLUMN_TIMESLICE_ID + 
 														" FROM " + GeneralInfoTable.TABLE_GENINFO + 
 														" WHERE " + GeneralInfoTable.COLUMN_HAS_BEEN_ANALYZED + "=0)" +
 				" and " + AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_ID + "=" + uid + ";";
