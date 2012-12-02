@@ -36,6 +36,8 @@ public class TimeLeft {
 		}
 		
 		// Only look at data from the last time the device was plugged in
+		
+		
 		int startIndex = 0;
 		for(int i = results.size() - 1; i >= 0; i--){
 			if(results.get(i).getIsCharging() == 1){
