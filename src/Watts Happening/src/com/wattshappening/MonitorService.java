@@ -38,23 +38,20 @@ import com.wattshappening.logevents.*;
 public class MonitorService extends Service {
 
 
-    private final long logTimeout = 5000; //1 minute
-    private AlarmManager am = null;
+    private final long logTimeout = 5 * 60 * 1000; //minutes * seconds * milli
+
+    private Vector<LogProcess> listOfLogs = new Vector<LogProcess>();
     
-    //may God have mercy on my soul for making this static so I can access it in the Alarm class
-    public static Vector<LogProcess> listOfLogs = new Vector<LogProcess>();
+    private BroadcastReceiver alarm = null;
+    public static final String ACTION_NAME = "com.WattsHappening.ALARMACTION";
+    private IntentFilter myFilter = new IntentFilter(ACTION_NAME);
+    
+    private GeneralInfoTable genInfoTable = null;
     
 	/**
 	 * 
 	 */
 	public MonitorService() {
-
-		//add any needed log processes to the listOfLogs Vector here
-		listOfLogs.add((LogProcess)(new HardwareStatusLogger(this)));
-		listOfLogs.add((LogProcess)(new BatteryStatusLogger(this)));
-		listOfLogs.add((LogProcess)(new GPSLocationLogger(this)));
-		listOfLogs.add((LogProcess)(new NetworkStatusLogger(this)));
-		listOfLogs.add((LogProcess)(new AppLogger(this)));
 	}
 	
 	/**
@@ -63,10 +60,33 @@ public class MonitorService extends Service {
 	@Override
     public void onCreate() {
 		super.onCreate();
+
+		listOfLogs.add((LogProcess)(new HardwareStatusLogger(this)));
+		listOfLogs.add((LogProcess)(new BatteryStatusLogger(this)));
+		listOfLogs.add((LogProcess)(new GPSLocationLogger(this)));
+		listOfLogs.add((LogProcess)(new NetworkStatusLogger(this)));
+		listOfLogs.add((LogProcess)(new AppLogger(this)));
 		
+		genInfoTable = new GeneralInfoTable(this);
 		
-		
-		am = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+		alarm = new BroadcastReceiver()
+		{
+
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				
+				
+				PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+		        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
+		        wl.acquire();
+
+		        // Put here YOUR code.
+		        logInformation(context);
+
+		        wl.release();
+			}
+			
+		};
 		
     }
 
@@ -82,9 +102,14 @@ public class MonitorService extends Service {
         	listOfLogs.get(i).startLoggingEvents();
         
 		//start the timer
-        Intent i = new Intent(this, Alarm.class);
-        PendingIntent pi = PendingIntent.getBroadcast(this, 0, i, 0);
-        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), logTimeout, pi); // Millisec * Second * Minute
+        registerReceiver(alarm,myFilter);
+        Intent intent1 = new Intent(ACTION_NAME);        
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent1, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        //alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (10 * 1000), pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()+logTimeout, logTimeout, pendingIntent); // Millisec * Second * Minute
         
         
         return START_STICKY;
@@ -101,60 +126,17 @@ public class MonitorService extends Service {
         	listOfLogs.get(i).stopLoggingEvents();
 
     	//stop the timer
+    	unregisterReceiver(alarm);
+    	/*
     	Intent intent = new Intent(this, Alarm.class);
         PendingIntent sender = PendingIntent.getBroadcast(this, 0, intent, 0);
-        am.cancel(sender);
+        am.cancel(sender);*/
     	
     	super.onDestroy();
 
     }
     
-    
-	/* (non-Javadoc)
-	 * @see android.app.Service#onBind(android.content.Intent)
-	 */
-	@Override
-	public IBinder onBind(Intent arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-    
-}
-
-class Alarm extends BroadcastReceiver
-{
-
-    private GeneralInfoTable genInfoTable = null;
-    
-    boolean isInitialized = false;
-    
-	public Alarm()
-	{
-		super();
-	}
-	
-    
-	@Override
-	public void onReceive(Context context, Intent intent) {
-		if (isInitialized == false)
-		{
-			genInfoTable = new GeneralInfoTable(context);
-			isInitialized = true;
-		}
-		
-		PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
-        wl.acquire();
-
-        // Put here YOUR code.
-        logInformation(context);
-
-        wl.release();
-		
-	}
-	
-	public void logInformation(Context context)
+    public void logInformation(Context context)
     {
 		
     	int timesliceID = genInfoTable.getNextTimesliceID();
@@ -207,8 +189,19 @@ class Alarm extends BroadcastReceiver
 			e.printStackTrace();
 		}
     	
-    	for (int i = 0; i<MonitorService.listOfLogs.size(); ++i)
-    		MonitorService.listOfLogs.get(i).logInformation(timesliceID);
+    	for (int i = 0; i<listOfLogs.size(); ++i)
+    		listOfLogs.get(i).logInformation(timesliceID);
     }
+    
+	/* (non-Javadoc)
+	 * @see android.app.Service#onBind(android.content.Intent)
+	 */
+	@Override
+	public IBinder onBind(Intent arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
+    
 }
+
