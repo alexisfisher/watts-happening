@@ -56,8 +56,8 @@ public class TimeLeft {
 		double longTermTime = results.get(results.size() - 1).getTimestamp() - 
 				results.get(startIndex).getTimestamp();
 		
-		double longTermUsage = results.get(results.size() - 1).getPercentage() - 
-				results.get(startIndex).getPercentage();
+		double longTermUsage = results.get(startIndex).getPercentage() - 
+				results.get(results.size() - 1).getPercentage();
 		
 		startIndex = -1;
 		for(int i = results.size() - 2; i >= 0; i--){
@@ -83,8 +83,8 @@ public class TimeLeft {
 		double shortTermTime = results.get(results.size() - 1).getTimestamp() - 
 				results.get(startIndex).getTimestamp();
 		
-		double shortTermUsage = results.get(results.size() - 1).getPercentage() - 
-				results.get(startIndex).getPercentage();
+		double shortTermUsage = results.get(startIndex).getPercentage() - 
+				results.get(results.size() - 1).getPercentage();
 		
 		double percentPerMillisecond = (weightLong * (longTermUsage / longTermTime)) + 
 				(weightShort * (shortTermUsage / shortTermTime));
