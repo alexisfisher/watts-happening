@@ -5,17 +5,21 @@ public class AggregateAppInfo extends DBEntry {
 	//appID, historic cpu use, historic network use, hardware use, number of updates
 	
 	private int appUID;
-	private long histCPU;
-	private long histNet;
-	private long histHard;
+	private double histCPU;
+	private double histNet;
+	private double histHard;
 	private int numUpdates;
 	
-	public AggregateAppInfo(int appUID, long histCPU, long histNet, long histHard, int numUpdates) {
+	public AggregateAppInfo(int appUID, double d, double e, long histHard, int numUpdates) {
 		this.appUID = appUID;
-		this.histCPU = histCPU;
-		this.histNet = histNet;
+		this.histCPU = d;
+		this.histNet = e;
 		this.histHard = histHard;
 		this.numUpdates = numUpdates;
+	}
+
+	public AggregateAppInfo() {
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -28,21 +32,21 @@ public class AggregateAppInfo extends DBEntry {
 	/**
 	 * @return the histCPU
 	 */
-	public long getHistoricCPU() {
+	public double getHistoricCPU() {
 		return histCPU;
 	}
 
 	/**
 	 * @return the histNet
 	 */
-	public long getHistoricNetwork() {
+	public double getHistoricNetwork() {
 		return histNet;
 	}
 
 	/**
 	 * @return the histHard
 	 */
-	public long getHistoricHardware() {
+	public double getHistoricHardware() {
 		return histHard;
 	}
 

@@ -30,7 +30,7 @@ public class HardwareTable extends DBTable{
 			"CHECK ("+ COLUMN_HARDWARE_ENABLED + "= 0 OR " + COLUMN_HARDWARE_ENABLED + " = 1));";
 	
 	public HardwareTable(Context context) {
-		super(context);
+		super(context, DBTable.FLUSH_ALL | DBTable.FLUSH_ONLY_NONPERSISTANT);
 	}
 
 	@Override

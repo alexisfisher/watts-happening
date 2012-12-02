@@ -10,6 +10,16 @@ public class GeneralTimesliceInfo extends DBEntry {
 	private int ticksIdle;
 	private int ticksTotal;
 
+	/**
+	 * 
+	 * @param timesliceID - The unique id of the timeslice
+	 * @param timestamp - The time the timeslice occured at
+	 * @param isCharging - If the phone was charging when this timeslice occured
+	 * @param ticksUser - The number of ticks the CPU spent on User mode code up to this point
+	 * @param ticksSystem - The number of ticks the CPU spent on System mode code up to this point
+	 * @param ticksIdle - The number of ticks the CPU spent Idle up to this point
+	 * @param ticksTotal - The total number of cpu ticks that have occurred up to this point
+	 */
 	public GeneralTimesliceInfo(int timesliceID, long timestamp, int isCharging, int ticksUser, int ticksSystem, int ticksIdle, int ticksTotal) {
 		this.timesliceID = timesliceID;
 		this.timestamp = timestamp;

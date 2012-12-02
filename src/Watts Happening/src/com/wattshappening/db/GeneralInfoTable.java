@@ -1,6 +1,9 @@
 package com.wattshappening.db;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -17,6 +20,7 @@ public class GeneralInfoTable extends DBTable {
 	public static final String COLUMN_TICKS_SYSTEM = "ticks_system";
 	public static final String COLUMN_TICKS_IDLE = "ticks_idle";
 	public static final String COLUMN_TICKS_TOTAL = "ticks_total";
+	public static final String COLUMN_HAS_BEEN_ANALYZED = "has_been_analyzed";
 	public static final String COLUMN_ID = "id";
 	
 	public static final String CREATE_GEN_TABLE = "create table " + 
@@ -28,12 +32,13 @@ public class GeneralInfoTable extends DBTable {
 			COLUMN_TICKS_USER + " integer, " +
 			COLUMN_TICKS_SYSTEM + " integer, " +
 			COLUMN_TICKS_IDLE + " integer, " +
-			COLUMN_TICKS_TOTAL + " integer " +
+			COLUMN_TICKS_TOTAL + " integer, " +
+			COLUMN_HAS_BEEN_ANALYZED + " integer default 0" +
 			"CONSTRAINT chk_charging " +
 			"CHECK ("+ COLUMN_IS_CHARGING + "= 0 OR " + COLUMN_IS_CHARGING + " = 1));";
 
 	public GeneralInfoTable(Context context) {
-		super(context);
+		super(context, DBTable.FLUSH_ALL | DBTable.FLUSH_ONLY_NONPERSISTANT);
 	}
 
 	@Override
@@ -69,6 +74,46 @@ public class GeneralInfoTable extends DBTable {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	/**
+	 * Will return the list of timeslices that have not yet been analyzed
+	 * @author Nick
+	 * @return A HashMap containing the list of GeneralTimesliceInfo objects that represent that
+	 * 		the timeslices that have not yet been analyzed. The key field wil contain the timesliceID.
+	 */
+	public HashMap<Integer,GeneralTimesliceInfo> fetchAllNewEntries(){
+		SQLiteDatabase db = DBManager.getInstance(context).getWritableDatabase();
+		HashMap<Integer,GeneralTimesliceInfo> timesliceInfo = new HashMap<Integer,GeneralTimesliceInfo>();
+		String selectQuery = 	"SELECT " + 
+									COLUMN_TIMESLICE_ID + "	, " +
+									COLUMN_GEN_TIME + "		, " +
+									COLUMN_IS_CHARGING + "	, " +
+									COLUMN_TICKS_USER + "	, " +
+									COLUMN_TICKS_SYSTEM + "	, " +
+									COLUMN_TICKS_IDLE + "	, " +
+									COLUMN_TICKS_TOTAL +
+								" FROM " + TABLE_GENINFO + 
+								" WHERE " + COLUMN_HAS_BEEN_ANALYZED +"=0;";
+		
+		Cursor cursor = db.rawQuery(selectQuery, null);
+		
+		if(cursor.moveToFirst()){ //if there were entries returned
+			do{
+				
+				//GeneralTimesliceInfo(int timesliceID, long timestamp, int isCharging, int ticksUser, int ticksSystem, int ticksIdle, int ticksTotal)
+				GeneralTimesliceInfo ts = new GeneralTimesliceInfo(	cursor.getInt(cursor.getColumnIndex(COLUMN_TIMESLICE_ID)), 
+																	cursor.getLong(cursor.getColumnIndex(COLUMN_GEN_TIME)), 
+																	cursor.getInt(cursor.getColumnIndex(COLUMN_IS_CHARGING)), 
+																	cursor.getInt(cursor.getColumnIndex(COLUMN_TICKS_USER)), 
+																	cursor.getInt(cursor.getColumnIndex(COLUMN_TICKS_SYSTEM)), 
+																	cursor.getInt(cursor.getColumnIndex(COLUMN_TICKS_IDLE)), 
+																	cursor.getInt(cursor.getColumnIndex(COLUMN_TICKS_TOTAL)));
+				timesliceInfo.put(Integer.valueOf(ts.getTimesliceID()),ts);
+			}while(cursor.moveToNext()); //keep going while there is still more data
+		}
+		
+		return timesliceInfo;
+	}
 
 	@Override
 	public String getTableName() {
@@ -87,6 +132,14 @@ public class GeneralInfoTable extends DBTable {
 		else
 			return cursor.getInt(0) + 1;
 		
+	}
+	
+	public void markAllEntriesRead(){
+		SQLiteDatabase db = DBManager.getInstance(context).getReadableDatabase();
+		
+		ContentValues args = new ContentValues();
+		args.put(GeneralInfoTable.COLUMN_HAS_BEEN_ANALYZED, "1");
+		db.update(GeneralInfoTable.CREATE_GEN_TABLE, args, null, null);
 	}
 
 }

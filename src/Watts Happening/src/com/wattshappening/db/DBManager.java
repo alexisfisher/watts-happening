@@ -40,8 +40,7 @@ public class DBManager extends SQLiteOpenHelper {
 	
 	@Override 
 	public void onCreate(SQLiteDatabase database){
-		for (int i = 0; i<tables.size(); ++i)
-			database.execSQL(tables.get(i).getCreationQuerry());
+		createDatabaseTables(database,DBTable.FLUSH_ALL);
 	}
 		
 	@Override
@@ -49,49 +48,17 @@ public class DBManager extends SQLiteOpenHelper {
 		System.out.println("Upgrading database from version " + oldVersion +
 				" to " + newVersion + ", ALL CURRENT DATA WILL BE LOST!");
 		
-		for (int i = 0; i<tables.size(); ++i)
-			db.execSQL("DROP TABLE IF EXISTS " + tables.get(i).getTableName() + ";");
+		flushTables(db, DBTable.FLUSH_ALL);
 		
-		onCreate(db);
 	}	
-	
-	public void dropTables(SQLiteDatabase db){
-		//don't want to drop if table name is "agg_app_info"
-		for (int i = 0; i< tables.size(); ++i){
-			if (tables.get(i).getTableName() == "agg_app_info"){ //check if we're flushing all
-				continue;
-			}
-			db.execSQL("DROP TABLE IF EXISTS " + tables.get(i).getTableName() + ";");
-		}
-	}
 	
 	/**
 	 * 
-	 * @param uid: uid of the app needed
-	 * @param slices: how many time slices of information needed
+	 * @param uid - the UID of the app needed
 	 * @return Vector containing AppInfoBat objects for the uid specified. On error empty vector is returned.
 	 */
-	public Vector<AppInfoBat> getAppInfo(int uid, int slices){
-		Vector<AppInfoBat> results = new Vector<AppInfoBat>();
-		String getTimestampID = "SELECT MAX(" + AppInfoTable.COLUMN_APP_TIMESLICE + ") FROM "
-				+ AppInfoTable.TABLE_APPINFO +
-				" where " + AppInfoTable.COLUMN_APP_ID +"=" + uid + ";";
-		int maxTimeslice = -1;
-		Cursor cursor = instance.getReadableDatabase().rawQuery(getTimestampID, null);
-		
-		if(cursor.moveToFirst()){
-			maxTimeslice = cursor.getInt(0);
-		}
-		else {
-			Log.e("DBManager", "COULD NOT GET MAX TIMESTAMP ID");
-			return null;
-		}
-		
-		int startTimeslice = maxTimeslice - slices;
-		// If there isn't enough data for the request, then return all we have
-		if(startTimeslice < 1){
-			startTimeslice = 0;
-		}
+	public Vector<AppDetailedInfo> getAppInfo(int uid){
+		Vector<AppDetailedInfo> results = new Vector<AppDetailedInfo>();
 		
 		String sqlQuery = "SELECT DISTINCT " + 
 				AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_TIMESLICE + ", " +
@@ -101,17 +68,21 @@ public class DBManager extends SQLiteOpenHelper {
 				AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_RX_BYTES + ", " +
 				AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_TX_BYTES + ", " +
 				BatteryTable.TABLE_BATTERY + "." + BatteryTable.COLUMN_BATTERY_PERCENTAGE +
-				" FROM " + AppInfoTable.TABLE_APPINFO + ", " + 
-				BatteryTable.TABLE_BATTERY + " where " + 
-				AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_TIMESLICE + ">" + startTimeslice + 
-				" and " + BatteryTable.TABLE_BATTERY + "." + BatteryTable.COLUMN_TIMESLICE_ID + ">" + startTimeslice +
+				" FROM " + AppInfoTable.TABLE_APPINFO + 
+				" LEFT JOIN " + BatteryTable.TABLE_BATTERY + 
+				" ON " + AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_TIMESLICE + "=" + BatteryTable.TABLE_BATTERY + "." + BatteryTable.COLUMN_TIMESLICE_ID +
+				" WHERE " + 
+				AppInfoTable.COLUMN_APP_TIMESLICE + " IN (SELECT " + 
+															GeneralInfoTable.COLUMN_TIMESLICE_ID + 
+														" FROM " + GeneralInfoTable.TABLE_GENINFO + 
+														" WHERE " + GeneralInfoTable.COLUMN_HAS_BEEN_ANALYZED + "=0)" +
 				" and " + AppInfoTable.TABLE_APPINFO + "." + AppInfoTable.COLUMN_APP_ID + "=" + uid + ";";
 
-		cursor = instance.getReadableDatabase().rawQuery(sqlQuery, null);
+		Cursor cursor = instance.getReadableDatabase().rawQuery(sqlQuery, null);
 		
 		if(cursor.moveToFirst()){
 			do {
-				results.add(new AppInfoBat(
+				results.add(new AppDetailedInfo(
 						cursor.getInt(cursor.getColumnIndex(AppInfoTable.COLUMN_APP_TIMESLICE)),
 						cursor.getString(cursor.getColumnIndex(AppInfoTable.COLUMN_APP_NAME)),
 						cursor.getInt(cursor.getColumnIndex(AppInfoTable.COLUMN_APP_ID)),
@@ -170,5 +141,41 @@ public class DBManager extends SQLiteOpenHelper {
 		return results;
 	}
 	
+	/**
+	 * Call this function to flush the data from the tables. You should pass it 
+	 * a flush level and all tables that match that level will be flushed, 
+	 * tables that do not match that flush level will not be flushed. To flush 
+	 * the data this function will drop and recreate the tables that match the
+	 * flush level, which also makes it useful if you just want to recreate the
+	 * tables.
+	 * 
+	 * @author Nick
+	 * @param flushLevel - The level of flush you want to perform (see DBTable 
+	 * 		for the available flush levels)
+	 */
+	public void flushTables(SQLiteDatabase db,int flushLevel)
+	{
+		for (int i = 0; i<tables.size(); ++i)
+			if (tables.get(i).shouldIBeFlushed(flushLevel))
+				db.execSQL("DROP TABLE IF EXISTS " + tables.get(i).getTableName() + ";");
+		
+		createDatabaseTables(db,flushLevel);
+	}
+	
+	/**
+	 * This function will handle creating the tables for a given flush level. It should
+	 * really only be called if you know that the tables don't exist (which would be from
+	 * onCreate() or from flushTables.
+	 * 
+	 * @author Nick
+	 * @param db - The database object to use when performing the queries 
+	 * @param flushLevel
+	 */
+	private void createDatabaseTables(SQLiteDatabase db, int flushLevel)
+	{
+		for (int i = 0; i<tables.size(); ++i)
+			if (tables.get(i).shouldIBeFlushed(flushLevel))
+				db.execSQL(tables.get(i).getCreationQuerry());
+	}
 }
 
