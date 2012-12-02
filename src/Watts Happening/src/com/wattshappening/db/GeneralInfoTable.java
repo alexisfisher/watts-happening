@@ -33,7 +33,7 @@ public class GeneralInfoTable extends DBTable {
 			COLUMN_TICKS_SYSTEM + " integer, " +
 			COLUMN_TICKS_IDLE + " integer, " +
 			COLUMN_TICKS_TOTAL + " integer, " +
-			COLUMN_HAS_BEEN_ANALYZED + " integer default 0" +
+			COLUMN_HAS_BEEN_ANALYZED + " integer default 0 " +
 			"CONSTRAINT chk_charging " +
 			"CHECK ("+ COLUMN_IS_CHARGING + "= 0 OR " + COLUMN_IS_CHARGING + " = 1));";
 

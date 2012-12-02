@@ -37,7 +37,7 @@ public class MonitorService extends Service {
 
     Vector<LogProcess> listOfLogs = new Vector<LogProcess>();
 
-    private final long logTimeout = 60000; //1 minute
+    private final long logTimeout = 5000; //1 minute
     private Handler h = new Handler();
     private Runnable runMonitor = null;
     private GeneralInfoTable genInfoTable = null;
