@@ -26,7 +26,7 @@ public class TimeLeft {
 		double weightShort = .2;
 		
 		int shortTermMinutes = 5; // number of minutes to consider for short term info
-		int msInSec = 60000; // milliseconds in a second
+		int msInMin = 60000; // milliseconds in a minute
 		DBManager db = DBManager.getInstance(context);		
 		Vector<BatteryTime> results = db.getBatteryInformation(); 
 		
@@ -62,7 +62,7 @@ public class TimeLeft {
 		startIndex = -1;
 		for(int i = results.size() - 2; i >= 0; i--){
 			if((results.get(results.size() -1).getTimestamp() - results.get(i).getTimestamp()) > 
-					(shortTermMinutes * msInSec)){
+					(shortTermMinutes * msInMin)){
 				startIndex = i + 1;
 				break;
 			}
@@ -88,12 +88,16 @@ public class TimeLeft {
 		
 		double percentPerMillisecond = (weightLong * (longTermUsage / longTermTime)) + 
 				(weightShort * (shortTermUsage / shortTermTime));
-				
+			
+		Log.i("TimeLeft", "longTermUsage / longTermTime = " + longTermUsage + " / " + longTermTime + " = " + longTermUsage / longTermTime);
+		Log.i("TimeLeft", "shortTermUsage / shortTermTime = " + shortTermUsage + " / " + shortTermTime + " = " + shortTermUsage / shortTermTime);
+		
 		// battery percentage / percentPerMillisecond		
 		double millisecLeft = results.get(results.size() - 1).getPercentage() / percentPerMillisecond;
 		
+		Log.i("TimeLeft" , "Milliseconds Left: " + millisecLeft);
 		// flip to minutes and return
-		return millisecLeft / msInSec;
+		return millisecLeft / msInMin;
 	}
 
 }
