@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TabHost;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -34,6 +35,7 @@ public class WattsHappening extends Activity {
 	Button dbExportButton;
 	Button analysisButton;
 	Button toastButton;
+	TextView tv;
 	/**
 	 * 
 	 */
@@ -130,6 +132,9 @@ public class WattsHappening extends Activity {
         		a.runAnalysis(v.getContext());
         	}
         });
+        
+        tv = (TextView) findViewById(R.id.tv1);
+        tv.setText("Hello");
         
         toastButton = (Button) findViewById(R.id.button6);
         toastButton.setOnClickListener(new View.OnClickListener() {
