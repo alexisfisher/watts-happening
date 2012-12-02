@@ -115,9 +115,9 @@ public class Analyzer{
 			genInfoTable.markAllEntriesRead();
 
 		}
-		double time = TimeLeft.getTimeLeft(con);
 		
-		Toast.makeText(con, "Minutes left: " + time, Toast.LENGTH_SHORT).show();
+		double time = TimeLeft.getTimeLeft(con);		
+		Toast.makeText(con, "Minutes left: " + time, Toast.LENGTH_LONG).show();
 		Log.i("TimeLeft" , "Minutes: " + time);
 	}
 		
