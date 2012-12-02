@@ -12,7 +12,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.wattshappening.analysis.AppAnalyzer;
 import com.wattshappening.db.AppDetailedInfo;
 import com.wattshappening.db.DBManager;
 import com.wattshappening.db.AggregateAppInfoTable;
