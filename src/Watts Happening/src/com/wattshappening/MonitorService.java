@@ -23,6 +23,7 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
 
+import com.wattshappening.analysis.Analyzer;
 import com.wattshappening.db.GeneralInfoTable;
 import com.wattshappening.db.GeneralTimesliceInfo;
 import com.wattshappening.logevents.*;
@@ -39,6 +40,8 @@ public class MonitorService extends Service {
 
 
     private final long logTimeout = 5 * 60 * 1000; //minutes * seconds * milli
+    private final long analyzeTimeout = 30 * 60 * 1000; //minutes * seconds * milli
+    private int counter = 0; 
 
     private Vector<LogProcess> listOfLogs = new Vector<LogProcess>();
     
@@ -82,6 +85,13 @@ public class MonitorService extends Service {
 
 		        // Put here YOUR code.
 		        logInformation(context);
+		        
+		        if (analyzeTimeout < (logTimeout * counter++))
+		        {
+		        	counter = 0;
+		        	Analyzer a = new Analyzer();
+	        		a.runAnalysis(context);
+		        }
 
 		        wl.release();
 			}
