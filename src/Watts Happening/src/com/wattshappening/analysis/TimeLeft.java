@@ -27,11 +27,11 @@ public class TimeLeft {
 			 tlTable = new TimeLeftTable(context);
 		
 		// get long term average usage per minute
-		// get short term average usage per minute (over the last 10 minutes)
 		// weight them 80/20 to get usage/time
 		
-		double weightLong = .8;
-		double weightShort = .2;
+		double weightLong = .7;
+		double weightShort = .3;
+		double percentPerMillisecond;
 		
 		int shortTermMinutes = 5; // number of minutes to consider for short term info
 		int msInMin = 60000; // milliseconds in a minute
@@ -96,8 +96,21 @@ public class TimeLeft {
 		double shortTermUsage = results.get(startIndex).getPercentage() - 
 				results.get(results.size() - 1).getPercentage();
 		
-		double percentPerMillisecond = (weightLong * (longTermUsage / longTermTime)) + 
-				(weightShort * (shortTermUsage / shortTermTime));
+/*		if(shortTermUsage == 0){
+			// Inflate a little bit to compensate for the fact
+			// that we're never using 0 battery. Have to use at least a little.
+			shortTermUsage = .5;
+		}
+*/		
+		if(shortTermUsage != 0){
+			percentPerMillisecond = shortTermUsage / shortTermTime;
+		}
+		else{
+			percentPerMillisecond = longTermUsage / longTermTime;
+		}
+		
+	//	percentPerMillisecond = (weightLong * (longTermUsage / longTermTime)) + 
+		//	(weightShort * (shortTermUsage / shortTermTime));
 			
 		Log.i("TimeLeft", "longTermUsage / longTermTime = " + longTermUsage + " / " + longTermTime + " = " + longTermUsage / longTermTime);
 		Log.i("TimeLeft", "shortTermUsage / shortTermTime = " + shortTermUsage + " / " + shortTermTime + " = " + shortTermUsage / shortTermTime);
