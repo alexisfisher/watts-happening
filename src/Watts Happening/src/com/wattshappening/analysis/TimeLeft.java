@@ -25,6 +25,7 @@ public class TimeLeft {
 		
 		double weightLong = .8;
 		double weightShort = .2;
+		double percentPerMillisecond;
 		
 		int shortTermMinutes = 5; // number of minutes to consider for short term info
 		int msInMin = 60000; // milliseconds in a minute
@@ -87,8 +88,13 @@ public class TimeLeft {
 		double shortTermUsage = results.get(startIndex).getPercentage() - 
 				results.get(results.size() - 1).getPercentage();
 		
-		double percentPerMillisecond = (weightLong * (longTermUsage / longTermTime)) + 
+		if(shortTermUsage != 0){
+			percentPerMillisecond = (weightLong * (longTermUsage / longTermTime)) + 
 				(weightShort * (shortTermUsage / shortTermTime));
+		}
+		else{
+			percentPerMillisecond = longTermUsage / longTermTime;
+		}
 			
 		Log.i("TimeLeft", "longTermUsage / longTermTime = " + longTermUsage + " / " + longTermTime + " = " + longTermUsage / longTermTime);
 		Log.i("TimeLeft", "shortTermUsage / shortTermTime = " + shortTermUsage + " / " + shortTermTime + " = " + shortTermUsage / shortTermTime);
