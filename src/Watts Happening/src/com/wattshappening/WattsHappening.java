@@ -5,8 +5,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import android.os.Bundle;
 import android.os.Environment;
@@ -156,6 +161,7 @@ public class WattsHappening extends Activity {
         List<ActivityManager.RunningAppProcessInfo> procs = am.getRunningAppProcesses();
         HashMap<String, Double> cpuUse = new HashMap<String, Double>();
         HashMap<String, Double> netUse = new HashMap<String, Double>();
+        
         if(procs != null){
         	for(ActivityManager.RunningAppProcessInfo proc : procs){
         		ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo)(proc);
@@ -166,13 +172,20 @@ public class WattsHappening extends Activity {
         		double cpu = aggappinfo.getHistoricCPU();
         		double net = aggappinfo.getHistoricNetwork();
         		cpuUse.put(name, cpu);
-        		cpuOut += name + " : "+cpu+"\n";
+        		//cpuOut += name + " : "+cpu+"\n";  // temporary
         		netUse.put(name, net);
-        		netOut += name + " : " + net + "\n";
+        		//netOut += name + " : " + net + "\n";  // temporary
         	}
         }
         //sort & display
+        Map<String, Double> sortedCpu = sortByValue(cpuUse);
+        Map<String, Double> sortedNet = sortByValue(netUse);
         
+       for (Map.Entry entry: sortedCpu.entrySet())
+    	   cpuOut += entry.getKey() + " : " + entry.getValue() + "\n";
+       for (Map.Entry entry: sortedNet.entrySet())
+    	   netOut += entry.getKey() + " : " + entry.getValue() + "\n";
+       
         tvCPU.setText(cpuOut);
         tvNet.setText(netOut);
         
@@ -184,6 +197,22 @@ public class WattsHappening extends Activity {
 		});
     }
     
+    public static Map<String, Double> sortByValue(Map<String, Double> map) {
+        List<Map.Entry<String, Double>> list = new LinkedList<Map.Entry<String, Double>>(map.entrySet());
+
+        Collections.sort(list, new Comparator<Map.Entry<String, Double>>() {
+
+            public int compare(Map.Entry<String, Double> m1, Map.Entry<String, Double> m2) {
+                return (m2.getValue()).compareTo(m1.getValue());
+            }
+        });
+
+        Map<String, Double> result = new LinkedHashMap<String, Double>();
+        for (Map.Entry<String, Double> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        return result;
+    }
 
 	/**
 	 * 
