@@ -29,8 +29,8 @@ public class TimeLeft {
 		// get long term average usage per minute
 		// weight them 80/20 to get usage/time
 		
-		double weightLong = .8;
-		double weightShort = .2;
+		double weightLong = .7;
+		double weightShort = .3;
 		double percentPerMillisecond;
 		
 		int shortTermMinutes = 5; // number of minutes to consider for short term info
