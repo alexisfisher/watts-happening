@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.os.Bundle;
@@ -27,6 +29,7 @@ import android.widget.Toast;
 import com.wattshappening.R;
 import com.wattshappening.analysis.Analyzer;
 import com.wattshappening.db.AggregateAppInfo;
+import com.wattshappening.db.AggregateAppInfoTable;
 import com.wattshappening.db.DBManager;
 import com.wattshappening.db.DBTable;
 /**
@@ -144,28 +147,30 @@ public class WattsHappening extends Activity {
         tvNet = (TextView) findViewById(R.id.tvnet);
         String cpuOut = "cpu:\n";
         String netOut = "net\ntest";
+        AggregateAppInfoTable aggTable = new AggregateAppInfoTable(getBaseContext());
         
-        //get list of currently running apps
+        //get list of currently running apps   
+        // 
         ActivityManager am = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
         PackageManager pm = getPackageManager();
         List<ActivityManager.RunningAppProcessInfo> procs = am.getRunningAppProcesses();
-
+        HashMap<String, Double> cpuUse = new HashMap<String, Double>();
+        HashMap<String, Double> netUse = new HashMap<String, Double>();
         if(procs != null){
         	for(ActivityManager.RunningAppProcessInfo proc : procs){
         		ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo)(proc);
         		String name = info.processName;
-        		cpuOut += name;
-        		cpuOut += "\n";
-        		try {
-        			CharSequence c = pm.getApplicationLabel(pm.getApplicationInfo(
-        					info.processName, PackageManager.GET_META_DATA));
-        			name = c.toString();
-        		} catch (NameNotFoundException e) {
-        		}
+        		int uid = info.uid;
+        		//get usage by uid
+        		AggregateAppInfo aggappinfo = aggTable.fetchMostRecent(uid);
+        		double cpu = aggappinfo.getHistoricCPU();
+        		double net = aggappinfo.getHistoricNetwork();
+        		cpuUse.put(name, cpu);
+        		cpuOut += name + " : "+cpu+"\n";
+        		netUse.put(name, net);
+        		netOut += name + " : " + net + "\n";
         	}
         }
-        //then get AggregateAppInfo oldInfo = aggTable.fetchMostRecent(uid);
-			//if (oldInfo != null) //if there was a previous entry for this app
         //sort & display
         
         tvCPU.setText(cpuOut);
