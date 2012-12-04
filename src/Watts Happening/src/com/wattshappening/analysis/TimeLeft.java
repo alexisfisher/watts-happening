@@ -96,14 +96,21 @@ public class TimeLeft {
 		double shortTermUsage = results.get(startIndex).getPercentage() - 
 				results.get(results.size() - 1).getPercentage();
 		
-		if(shortTermUsage == 0){
+/*		if(shortTermUsage == 0){
 			// Inflate a little bit to compensate for the fact
 			// that we're never using 0 battery. Have to use at least a little.
 			shortTermUsage = .5;
 		}
+*/		
+		if(shortTermUsage != 0){
+			percentPerMillisecond = shortTermUsage / shortTermTime;
+		}
+		else{
+			percentPerMillisecond = longTermUsage / longTermTime;
+		}
 		
-		percentPerMillisecond = (weightLong * (longTermUsage / longTermTime)) + 
-			(weightShort * (shortTermUsage / shortTermTime));
+	//	percentPerMillisecond = (weightLong * (longTermUsage / longTermTime)) + 
+		//	(weightShort * (shortTermUsage / shortTermTime));
 			
 		Log.i("TimeLeft", "longTermUsage / longTermTime = " + longTermUsage + " / " + longTermTime + " = " + longTermUsage / longTermTime);
 		Log.i("TimeLeft", "shortTermUsage / shortTermTime = " + shortTermUsage + " / " + shortTermTime + " = " + shortTermUsage / shortTermTime);
