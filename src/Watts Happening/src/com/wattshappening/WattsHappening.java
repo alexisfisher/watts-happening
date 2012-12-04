@@ -4,11 +4,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
+import java.util.List;
 
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.Menu;
@@ -21,6 +26,7 @@ import android.widget.Toast;
 
 import com.wattshappening.R;
 import com.wattshappening.analysis.Analyzer;
+import com.wattshappening.db.AggregateAppInfo;
 import com.wattshappening.db.DBManager;
 import com.wattshappening.db.DBTable;
 /**
@@ -35,7 +41,8 @@ public class WattsHappening extends Activity {
 	Button dbExportButton;
 	Button analysisButton;
 	Button toastButton;
-	TextView tv;
+	TextView tvCPU;
+	TextView tvNet;
 	/**
 	 * 
 	 */
@@ -133,8 +140,36 @@ public class WattsHappening extends Activity {
         	}
         });
         
-        tv = (TextView) findViewById(R.id.tv1);
-        tv.setText("Hello");
+        tvCPU = (TextView) findViewById(R.id.tvcpu);
+        tvNet = (TextView) findViewById(R.id.tvnet);
+        String cpuOut = "cpu:\n";
+        String netOut = "net\ntest";
+        
+        //get list of currently running apps
+        ActivityManager am = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+        PackageManager pm = getPackageManager();
+        List<ActivityManager.RunningAppProcessInfo> procs = am.getRunningAppProcesses();
+
+        if(procs != null){
+        	for(ActivityManager.RunningAppProcessInfo proc : procs){
+        		ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo)(proc);
+        		String name = info.processName;
+        		cpuOut += name;
+        		cpuOut += "\n";
+        		try {
+        			CharSequence c = pm.getApplicationLabel(pm.getApplicationInfo(
+        					info.processName, PackageManager.GET_META_DATA));
+        			name = c.toString();
+        		} catch (NameNotFoundException e) {
+        		}
+        	}
+        }
+        //then get AggregateAppInfo oldInfo = aggTable.fetchMostRecent(uid);
+			//if (oldInfo != null) //if there was a previous entry for this app
+        //sort & display
+        
+        tvCPU.setText(cpuOut);
+        tvNet.setText(netOut);
         
         toastButton = (Button) findViewById(R.id.button6);
         toastButton.setOnClickListener(new View.OnClickListener() {
