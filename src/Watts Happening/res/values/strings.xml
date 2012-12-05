@@ -11,5 +11,6 @@
     <string name="db_flush_button">Flush &amp; Rebuild DB</string>
     <string name="db_export_button">Export DB</string>
     <string name="analysis_button">Run Analysis</string>
+    <string name="refresh_button">Refresh</string>
 
 </resources>

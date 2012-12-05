@@ -48,7 +48,7 @@ public class WattsHappening extends Activity {
 	Button dbFlushButton;
 	Button dbExportButton;
 	Button analysisButton;
-	Button toastButton;
+	Button refreshButton;
 	TextView tvCPU;
 	TextView tvNet;
 	/**
@@ -148,51 +148,54 @@ public class WattsHappening extends Activity {
         	}
         });
         
-        tvCPU = (TextView) findViewById(R.id.tvcpu);
-        tvNet = (TextView) findViewById(R.id.tvnet);
-        String cpuOut = "cpu:\n";
-        String netOut = "net\ntest";
-        AggregateAppInfoTable aggTable = new AggregateAppInfoTable(getBaseContext());
-        
-        //get list of currently running apps   
-        // 
-        ActivityManager am = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
-        PackageManager pm = getPackageManager();
-        List<ActivityManager.RunningAppProcessInfo> procs = am.getRunningAppProcesses();
-        HashMap<String, Double> cpuUse = new HashMap<String, Double>();
-        HashMap<String, Double> netUse = new HashMap<String, Double>();
-        
-        if(procs != null){
-        	for(ActivityManager.RunningAppProcessInfo proc : procs){
-        		ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo)(proc);
-        		String name = info.processName;
-        		int uid = info.uid;
-        		//get usage by uid
-        		AggregateAppInfo aggappinfo = aggTable.fetchMostRecent(uid);
-        		double cpu = aggappinfo.getHistoricCPU();
-        		double net = aggappinfo.getHistoricNetwork();
-        		cpuUse.put(name, cpu);
-        		//cpuOut += name + " : "+cpu+"\n";  // temporary
-        		netUse.put(name, net);
-        		//netOut += name + " : " + net + "\n";  // temporary
-        	}
-        }
-        //sort & display
-        Map<String, Double> sortedCpu = sortByValue(cpuUse);
-        Map<String, Double> sortedNet = sortByValue(netUse);
-        
-       for (Map.Entry entry: sortedCpu.entrySet())
-    	   cpuOut += entry.getKey() + " : " + entry.getValue() + "\n";
-       for (Map.Entry entry: sortedNet.entrySet())
-    	   netOut += entry.getKey() + " : " + entry.getValue() + "\n";
-       
-        tvCPU.setText(cpuOut);
-        tvNet.setText(netOut);
-        
-        toastButton = (Button) findViewById(R.id.button6);
-        toastButton.setOnClickListener(new View.OnClickListener() {
+                
+        refreshButton = (Button) findViewById(R.id.button6);
+        refreshButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Toast.makeText(getBaseContext(), "button 6", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getBaseContext(), "Refreshing...", Toast.LENGTH_SHORT).show();
+				tvCPU = (TextView) findViewById(R.id.tvcpu);
+		        tvNet = (TextView) findViewById(R.id.tvnet);
+		        String cpuOut = "cpu:\n";
+		        String netOut = "net\ntest";
+		        AggregateAppInfoTable aggTable = new AggregateAppInfoTable(getBaseContext());
+		        
+		        //get list of currently running apps   
+		        // 
+		        ActivityManager am = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+		        PackageManager pm = getPackageManager();
+		        List<ActivityManager.RunningAppProcessInfo> procs = am.getRunningAppProcesses();
+		        HashMap<String, Double> cpuUse = new HashMap<String, Double>();
+		        HashMap<String, Double> netUse = new HashMap<String, Double>();
+		        
+		        if(procs != null){
+		        	for(ActivityManager.RunningAppProcessInfo proc : procs){
+		        		ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo)(proc);
+		        		String name = info.processName;
+		        		int uid = info.uid;
+		        		//get usage by uid
+		        		AggregateAppInfo aggappinfo = aggTable.fetchMostRecent(uid);
+		        		double cpu = aggappinfo.getHistoricCPU();
+		        		double net = aggappinfo.getHistoricNetwork();
+		        		cpuUse.put(name, cpu);
+		        		//cpuOut += name + " : "+cpu+"\n";  // temporary
+		        		netUse.put(name, net);
+		        		//netOut += name + " : " + net + "\n";  // temporary
+		        	}
+		        }
+		        //sort & display
+		        Map<String, Double> sortedCpu = sortByValue(cpuUse);
+		        Map<String, Double> sortedNet = sortByValue(netUse);
+		        
+		       for (Map.Entry entry: sortedCpu.entrySet())
+		    	   cpuOut += entry.getKey() + " : " + entry.getValue() + "\n";
+		       for (Map.Entry entry: sortedNet.entrySet())
+		    	   netOut += entry.getKey() + " : " + entry.getValue() + "\n";
+		       
+		        tvCPU.setText(cpuOut);
+		        tvNet.setText(netOut);
+
+				tvCPU.setText(cpuOut);
+				tvNet.setText(netOut);
 			}
 		});
     }

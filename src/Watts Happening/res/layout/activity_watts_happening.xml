@@ -87,7 +87,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="22dp"
                     android:layout_marginLeft="22dp"
-                    android:text="sample tab2 button" />
+                    android:text="@string/refresh_button" />
                 <TextView
                     android:id="@+id/tvcpu"
                     android:layout_width="wrap_content"
