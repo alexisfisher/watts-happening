@@ -1,0 +1,185 @@
+\documentclass[11pt,twocolumn]{article}
+\usepackage{alltt}
+\usepackage{verbatim}
+\usepackage[margin=1in, paperwidth=8.5in, paperheight=11in]{geometry}
+
+\title{Watt's Happening}
+\author{Ben Bramble, Nick Burek, Alexis Fisher, and Adam Vail}
+\begin{document}
+\maketitle
+
+\section*{Introduction}
+Mobile devices, including smart phones and tablets, are capable of performing an ever-increasing array of tasks. 
+Unfortunately, short battery life severely limits the full potential of smart phones. 
+A user may experience erratic power surges based on different applications and might not know if her phone will last until the end of the day. 
+While power analyzing applications exist, most are intended for use by energy-conscious application developers and not for end users [1] [2]. 
+Of the power saving applications available for end users, some complain of the applications being too intrusive. 
+These applications disable important features of the phone without user consent and make practical usage very difficult. 
+Allowing the user to set a target ''no-charge-until" goal time, and then guiding the user towards decisions to achieve this goal, would enable more efficient and productive use of mobile devices.
+Mobile devices are nearly ubiquitous, and function as an integral part of modern life. 
+As battery technology lags behind the ever-increasing demands applications make, devices need intelligent use of limited resources. 
+Unfortunately, most application developers do not take into account these power limitations, or even realize the power draws of their applications on disparate devices. 
+Compounding this problem, common users remain blissfully unaware of their power use until their phone reaches a minimum battery threshold.
+
+Intelligently learning a user's standard behavior and performing power-saving adjustments that fit with the user's needs would enable longer battery life. 
+Adjustments could include powering down radios (including GPS, Wifi, 4G, 3G) automatically, terminating applications that are drawing extreme power without user interaction, and recommending user application termination when the goal may not be achievable based on current usage. 
+The proposed end state is an easy-to-use application that educates the user of their individual energy use and allows the user to customize their mobile device to extend the battery life on a single charge.
+Our goal is to optimize the overall battery usage of the entire device. 
+Therefore, we plan to monitor a variety of usage scenarios, gathering battery and usage snapshots throughout the test period. 
+An approximate duplication of these usage scenarios using our ''Watt's Happening" application should provide information on general power trends. 
+Ideally, the use of Watt's Happening will provide a noticeable extension of battery life without impacting necessary or desired user operations.  
+Although formal and repeatable testing would provide a consistent and controlled environment to display incontrovertible usage trends, a sterile environment is not the expected use case. 
+Therefore, averaging real world usage scenarios will hopefully provide a more realistic, yet still convincing, data set.
+Section 2 of our paper discusses how Watt's Happening gathers battery usage information in order to analyze user's usage habits.  
+Section 3 describes the analyze process to develop heuristics based on the footprint established by the logging.  
+Section 4 focuses on presenting recommendations to the user based on the analysis and the target battery life input from the user.  
+Section 5 presents the results of experiments run with Watt's Happening and Section 6 relates similar works in the field by other designers.
+
+
+\section*{Motivation}
+
+
+\section*{Design}
+\subsection*{Assumptions}
+Before starting on the application, we made two design assumptions.  
+First, any services that end quickly will not be incorporated into the analysis.  
+We assume that only long running programs will have a significant effect on the overall battery usage.  
+There exists the possibility for short, intense applications to game the system by terminating before our application's polling, but we ignore that possibility for now.  
+The second assumption is that we only display candidate applications for termination if they are currently running.  
+Future variation of the program can implement features that inform the user how much longer they can run their favorite applications while still reaching their target, but currently we limit our focus.
+
+\subsection{System Interactions}
+-Since each application in Android has its own Linux style process, components of other applications are separated from our application.  
+However, Android OS provides an Activity Manager (class|interface) that interacts with all activities running in the system.  
+Watt's Happening draws heavily from the Activity Manager to receive a list of all running processes and information for the processes, such as the User ID (UID).   
+Similarly, the Battery Manager passes information including when the charging status of the 
+device is changed such as from charging to disconnected status.  
+Most importantly, the Battery Manager passes the level and scale of the battery which allows Watt's Happening to determine the current battery percentage remaining.  
+Other managers that are important to our application include the Wifi Manager, the Location Manager, and the Power Manager.  
+The latter of which describes the state of the device's screen. %what --af
+
+
+\section*{Implementation}
+\subsection*{Logging}
+Core to the success of Watt's Happening is the logging and structure of all application, CPU, battery, network, and hardware data that allows the follow-on analysis.  
+Android OS provides SQLite for easy database creation and management. 
+The initial decision on what information to collect was simply to capture as much as possible to identify correlations between applications, the hardware resources they use, and the effects on the battery.  
+After understanding the trend on a few different devices, useless information can be discarded to reduce Watt's Happening's impact on the device.
+To organize the data collected from the various managers provided by Android OS, a separate table was created for each major resource to include application, battery, GPS, hardware, and network status.  
+Each table includes a timeslice which allows the analyzer to relate the effects of running applications to the resources used at the same time.  
+This will be discussed in further detail under Section 3.
+To reduce the impact of Watt's Happening on the host device, the data collection occurs as a service in the background.  
+Since the service is not CPU intensive, it does not require a thread of its own and allows 
+the user to run other applications without much overhead.  
+To further reduce the application's battery cost, the GPS logger uses passive listening to only receive updates when another application uses the receiver.  
+This piggy-backing approach paints a decent picture of device location without requiring the more expensive GPS or network provider.
+An additional overhead Watt's Happening seeks to limit is the potentially unlimited growth of the database.  
+The program uses a global variable called timeslice that represents the amount of time between information requests from the resource managers.  
+A smaller timeslice allows for a fine granularity to identify sudden changes in CPU use by short, intense applications.  
+However, a small timeslice also adds dozens of entries to each data table. 
+ Over the course of several days of logging data, the database can grow to an unacceptable size.  
+We reduce the memory cost of the database by condensing the data every 24 hours into a persistent table that represents the long term usage of the user.  
+New data brought into the persistent table is weighted so increase the impact of recent activity into our analysis.
+\subsection*{Analyzing Data}
+The brunt of our project relies on the successful interpretation of the collected data.  
+Ideally, one could monitor the change in battery life and determine the cost of an application.  
+However, there are several complications that affect this analysis.  
+Foremost, one must weigh the importance of recent data versus historic data.  
+A user's device usage rate is not likely to stay constant throughout the day.  
+For the majority of the day, the device might sit idle with occasional high power draining applications. 
+As a result, the long term usage rate alone cannot be the sole representation for analyzing and predicting the remaining time.  
+A common example would be a device that has been on idle for nearly a whole day.  
+The long term rate at this point would be a slow decrease that has left the phone low on remaining battery.  
+For the next five minutes, the user begins playing a CPU and network intensive game.  
+The user then wants to know if their device will last another hour.  
+If only the long term rate is used, that last five minute high usage rate is lost amongst the previous 24 hours.  
+However, the user is likely to continue running the game in the immediate future.  
+The long term collection and the most recent usage are combined with specific weights to create the most insightful recommendation possible. 
+With the overall rate and predicted end time determined, the application will be able to identify the primary culprits in the battery drain.  
+For our project, a culprit is an application that uses battery through intensive CPU or network use.  
+When the analyzer is started, Watt's Happening cycles through the list of currently running applications.  
+As stated in the assumptions section, only currently running applications are candidates for termination.  
+The analyzer considers the recent behavior as captured into the database and calculates the CPU and network use designated to each UID during the duration that it has been running.  
+With the CPU and network cost assigned to each culprit, the analyzer can determine the approximate cost of each culprit by combining those values with the amount of battery drained overall during the time period that the application was running.  
+The resulting value is used as a heuristic variable to allow comparisons between culprits and the follow-on recommendations to the user.
+
+\subsection*{Making Recommendations}
+The key to the success of Watt's Happening is arming the user with knowledge of their use and make knowledgeable recommendation to keep the device alive.  
+The logged information keep over a time period displaying the battery percentage versus time on a graph allows a graphical representation for the user to observe their usage habits. 
+The rate determined in the analyzer depicts on the graph the predicted battery termination time.  
+Should that time end before the user's goal, the application can display the top culprits currently running so the user is made aware of their candidates to close in order to reach their desired end time.
+
+
+\section*{Evaluation}
+
+
+\section*{Related Work}
+Zwang et al./cite{} created a similar program in 2010 called PowerTutor that receives a power estimate to various hardware components and application and then assigns power usage to specific applications.  
+They created the benchmarks using a previous project call PowerBooter that monitored power consumption while controlling power management for individual components.  
+PowerTutor ultimately allows developers to determine the impact of their own application to improve their software designs.  
+Future work could seek to incorporate PowerTutor into Watt's Happening to fine-tune application usage details and improve recommendations.
+
+Chang, Agrawal, and Cameron survey the power management techniques employed by Android and how popular applications abuse or take advantage of those techniques\cite{energy-aware}. 
+They explore the idea that software written for mobile devices should be optimized for efficient power consumption, but in many cases the application developer doesn't necessarily take power into consideration. 
+They do several case studies of popular applications and analyze how they interact with the CPU, the screen, and other aspects of the mobile devices. 
+They came to the conclusion that even though Android does a great job to aggressively save power, application developers need to create their software with power consumption in mind. 
+The paper is a beneficial overview of the Android power management system as well as several tools that can be used to monitor the power usage of a device's underlying hardware. 
+
+Pathak, Hu, and Zhang help application developers create power conserving software through their energy profiling tool called \emph{eprof}\cite{Pathak:2012:ESI:2168836.2168841}. 
+The tool allows developers to monitor power consumption with multiple granularities and determine which pieces of code consume the most energy. 
+This is useful for catching programming bugs, such as holding onto a wakelock too long, as well as directing attention to code that needs to be optimized. 
+It also illuminates the fact that large amounts of energy are used in I/O operations. 
+This implies that in order to save energy it is important to only use 3G, GPS, and WiFi when it is truly necessary. 
+Therefore, it is clear that disabling these aspects of a mobile device can make profound differences in battery life.
+
+Balajinath and Raghavan discuss learning user behavior to build a model of non-malicious user actions, with the intent to easily identify malicious users\cite{Balajinath:2001:IDT:2294491.2294970}. 
+User activity is recorded, and a newness factor is used to help identify behavior out of the norm. 
+A 500-command history was identified as the amount of history required to ensure maximum prediction accuracy. 
+
+Fawcett et al. use usage profiling to detect cellular cloning fraud \cite{dataMiningFraudDetection}. 
+While the idea of profiling users based on when and where they use services is similar to what we are trying to do, they are using this information for a much different application. 
+
+Ashbrook learns significant locations and predicts user movement from GPS data \cite{Ashbrook:2002:LSL:862896.881068}. 
+Raw location data is analyzed using k-clustering with a variety of radiuses. 
+A building location is inferred from lack of GPS information for an arbitrarily selected ten minute time slice. 
+This is vulnerable to other GPS data issues, including urban canyons or device failure. 
+The location prediction is based on a Markov model built off of observed patterns. 
+First order Markov models are used, as data models beyond that would require a much longer observation period. 
+
+Goecks and Shavlik address unobtrusive observation of user behavior \cite{Goecks:2000:LUI:325737.325806}. 
+Users don't need to necessarily identify successful results, but measurements of success can be inferred from properties of successful predictions. 
+These properties should be observable without user interaction to assess likelihood of success. 
+
+Murmuria et al. develop a system for modeling power consumption on smartphone devices by collecting data on the wakelock drivers for a device's subsystem \cite{mobilePowerUsageMeasurements}. 
+They break down the major subsystems (CPU, display, graphics, GPS, audio, and WiFi) and develop metrics by which power consumption can be determined for each subsystem. 
+This paper provides a good overview of a low impact way of determining power consumption of individual components in a smartphone. 
+
+Rumble et al. discussed a new operating system called Cinder that sought to extend limited energy resources by implementing capacitor objects \cite{Rumble:2009:AJT:1592606.1592618}. 
+The similarities to their work included a desire to reach a goal usage time by dynamically running statistics of application energy consumption. 
+The differences between their OS and our goal is that they built a new OS where as we aim to create an application on top of Android. 
+In addition, Cinder actively limits the energy consumption of various applications where we will create suggestions for the user to implement. 
+
+Zeng et al. established energy as a resource called currentcy and established pricing for using that resource \cite{Zeng:2003:CUA:1247340.1247344}. 
+Both currentcy and Watt's Happening set usage time goals and dynamically adjusts to overspent and underspent energy to allow the application to meet that energy goal. 
+However, currentcy forces all devices on the platform to adopt the energy resource type. 
+This makes application programmers factor currentcy in to their design whereas Watt's Happening aims to be invisible to other applications. 
+
+Shi et al. develop a method of identifying users based on behavior profiling \cite{learningUserBehavior}. 
+Their methods of learning users' typical habits could be applied to power usage as well. 
+If we know that a person uses their GPS when traveling to work every morning then we can account for that required power consumption when modeling usage goals. 
+
+
+\section*{Conclusion}
+Watt's Happening demonstrates the potential for an application existing exclusively in user space to monitor, log, and analyze the actions of other applications.  
+While the scope of the project had to be limited due to time constraints, we feel that the proof of concept has been achieved.  
+The resource managers provided by Android allows for independent application oversight.
+We started by examining what device resources we had access to and determining the possibility of 
+relating resource depletion to specific user applications.  
+Our observations based on the logged data allowed for empirical analysis and eventual recommendations.  
+The result is an informed user that is capable of extending the device's battery.
+{\footnotesize \bibliographystyle{acm}
+\bibliography{references}}
+
+
+
+\end{document}

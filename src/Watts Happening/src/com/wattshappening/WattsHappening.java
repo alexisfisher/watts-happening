@@ -4,11 +4,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import android.view.Menu;
@@ -21,6 +33,8 @@ import android.widget.Toast;
 
 import com.wattshappening.R;
 import com.wattshappening.analysis.Analyzer;
+import com.wattshappening.db.AggregateAppInfo;
+import com.wattshappening.db.AggregateAppInfoTable;
 import com.wattshappening.db.DBManager;
 import com.wattshappening.db.DBTable;
 /**
@@ -34,8 +48,9 @@ public class WattsHappening extends Activity {
 	Button dbFlushButton;
 	Button dbExportButton;
 	Button analysisButton;
-	Button toastButton;
-	TextView tv;
+	Button refreshButton;
+	TextView tvCPU;
+	TextView tvNet;
 	/**
 	 * 
 	 */
@@ -133,17 +148,74 @@ public class WattsHappening extends Activity {
         	}
         });
         
-        tv = (TextView) findViewById(R.id.tv1);
-        tv.setText("Hello");
-        
-        toastButton = (Button) findViewById(R.id.button6);
-        toastButton.setOnClickListener(new View.OnClickListener() {
+                
+        refreshButton = (Button) findViewById(R.id.button6);
+        refreshButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Toast.makeText(getBaseContext(), "button 6", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getBaseContext(), "Refreshing...", Toast.LENGTH_SHORT).show();
+				tvCPU = (TextView) findViewById(R.id.tvcpu);
+		        tvNet = (TextView) findViewById(R.id.tvnet);
+		        String cpuOut = "cpu:\n";
+		        String netOut = "net\ntest";
+		        AggregateAppInfoTable aggTable = new AggregateAppInfoTable(getBaseContext());
+		        
+		        //get list of currently running apps   
+		        // 
+		        ActivityManager am = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+		        PackageManager pm = getPackageManager();
+		        List<ActivityManager.RunningAppProcessInfo> procs = am.getRunningAppProcesses();
+		        HashMap<String, Double> cpuUse = new HashMap<String, Double>();
+		        HashMap<String, Double> netUse = new HashMap<String, Double>();
+		        
+		        if(procs != null){
+		        	for(ActivityManager.RunningAppProcessInfo proc : procs){
+		        		ActivityManager.RunningAppProcessInfo info = (ActivityManager.RunningAppProcessInfo)(proc);
+		        		String name = info.processName;
+		        		int uid = info.uid;
+		        		//get usage by uid
+		        		AggregateAppInfo aggappinfo = aggTable.fetchMostRecent(uid);
+		        		double cpu = aggappinfo.getHistoricCPU();
+		        		double net = aggappinfo.getHistoricNetwork();
+		        		cpuUse.put(name, cpu);
+		        		//cpuOut += name + " : "+cpu+"\n";  // temporary
+		        		netUse.put(name, net);
+		        		//netOut += name + " : " + net + "\n";  // temporary
+		        	}
+		        }
+		        //sort & display
+		        Map<String, Double> sortedCpu = sortByValue(cpuUse);
+		        Map<String, Double> sortedNet = sortByValue(netUse);
+		        
+		       for (Map.Entry entry: sortedCpu.entrySet())
+		    	   cpuOut += entry.getKey() + " : " + entry.getValue() + "\n";
+		       for (Map.Entry entry: sortedNet.entrySet())
+		    	   netOut += entry.getKey() + " : " + entry.getValue() + "\n";
+		       
+		        tvCPU.setText(cpuOut);
+		        tvNet.setText(netOut);
+
+				tvCPU.setText(cpuOut);
+				tvNet.setText(netOut);
 			}
 		});
     }
     
+    public static Map<String, Double> sortByValue(Map<String, Double> map) {
+        List<Map.Entry<String, Double>> list = new LinkedList<Map.Entry<String, Double>>(map.entrySet());
+
+        Collections.sort(list, new Comparator<Map.Entry<String, Double>>() {
+
+            public int compare(Map.Entry<String, Double> m1, Map.Entry<String, Double> m2) {
+                return (m2.getValue()).compareTo(m1.getValue());
+            }
+        });
+
+        Map<String, Double> result = new LinkedHashMap<String, Double>();
+        for (Map.Entry<String, Double> entry : list) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        return result;
+    }
 
 	/**
 	 * 
