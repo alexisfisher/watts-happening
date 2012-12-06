@@ -32,6 +32,13 @@ This allows our model to be highly responsive to changing usage patterns, while 
 Although we experimented with combining the short and long term rates, this failed to capture the impact of significant short term usage.  
 This would result in severe overestimation of remaining battery duration.
 Short term usage will then be incorporated in to future long term rates which will be used if the device is again idle.
+\begin{figure}[ht!]
+	\begin{center}
+		\includegraphics[width=\columnwidth]{figs/bat_vs_time.png}
+		\caption{Battery level and projected level}
+		\label{fig:bat_v_time}
+\end{center}
+\end{figure}
 %%re-incorporate example?
 % I like the example-- we should maybe provide it here or ? 
 %   & not interspersed with implementation details
