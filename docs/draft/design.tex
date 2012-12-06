@@ -27,10 +27,10 @@ We assume that short-running applications that account for significant battery d
 Applications that are not visible to our logger certainly still draw battery, but this usage, by necessity, will be amortized over applications that are visible.
 
 \emph{Watt's Happening} provides an activity-weighted battery life estimate.
-This estimate is strongly biased in favor of recent activity. 
+This estimate is strongly biased in favor of recent activity, while still incorporating long-term historic usage. 
 Since battery consumption rate is derived from the assumption that the current usage pattern will continue, recent activities will yield a more conservative estimation of future use.
 The reported time remaining should be conservative because user expectation dictates that the battery will last at least as long as the \emph{Watt's Happening} estimate.
-In the case of no change in the battery level during a short term snapshot, a longterm averaged estimate is used.
+%In the case of no change in the battery level during a short term snapshot, a longterm averaged estimate is used.
 
 If the user desires to prolong their battery further than the estimate, \emph{Watt's Happening} presents a set of lists showing running applications sorted by respective resource usage.
 Usage is directly tied to battery draw as described above. 

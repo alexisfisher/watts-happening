@@ -1,40 +1,48 @@
 \section*{Implementation}
-
-\subsection*{System Interactions}
--Since each application in Android has its own Linux style process, components of other applications are separated from our application.  
-However, Android OS provides an Activity Manager (class|interface) that interacts with all activities running in the system.  
-Watt's Happening draws heavily from the Activity Manager to receive a list of all running processes and information for the processes, such as the User ID (UID).   
-Similarly, the Battery Manager passes information including when the charging status of the 
-device is changed such as from charging to disconnected status.  
-Most importantly, the Battery Manager passes the level and scale of the battery which allows Watt's Happening to determine the current battery percentage remaining.  
-Other managers that are important to our application include the Wifi Manager, the Location Manager, and the Power Manager.  
-The latter of which describes the state of the device's screen. %what --af
+\label{sec:implementation}
+\emph{Watt's Happening} is implemented on Android OS version 4.0, API level $>$ 14. 
+The Android OS provides a variety of APIs allowing access to application and hardware information.
+Information that is not exposed via the API is obtained directly from the underlying operating system.
 
 \subsection*{Logging}
-% HW Info,   App Info
-Core to the success of Watt's Happening is the logging and structure of all application, CPU, battery, network, and hardware data that allows the follow-on analysis.  
-Android OS provides SQLite for easy database creation and management. 
-The initial decision on what information to collect was simply to capture as much as possible to identify correlations between applications, the hardware resources they use, and the effects on the battery.  
-After understanding the trend on a few different devices, useless information can be discarded to reduce Watt's Happening's impact on the device.
-To organize the data collected from the various managers provided by Android OS, a separate table was created for each major resource to include application, battery, GPS, hardware, and network status.  
-Each table includes a timeslice which allows the analyzer to relate the effects of running applications to the resources used at the same time.  
-This will be discussed in further detail under Section 3.
-To reduce the impact of Watt's Happening on the host device, the data collection occurs as a service in the background.  
-Since the service is not CPU intensive, it does not require a thread of its own and allows 
-the user to run other applications without much overhead.  
-To further reduce the application's battery cost, the GPS logger uses passive listening to only receive updates when another application uses the receiver.  
-This piggy-backing approach paints a decent picture of device location without requiring the more expensive GPS or network provider.
-An additional overhead Watt's Happening seeks to limit is the potentially unlimited growth of the database.  
-The program uses a global variable called timeslice that represents the amount of time between information requests from the resource managers.  
-A smaller timeslice allows for a fine granularity to identify sudden changes in CPU use by short, intense applications.  
-However, a small timeslice also adds dozens of entries to each data table. 
- Over the course of several days of logging data, the database can grow to an unacceptable size.  
-We reduce the memory cost of the database by condensing the data every 24 hours into a persistent table that represents the long term usage of the user.  
-New data brought into the persistent table is weighted so increase the impact of recent activity into our analysis.
-\subsection*{Analyzing Data}
-The brunt of our project relies on the successful interpretation of the collected data.  
-Ideally, one could monitor the change in battery life and determine the cost of an application.  
-However, there are several complications that affect this analysis.  
+When obtaining information, it is important to ensure \emph{Watt's Happening} remains relatively low-impact.
+This is accomplished by using a time-based polling method of collecting data, as opposed to constant and intrusive observation.
+Resource usage is obtained via the Managers provided in the Android API.
+Battery level, GPS state, WiFi state, Bluetooth state, network connection and screen state are all collected and stored.
+Application information including UID, name, network information transmitted and received, cpu usage, and runtime is collected and stored. 
+While the majority of the application information is obtained from the Managers described above, cpu usage is not exposed via the API.
+\emph{Watt's Happening} obtains cpu usage in the same manner as `top', `ps', and other standard system tools.
+\emph{Watt's Happening} parses the data in the `proc' folder for each application.
+Based on our iterative experimentation, information is polled every five minutes.
+We believe this maintains the delicate balance between fine-grained information capture and battery used by \emph{Watt's Happening}.
+There are some low duration, high-power events, such as BlueTooth pairing and GPS-based updates, that may not be captured by time-based polling.
+To handle these cases, our framework allows for event listeners.
+These events are logged when they occur. 
+
+\subsection*{Analysis}
+Although data is collected every five minutes, analysis is delayed until there is sufficient information to justify the overhead of performing the analysis.
+The analysis performs two distinct tasks, aggregating application resource usage and determining projected battery longevity.
+Application cpu and network I/O information is condensed to a persistent long-term running average, and stored.
+Once this average is stored, the short-term information can be archived, reducing the memory footprint of \emph{Watt's Happening}.
+Projected battery longevity is estimated based on short and long term battery drain rate.
+Since battery level is only reported to the closest 1\%, a change may not be visible over a short term period, especially if the device is idle.
+In this case, the long term battery drain rate is used to estimate battery longevity.  
+If the short term battery drain rate is greater than zero, it is used to estimate the battery longevity.
+This allows our model to be highly responsive to changing usage patterns, while still maintaining accuracy over long term idle periods.
+Although we experimented with combining the short and long term rates, this failed to capture the impact of significant short term usage.  
+This would result in severe overestimation of remaining battery duration.
+
+
+%TODO
+% alg for app score value: analyze all apps we have new data for, update persistent table w/usage score for CPU and HW.   % of cpu and hw.   
+% time left: short term(5min ) & long term (BEGINNING OF CHARGE), when we use each
+% In the case of no change in the battery level during a short term snapshot, a longterm averaged estimate is used.
+% when analysis is run
+% persistent DB
+% 
+%The brunt of our project relies on the successful interpretation of the collected data.  
+%Ideally, one could monitor the change in battery life and determine the cost of an application.  
+%However, there are several complications that affect this analysis.  
 Foremost, one must weigh the importance of recent data versus historic data.  
 A user's device usage rate is not likely to stay constant throughout the day.  
 For the majority of the day, the device might sit idle with occasional high power draining applications. 
@@ -54,7 +62,8 @@ The analyzer considers the recent behavior as captured into the database and cal
 With the CPU and network cost assigned to each culprit, the analyzer can determine the approximate cost of each culprit by combining those values with the amount of battery drained overall during the time period that the application was running.  
 The resulting value is used as a heuristic variable to allow comparisons between culprits and the follow-on recommendations to the user.
 
-\subsection*{Making Recommendations}
+%\subsection*{Making Recommendations}
+%TODO why we display what we do how we do dododo
 The key to the success of Watt's Happening is arming the user with knowledge of their use and make knowledgeable recommendation to keep the device alive.  
 The logged information keep over a time period displaying the battery percentage versus time on a graph allows a graphical representation for the user to observe their usage habits. 
 The rate determined in the analyzer depicts on the graph the predicted battery termination time.  
