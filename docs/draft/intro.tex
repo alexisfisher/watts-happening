@@ -1,27 +1,8 @@
 \section*{Introduction}
 \label{sec:intro}
-Mobile devices, including smart phones and tablets, are capable of performing an ever-increasing array of tasks. 
-Unfortunately, short battery life severely limits the full potential of smart phones. 
-A user may experience erratic power surges based on different applications and might not know if her phone will last until the end of the day. 
-While power analyzing applications exist, most are intended for use by energy-conscious application developers but not for end users \cite{Pathak:2012:ESI:2168836.2168841} \cite{energy-aware}. 
-Of the power saving applications available for end users, some complain of the applications being too intrusive. 
-These applications disable important features of the phone without user consent and make practical usage very difficult. 
-Allowing the user to set a target ``no-charge-until" goal time, and then guiding the user towards decisions to achieve this goal, would enable more efficient and productive use of mobile devices.
-Mobile devices are nearly ubiquitous, and function as an integral part of modern life. 
-As battery technology lags behind the ever-increasing demands applications make, devices need intelligent use of limited resources. 
-Unfortunately, most application developers do not take into account these power limitations, or even realize the power draws of their applications on disparate devices. 
-Compounding this problem, common users remain blissfully unaware of their power use until their phone reaches a minimum battery threshold.
-
-Intelligently learning a user's standard behavior and performing power-saving adjustments that fit with the user's needs would enable longer battery life. 
-Adjustments could include powering down radios (including GPS, Wifi, 4G, 3G) automatically, terminating applications that are drawing extreme power without user interaction, and recommending user application termination when the goal may not be achievable based on current usage. 
-The proposed end state is an easy-to-use application that educates the user of their individual energy use and allows the user to customize their mobile device to extend the battery life on a single charge.
-Our goal is to optimize the overall battery usage of the entire device. 
-Therefore, we plan to monitor a variety of usage scenarios, gathering battery and usage snapshots throughout the test period. 
-An approximate duplication of these usage scenarios using our ``Watt's Happening" application should provide information on general power trends. 
-Ideally, the use of Watt's Happening will provide a noticeable extension of battery life without impacting necessary or desired user operations.  
-Although formal and repeatable testing would provide a consistent and controlled environment to display incontrovertible usage trends, a sterile environment is not the expected use case. 
-Therefore, averaging real world usage scenarios will hopefully provide a more realistic, yet still convincing, data set.
-Section 2 of our paper discusses how Watt's Happening gathers battery usage information in order to analyze user's usage habits.  
-Section 3 describes the analyze process to develop heuristics based on the footprint established by the logging.  
-Section 4 focuses on presenting recommendations to the user based on the analysis and the target battery life input from the user.  
-Section 5 presents the results of experiments run with Watt's Happening and Section 6 relates similar works in the field by other designers.
+This paper describes the \emph{Watt's Happening} battery monitoring application. 
+With the rapid increase in the prevalence of mobile device technology into everyday usage, users want to be sure that their device will not die in the middle of the day.
+This can be tricky to balance since it's not always immediately apparent where the energy is getting spent in your device.
+\emph{Watt's Happening} tracks the hardware state, battery level changes, and application resource usage. 
+It then uses that information to compile resource usage metrics to provide information to the user on how much longer their device will last at their current rate.
+By providing the user with this aggregated information in an easy to comprehend manor, they are able to make more informed decisions about how best to maximize their battery life.
