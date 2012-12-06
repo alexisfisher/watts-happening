@@ -1,0 +1,18 @@
+\section*{Design}
+\subsection*{Assumptions}
+Before starting on the application, we made two design assumptions.  
+First, any services that end quickly will not be incorporated into the analysis.  
+We assume that only long running programs will have a significant effect on the overall battery usage.  
+There exists the possibility for short, intense applications to game the system by terminating before our application's polling, but we ignore that possibility for now.  
+The second assumption is that we only display candidate applications for termination if they are currently running.  
+Future variation of the program can implement features that inform the user how much longer they can run their favorite applications while still reaching their target, but currently we limit our focus.
+
+\subsection{System Interactions}
+-Since each application in Android has its own Linux style process, components of other applications are separated from our application.  
+However, Android OS provides an Activity Manager (class|interface) that interacts with all activities running in the system.  
+Watt's Happening draws heavily from the Activity Manager to receive a list of all running processes and information for the processes, such as the User ID (UID).   
+Similarly, the Battery Manager passes information including when the charging status of the 
+device is changed such as from charging to disconnected status.  
+Most importantly, the Battery Manager passes the level and scale of the battery which allows Watt's Happening to determine the current battery percentage remaining.  
+Other managers that are important to our application include the Wifi Manager, the Location Manager, and the Power Manager.  
+The latter of which describes the state of the device's screen. %what --af
