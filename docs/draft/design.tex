@@ -1,18 +1,51 @@
 \section*{Design}
-\subsection*{Assumptions}
-Before starting on the application, we made two design assumptions.  
-First, any services that end quickly will not be incorporated into the analysis.  
-We assume that only long running programs will have a significant effect on the overall battery usage.  
-There exists the possibility for short, intense applications to game the system by terminating before our application's polling, but we ignore that possibility for now.  
-The second assumption is that we only display candidate applications for termination if they are currently running.  
-Future variation of the program can implement features that inform the user how much longer they can run their favorite applications while still reaching their target, but currently we limit our focus.
+%\subsection*{Assumptions}
+%	short-running processes will have their battery usage amortized over longer running apps.
+% could check all apps (instead of just running apps at snapshot),
+% but balance between WH's power usage and ability to provide useful info to end user.
+% 
+% Assume that apps that use significant power will be spotted eventually, unless waking up on strictly opposite cycle.
+% Assume short-term information more informative than historic view -- analyzer assumes current behavior will continue
+% analyzer examines CPU and network I/O.  Due to time constraints, these metrics are currently separated.  Future work could provide a unified metric of usage.
 
-\subsection{System Interactions}
--Since each application in Android has its own Linux style process, components of other applications are separated from our application.  
-However, Android OS provides an Activity Manager (class|interface) that interacts with all activities running in the system.  
-Watt's Happening draws heavily from the Activity Manager to receive a list of all running processes and information for the processes, such as the User ID (UID).   
-Similarly, the Battery Manager passes information including when the charging status of the 
-device is changed such as from charging to disconnected status.  
-Most importantly, the Battery Manager passes the level and scale of the battery which allows Watt's Happening to determine the current battery percentage remaining.  
-Other managers that are important to our application include the Wifi Manager, the Location Manager, and the Power Manager.  
-The latter of which describes the state of the device's screen. %what --af
+The \emph{Watt's Happening} application provides an estimate of remaining battery time, based on current and historic resource usage metrics. 
+This estimate is provided along with a list of the currently running applications, weighted based on resource usage metrics.  
+This provides the user with information that can be used to terminate a running application, thereby lengthening remaining battery time.
+The resource usage metrics are calculated on a per-application basis.
+The resources examined include CPU and network I/O.
+The reason to choose these resources for examination is twofold: the ease of measurement, and the high correlation between the usage of these resources and battery draw.
+
+In order to obtain metrics on resource usage, data is gathered from the underlying operating system.
+The status of hardware devices including radio states, location, screen state, and battery levels is queried and retained.
+Currently running applications and resource consumption metrics are also queried and retained. 
+Hardware use is attributed to each application based on application resource consumption metrics. 
+Battery drain is attributed to hardware states.
+Use of hardware allows allocation of battery consumption across applications.
+Of course, the act of measuring carries the risk of excessive power draw; we attempt to obtain representative data collection in a conservative manner.
+Performing this balance does allow the possibility that short-running applications will not be seen by the \emph{Watt's Happening} logger.
+We assume that short-running applications that account for significant battery draw will eventually appear to our logger.
+Applications that are not visible to our logger certainly still draw battery, but this usage, by necessity, will be amortized over applications that are visible.
+
+\emph{Watt's Happening} provides an activity-weighted battery life estimate.
+This estimate is strongly biased in favor of recent activity. 
+Since battery consumption rate is derived from the assumption that the current usage pattern will continue, recent activities will yield a more conservative estimation of future use.
+The reported time remaining should be conservative because user expectation dictates that the battery will last at least as long as the \emph{Watt's Happening} estimate.
+In the case of no change in the battery level during a short term snapshot, a longterm averaged estimate is used.
+
+If the user desires to prolong their battery further than the estimate, \emph{Watt's Happening} presents a set of lists showing running applications sorted by respective resource usage.
+Usage is directly tied to battery draw as described above. 
+This allows the user to select what action to take (i.e., termination of one or more applications) to extend battery life by drawing attention to applications that are (i) currently running and (ii) drawing proportionally significant power.
+
+
+%Time-biased battery life estimate 
+
+
+%%%%%
+%Before starting on the application, we made two design assumptions.  
+%First, any services that end quickly will not be incorporated into the analysis.  
+%We assume that only long running programs will have a significant effect on the overall battery usage.  
+%There exists the possibility for short, intense applications to game the system by terminating before our application's polling, but we ignore that possibility for now.  
+%The second assumption is that we only display candidate applications for termination if they are currently running.  
+%TODO 
+%Future variation of the program can implement features that inform the user how much longer they can run their favorite applications while still reaching their target, but currently we limit our focus.
+

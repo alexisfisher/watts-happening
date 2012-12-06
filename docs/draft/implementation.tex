@@ -1,5 +1,17 @@
 \section*{Implementation}
+
+\subsection*{System Interactions}
+-Since each application in Android has its own Linux style process, components of other applications are separated from our application.  
+However, Android OS provides an Activity Manager (class|interface) that interacts with all activities running in the system.  
+Watt's Happening draws heavily from the Activity Manager to receive a list of all running processes and information for the processes, such as the User ID (UID).   
+Similarly, the Battery Manager passes information including when the charging status of the 
+device is changed such as from charging to disconnected status.  
+Most importantly, the Battery Manager passes the level and scale of the battery which allows Watt's Happening to determine the current battery percentage remaining.  
+Other managers that are important to our application include the Wifi Manager, the Location Manager, and the Power Manager.  
+The latter of which describes the state of the device's screen. %what --af
+
 \subsection*{Logging}
+% HW Info,   App Info
 Core to the success of Watt's Happening is the logging and structure of all application, CPU, battery, network, and hardware data that allows the follow-on analysis.  
 Android OS provides SQLite for easy database creation and management. 
 The initial decision on what information to collect was simply to capture as much as possible to identify correlations between applications, the hardware resources they use, and the effects on the battery.  
