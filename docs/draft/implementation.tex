@@ -22,7 +22,7 @@ These events are logged when they occur.
 \subsection*{Analysis}
 Although data is collected every five minutes, analysis is delayed until there is sufficient information to justify the overhead of performing the analysis.
 The analysis performs two distinct tasks, aggregating application resource usage and determining projected battery longevity.
-Application cpu and network I/O information is condensed to a persistent long-term running average, and stored.
+Application CPU and network I/O information is condensed to a persistent long-term running average, and stored.
 Once this average is stored, the short-term information can be archived, reducing the memory footprint of \emph{Watt's Happening}.
 Projected battery longevity is estimated based on short and long term battery drain rate.
 Since battery level is only reported to the closest 1\%, a change may not be visible over a short term period, especially if the device is idle.
