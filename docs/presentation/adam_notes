@@ -31,14 +31,11 @@ Although, if there is minimal usage or the phone is idle then we will not see ba
 	When the user returns to high activity the calculation responds quickly thus correcting possible overestimation.
 
 We used 5 minutes as the short term window.
-	This is in part because that is the granularity at which the logging is taking place.
+	This is in part because that is the granularity at which the logging is taking place. Which was discussed by Ben earlier.
 	----- Add graph showing the periods of no change, where shortTermUsage is 0 -------
 	Also, with a 5 minute window we were seeing a resonable amount of data where there was not enough battery drop to use the short term window, therefore we would not want to shorten it
 	Longer windows lessen our ability to correlate the recent usage with the immediate future usage. (What you have been doing for the last 10 minutes isn't necessarily what you'll be doing for the next 10 minutes in many cases)
 	
-
-
-
 One possible change we could make is that we could capture battery level change events and supplement our current data with that information.
 This would provide a more accurate data set of when the battery actually changed.
 
