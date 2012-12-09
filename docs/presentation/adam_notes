@@ -1,0 +1,48 @@
+
+
+
+
+Estimated Time Remaining Discussion Points
+
+The Watt's Happening app needs to estimate the amount of time remaining before the battery dies.
+An important issue that arises when estimated the amount of time left is overestimation and underestimation
+
+Overestimation
+	Estimating that the time remaining is longer than the actual remaining battery life.
+Underestimation
+	Estimating that the time remaining is less than the actual remaining battery life. 
+	This is the conservative estimate and is necessary since it is unacceptable to tell a user that their battery will last longer that it actual will.
+	So, this is the better estimation since it won't leave the user stranded with a dead device and no way to charge it.
+
+This estimation is done by looking at the battery levels over time.
+The data from the battery table is used and is captured at up to one percent granularity.
+
+Our initial intution was to simply look at all the data that had been collected since the last time the phone was charged.
+	----- Show figure here ------ Figure Ben made showing 
+	Explain that using purely the long term data would result in an overestimation
+	Motivation for giving short term usage a priority
+
+Therefore, in situations where there is an active user in the short term, we assume that their recent usage is indicative of their immediate future use
+	We also can not assume when this current activity will stop, the user could technically continue their current usage up until their battery dies, and therefore we must base the estimated time remaining soley on the short term usage.
+
+Although, if there is minimal usage or the phone is idle then we will not see battery levels drop within our short term window. 
+	In this case we fall back on the long term usage to determine the remaining time.
+	Long term usage is appropriate in this case since the phone has returned to an idle mode and all previous short usage information is encompassed in the long term usage.
+	When the user returns to high activity the calculation responds quickly thus correcting possible overestimation.
+
+We used 5 minutes as the short term window.
+	This is in part because that is the granularity at which the logging is taking place.
+	----- Add graph showing the periods of no change, where shortTermUsage is 0 -------
+	Also, with a 5 minute window we were seeing a resonable amount of data where there was not enough battery drop to use the short term window, therefore we would not want to shorten it
+	Longer windows lessen our ability to correlate the recent usage with the immediate future usage. (What you have been doing for the last 10 minutes isn't necessarily what you'll be doing for the next 10 minutes in many cases)
+	
+
+
+
+One possible change we could make is that we could capture battery level change events and supplement our current data with that information.
+This would provide a more accurate data set of when the battery actually changed.
+
+
+
+
+
