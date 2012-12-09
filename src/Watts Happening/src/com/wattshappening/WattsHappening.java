@@ -174,11 +174,14 @@ public class WattsHappening extends Activity {
 		        		int uid = info.uid;
 		        		//get usage by uid
 		        		AggregateAppInfo aggappinfo = aggTable.fetchMostRecent(uid);
-		        		double cpu = aggappinfo.getHistoricCPU();
-		        		double net = aggappinfo.getHistoricNetwork();
-		        		cpuUse.put(name, cpu);
-		        		//cpuOut += name + " : "+cpu+"\n";  // temporary
-		        		netUse.put(name, net);
+		        		//need to check if we get anything
+		        		if (aggappinfo != null){
+		        			double cpu = aggappinfo.getHistoricCPU();
+		        			double net = aggappinfo.getHistoricNetwork();
+		        			cpuUse.put(name, cpu);
+		        			//cpuOut += name + " : "+cpu+"\n";  // temporary
+		        			netUse.put(name, net);
+		        		}
 		        		//netOut += name + " : " + net + "\n";  // temporary
 		        	}
 		        }
