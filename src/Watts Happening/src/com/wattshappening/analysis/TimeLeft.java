@@ -120,10 +120,12 @@ public class TimeLeft {
 		double millisecLeft = results.get(results.size() - 1).getPercentage() / percentPerMillisecond;
 		
 		Log.i("TimeLeft" , "Milliseconds Left: " + millisecLeft);
-		Toast.makeText(context, "Longterm Usage: " + longTermUsage, Toast.LENGTH_LONG).show();
-		Toast.makeText(context, "Longterm Time: " + longTermTime, Toast.LENGTH_LONG).show();
-		Toast.makeText(context, "Shortterm Usage: " + shortTermUsage, Toast.LENGTH_LONG).show();
-		Toast.makeText(context, "Shortterm Time: " + shortTermTime, Toast.LENGTH_LONG).show();
+		//Toast.makeText(context, "Longterm Usage: " + longTermUsage, Toast.LENGTH_LONG).show();
+		//Toast.makeText(context, "Longterm Time: " + longTermTime, Toast.LENGTH_LONG).show();
+		//Toast.makeText(context, "Shortterm Usage: " + shortTermUsage, Toast.LENGTH_LONG).show();
+		//Toast.makeText(context, "Shortterm Time: " + shortTermTime, Toast.LENGTH_LONG).show();
+		Toast.makeText(context, "Shortterm Timeleft: " + shortTermUsage / shortTermTime, Toast.LENGTH_LONG).show();
+		Toast.makeText(context, "Longterm TimeLeft: " + longTermUsage / longTermTime, Toast.LENGTH_LONG).show();
 
 		try {
 			tlTable.addEntry(new TL(results.get(results.size()-1).getTimestamp(),
