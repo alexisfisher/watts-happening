@@ -1,8 +1,0 @@
-Date Pulled: 11/19/12 at 4:30pm
-Device: Nick's Evo 3D
-Estimated Time Running: 6 hours
-Usage During Test: Normal day of use. Started around 10:30am at my house. Used phone lightly 
-	through most of the morning, occasionally using it for data. 
-Notable Details: Interesting time may be around 2:00pm-2:30pm when I used google maps to give 
-	me directions home via bus and navigate the entire way. While on the bus I also played 
-	the "Great Little War Game" (which should be fairly CPU intesive for about 5-10 minutes).  
