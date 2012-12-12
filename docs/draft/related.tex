@@ -1,9 +1,12 @@
 \section*{Related Work}
 \label{sec:related}
-Zwang et al.\cite{Zhang:2010:AOP:1878961.1878982} created a similar program in 2010 called PowerTutor that receives a power estimate to various hardware components and application and then assigns power usage to specific applications.  
-They created the benchmarks using a previous project call PowerBooter that monitored power consumption while controlling power management for individual components.  
+Zwang et al.\cite{Zhang:2010:AOP:1878961.1878982} created a similar program in 2010 called PowerTutor that provides a power estimate to various hardware components and then assigns power usage to specific applications.  
+They created the benchmarks using a previous project call PowerBooter that monitored power consumption while controlling power management for individual components. 
+Since their models are based off of specific hardware components, their application is intrinsically tied to specific devices.
+They warn that if PowerTutor is used with devices other than their target devices, "power consumption estimates will be rough."
+\emph{Watt's Happening} was intended to be a more general application that can provide useful information to a user regardless of their device's hardware. 
 PowerTutor ultimately allows developers to determine the impact of their own application to improve their software designs.  
-Future work could seek to incorporate PowerTutor into Watt's Happening to fine-tune application usage details and improve recommendations.
+Future work could seek to incorporate aspects of PowerTutor into Watt's Happening to fine-tune application usage details and improve recommendations.
 
 Chang, Agrawal, and Cameron survey the power management techniques employed by Android and how popular applications abuse or take advantage of those techniques\cite{energy-aware}. 
 They explore the idea that software written for mobile devices should be optimized for efficient power consumption, but in many cases the application developer doesn't necessarily take power into consideration. 
@@ -15,8 +18,16 @@ Pathak, Hu, and Zhang help application developers create power conserving softwa
 The tool allows developers to monitor power consumption with multiple granularities and determine which pieces of code consume the most energy. 
 This is useful for catching programming bugs, such as holding onto a wakelock too long, as well as directing attention to code that needs to be optimized. 
 It also illuminates the fact that large amounts of energy are used in I/O operations. 
-This implies that in order to save energy it is important to only use 3G, GPS, and WiFi when it is truly necessary. 
-Therefore, it is clear that disabling these aspects of a mobile device can make profound differences in battery life.
+This implies that in order to save energy it is important to only use 3G, GPS, and WiFi when it is truly necessary.
+These observations led us to the conclusion that it is important for \emph{Watt's Happening} to record and correlate network usage to specific applications.
+Also, being that network operations were shown to be enery intensive, a recommendation system should place an emphasis on applications that abuse the devices networking.
+%Therefore, it is clear that disabling these aspects of a mobile device can make profound differences in battery life.
+
+There has also been significant work that offers insights into user profiling and modeling.
+Eventually, \emph{Watt's Happening} looks leverage user profiling to automatically control the power of different radios on the device. 
+This would allow the application to prolong the battery life of a mobile device just by observing a user's usage patterns.
+Intelligent models are necessary in order to keep from being too intrusive in user actions.
+If the application's actions cause annoyance to the user, then they will refuse to use the application. 
 
 Balajinath and Raghavan discuss learning user behavior to build a model of non-malicious user actions, with the intent to easily identify malicious users\cite{Balajinath:2001:IDT:2294491.2294970}. 
 User activity is recorded, and a newness factor is used to help identify behavior out of the norm. 
@@ -25,20 +36,23 @@ A 500-command history was identified as the amount of history required to ensure
 Fawcett et al. use usage profiling to detect cellular cloning fraud \cite{dataMiningFraudDetection}. 
 While the idea of profiling users based on when and where they use services is similar to what we are trying to do, they are using this information for a much different application. 
 
+Murmuria et al. develop a system for modeling power consumption on smartphone devices by collecting data on the wakelock drivers for a device's subsystem \cite{mobilePowerUsageMeasurements}. 
+They break down the major subsystems (CPU, display, graphics, GPS, audio, and WiFi) and develop metrics by which power consumption can be determined for each subsystem. 
+The paper provides a good overview of a low impact way of determining power consumption of individual components in a smartphone.
+This correlation between subsystem and power consumption would allow for more powerful recommendations by \emph{Watt's Happening}.
+\emph{Watt's Happening} could then give predictions stating how long a specific application can run while still achieving the overall battery-life goal for the device.
+
+Goecks and Shavlik address unobtrusive observation of user behavior \cite{Goecks:2000:LUI:325737.325806}. 
+Users don't need to necessarily identify successful results, but measurements of success can be inferred from properties of successful predictions. 
+These properties should be observable without user interaction to assess likelihood of success. 
+
+% I have no idea how to connect this to what we did
 Ashbrook learns significant locations and predicts user movement from GPS data \cite{Ashbrook:2002:LSL:862896.881068}. 
 Raw location data is analyzed using k-clustering with a variety of radiuses. 
 A building location is inferred from lack of GPS information for an arbitrarily selected ten minute time slice. 
 This is vulnerable to other GPS data issues, including urban canyons or device failure. 
 The location prediction is based on a Markov model built off of observed patterns. 
 First order Markov models are used, as data models beyond that would require a much longer observation period. 
-
-Goecks and Shavlik address unobtrusive observation of user behavior \cite{Goecks:2000:LUI:325737.325806}. 
-Users don't need to necessarily identify successful results, but measurements of success can be inferred from properties of successful predictions. 
-These properties should be observable without user interaction to assess likelihood of success. 
-
-Murmuria et al. develop a system for modeling power consumption on smartphone devices by collecting data on the wakelock drivers for a device's subsystem \cite{mobilePowerUsageMeasurements}. 
-They break down the major subsystems (CPU, display, graphics, GPS, audio, and WiFi) and develop metrics by which power consumption can be determined for each subsystem. 
-This paper provides a good overview of a low impact way of determining power consumption of individual components in a smartphone. 
 
 Rumble et al. discussed a new operating system called Cinder that sought to extend limited energy resources by implementing capacitor objects \cite{Rumble:2009:AJT:1592606.1592618}. 
 The similarities to their work included a desire to reach a goal usage time by dynamically running statistics of application energy consumption. 
