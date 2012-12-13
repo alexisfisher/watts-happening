@@ -27,39 +27,44 @@ Therefore, averaging real world usage scenarios provide a more realistic, yet ho
 \emph{Watt's Happening} was tested and analyzed via iterative real world testing on a selection of Android devices for over 40 hours of total testing time.
 The devices include an HTC EVO 3D and a Motorola Droid RAZR both running Android 4.0. 
 
-\begin{figure}[ht!]
-	\begin{center}
-		\includegraphics[width=\columnwidth]{figs/battery_level.png}
-		\caption{}
-		\label{fig:bat_level}
-\end{center}
-\end{figure}
-\begin{figure}[ht!]
-	\begin{center}
-		\includegraphics[width=\columnwidth]{figs/est_time_remaining.png}
-		\caption{}
-		\label{fig:est_remaining}
-\end{center}
-\end{figure}
-\begin{figure}[ht!]
-	\begin{center}
-		\includegraphics[width=\columnwidth]{figs/bat_vs_time_short.png}
-		\caption{}
-		\label{fig:bat_vs_time_short}
-\end{center}
-\end{figure}
-
-graphs of data
-describes use \& interesting points
-%
-are our metrics accurate?
-%
-performance
-% we did so many experiments
+%are our metrics accurate?
 
 \subsection{Performance}
 % do we see underestimation?
-% here's where nick's sweet graphs go
+% describes use \& interesting points
+\begin{figure*}[h]
+	\begin{center}
+		\includegraphics[scale=0.5]{figs/battery_level.png}
+		\caption{Battery Level Over Time, Dataset 1}
+		\label{fig:bat_level}
+\end{center}
+\end{figure*}
+\begin{figure*}[h]
+	\begin{center}
+		\includegraphics[scale=0.5]{figs/est_time_remaining.png}
+		\caption{Estimated Time Remaining Over Time, Dataset 1}
+		\label{fig:est_remaining}
+\end{center}
+\end{figure*}
+\begin{figure*}[h]
+	\begin{center}
+		\includegraphics[scale=0.5]{figs/bat_vs_time_short.png}
+		\caption{Battery Level Over Time, Dataset 2}
+		\label{fig:bat_vs_time_short}
+\end{center}
+\end{figure*}
+Figure \ref{fig:bat_level} shows the battery depletion over an approximately 20 hour run, beginning at approximately 11:00am. 
+The long period of minimal battery depletion aligns with our test user's sleeping habits.
+A sharp spike of device usage and corresponding battery depletion is evident, and correlates to our test user streaming music over 3G, a relatively resource intensive task.
+
+
+Figure \ref{fig:est_remaining} is from the same test period as figure \ref{fig:bat_level}.
+This figure shows \emph{Watt's Happening}'s estimate of remaining battery time, calculated every 30 minutes.
+As we can see, over long idle periods our estimation tends to increase.
+Conversely, over periods of heavy use, our estimation dramatically decreases in correlation with recent high usage.
+%TODO softshoe around overestimation
+Figure \ref{fig:bat_vs_time_short}
+
 % app performance
 % issues with long idle times messing up long term usage values
 % % how to fix
