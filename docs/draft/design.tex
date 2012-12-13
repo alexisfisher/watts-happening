@@ -20,18 +20,6 @@
 %     so for power depletion to be significant, must run very frequently
 % energy draw is amortized over all running apps
 
-%% 
-% why use shortterm only instead of weighted averages?
-% short-term info is more indicative (\ref{fig:bat_v_time} )
-% because weighted averages result in overestimation of remaining battery life.
-% Without a model of user behavior, we assume the user could proceed with 
-%current activity until the battery is depleted.
-
-%%
-% limited to currently running apps -- reduces /proc parsing overhead
-% 
-
-
 The \emph{Watt's Happening} application provides an estimate of remaining battery time, based on current and historic resource usage metrics. 
 This estimate is provided along with a list of the currently running applications, weighted based on resource usage metrics.  
 This provides the user with information that can be used to terminate a running application, thereby lengthening remaining battery time.

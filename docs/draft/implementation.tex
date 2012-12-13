@@ -10,10 +10,11 @@ When obtaining information, it is important to ensure \emph{Watt's Happening} re
 This is accomplished by using a time-based polling method of collecting data, as opposed to constant and intrusive observation.
 Resource usage is obtained via the Managers provided in the Android API.
 Battery level, GPS state, WiFi state, Bluetooth state, network connection and screen state are all collected and stored.
-Application information including UID, name, network information transmitted and received, cpu usage, and runtime is collected and stored. 
-While the majority of the application information is obtained from the Managers described above, cpu usage is not exposed via the API.
+Application information including UID, name, network information transmitted and received, CPU usage, and runtime is collected and stored. 
+While the majority of the application information is obtained from the Managers described above, CPU usage is not exposed via the API.
 \emph{Watt's Happening} obtains cpu usage in the same manner as `top', `ps', and other standard system tools.
-\emph{Watt's Happening} parses the data in the `proc' folder for each application.
+Each application has a file in proc that allows \emph{Watt's Happening} to obtain the CPU ticks for the application.
+This value can then be correlated to the number of overall CPU ticks to determine the percentage of the CPU the application consumes during the logging window.
 Based on our iterative experimentation, information is polled every five minutes.
 We believe this maintains the delicate balance between fine-grained information capture and battery used by \emph{Watt's Happening}.
 There are some low duration, high-power events, such as BlueTooth pairing and GPS-based updates, that may not be captured by time-based polling.
