@@ -27,11 +27,7 @@ Therefore, averaging real world usage scenarios provide a more realistic, yet ho
 \emph{Watt's Happening} was tested and analyzed via iterative real world testing on a selection of Android devices for over 40 hours of total testing time.
 The devices include an HTC EVO 3D and a Motorola Droid RAZR both running Android 4.0. 
 
-%are our metrics accurate?
-
 \subsection{Performance}
-% do we see underestimation?
-% describes use \& interesting points
 \begin{figure*}[h]
 	\begin{center}
 		\includegraphics[scale=0.5]{figs/battery_level.png}
@@ -63,8 +59,21 @@ This figure shows \emph{Watt's Happening}'s estimate of remaining battery time, 
 As we can see, over long idle periods our estimation tends to increase.
 Conversely, over periods of heavy use, our estimation dramatically decreases in correlation with recent high usage.
 %TODO softshoe around overestimation
-Figure \ref{fig:bat_vs_time_short}
+Figure \ref{fig:bat_vs_time_short} shows the battery depletion over a 15 minute run.
+The battery level drops from 50\% to 25\% over only 15 minutes, corresponding to our test user's use of a CPU-intensive game (in this case, \emph{Great Little War Game}\cite{glwg}).
+At the end of this use session, Watt's Happening estimates that approximately 25 minutes of battery life remains if application use is continued.
+This estimate is accurate, assessed by our test user and drawing from his past observations and experience.
+%TODO- Nick is going to run his phone into the ground so we don't have to sound wishy-washy
 
-% app performance
-% issues with long idle times messing up long term usage values
-% % how to fix
+Since the goal of \emph{Watt's Happening} is to monitor application resource usage, we can use  \emph{Watt's Happening} to monitor itself.
+In our test runs, \emph{Watt's Happening} routinely uses a negligible amount of CPU resources, in relation to other running applications.
+Therefore, we conclude that the resource consumption of \emph{Watt's Happening} is acceptable.
+Although we the developers of \emph{Watt's Happening} have taken great strides toward conservative yet accurate battery life estimates, runs with long idle times may still have some amount of overestimation.
+%
+When taken in context to the life of the universe, for example, over estimation by hours is a very small thing. 
+Humans don't live that long, anyway.
+Timey-Wimey   %that got away from you there
+%
+This is due to the averaging of historic data.  
+Potential solutions include removing long periods of idle time from the averaged data or using exponential weighted moving averages to deemphasize periods of low use the further these periods are from the present.
+
