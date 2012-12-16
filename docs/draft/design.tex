@@ -36,7 +36,13 @@ Use of hardware allows allocation of battery consumption across applications.
 Of course, the act of measuring carries the risk of excessive power draw; we attempt to obtain representative data collection in a conservative manner.
 Performing this balance does allow the possibility that short-running applications will not be seen by the \emph{Watt's Happening} logger.
 We assume that short-running applications that account for significant battery draw will eventually appear to our logger.
-Applications that are not visible to our logger certainly still draw battery, but this usage, by necessity, will be amortized over applications that are visible.
+This is a reasonable assumption for several reasons.
+First, most applications are not killed but simply backgrounded and therefore will be running at the same time as the logger.
+Applications that are not backgrounded are generally user-driven.
+Unless the user only interacts with the application in strictly opposite cycles from the logger (which is unlikely), then at some point the logger will observe the application.
+If an application is short-running, not user-driven, and not backgrounded then it would need to run frequently in order to draw significant amounts of battery.
+If the application is running frequently then it will eventually overlap with the logger.
+Applications that are still not visible to our logger will certainly still draw battery, but this usage, by necessity, will be amortized over applications that are visible.
 
 \emph{Watt's Happening} provides a battery life estimate based on rate of usage in conjunction with battery level remaining.
 This estimate is strongly biased in favor of recent activity, while still incorporating long-term historic usage. 
