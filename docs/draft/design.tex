@@ -31,18 +31,18 @@ We gather data from the underlying operating system in order to obtain metrics o
 The logging code queries and retains the status of hardware devices including radio states, location, screen state, and battery levels.
 We query and retain currently running applications and resource consumption metrics to attribute hardware use to each application.
 For battery drain, we attribute the change in level to hardware states.
-Use of hardware allows allocation of battery consumption across applications.
-Of course, the act of measuring carries the risk of excessive power draw; we attempt to obtain representative data collection in a conservative manner.
+Application use of hardware allows allocation of battery consumption across applications.
+Of course, the act of measuring carries the risk of excessive power draw; we attempt to obtain representative data collection in a power conserving manner.
 Performing this balance does allow the possibility that short-running applications will not be seen by the \emph{Watt's Happening} logger.
 We assume that short-running applications that account for significant battery draw will eventually appear to our logger.
 This is a reasonable assumption for several reasons.
 First, most applications are not killed but simply backgrounded and therefore run at the same time as the logger.
 Generally, user-driven applications are not backgrounded.
 %Unless the user only interacts with the application in cycles directly opposing the logger...
-Unless the user only interacts with the application in strictly opposite cycles from the logger (which is unlikely), then at some point the logger will observe the application.
+Unless the user only interacts with the application in cycles directly opposing the logger (which is unlikely), then at some point the logger will observe the application.
 A frequently running application will eventually overlap with the logger.
-If the application is running frequently then it will eventually overlap with the logger.
-Applications that are still not visible to our logger will draw battery, but visible applications will amortize this usage, by necessity.
+Applications that are not visible to our logger will draw battery, but usage will be amortized over visible applications by necessity.
+
 
 \emph{Watt's Happening} provides a battery life estimate based on rate of usage in conjunction with battery level remaining.
 Recent activity strongly biases this estimate in its favor, while still incorporating long-term historic usage in certain scenarios.

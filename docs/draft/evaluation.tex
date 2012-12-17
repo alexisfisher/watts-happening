@@ -24,11 +24,11 @@
 \subsection{Logging Window}
 \emph{Watt's Happening} selected a five minute logging window.
 We chose this window to balance the impact on the system with a desire to capture as much data as possible, as mentioned in Section \ref{subsec:impl_logging}.
-Our timing window also impacts our time remaining calculation, described in Section \ref{subsec:impl_analysis} 
+Our timing window also impacts our time remaining calculation, described in Section \ref{subsec:impl_analysis}.
 As we see in figure %\ref{fig:bat_level}, because battery level does not change for long periods of time while the phone idles, shorter logging windows would not provide more utility for our estimations. 
-Using less than a five minute window, the number of short term observations with no battery change registered will grow, which results in more logging with no gain in useful data.
+The number of short term observations with no battery change registered will grow if using less than a five minute window, which results in more logging with no gain in useful data.
 If more fine-grained battery information is required, we could register a \texttt{BatteryLevelChange} event handler to capture exactly when a battery level change occurs.
-If we extend the logging window, there is a higher chance of missing applications that impact battery depletion.
+Conversely, if we extend the logging window, there is a higher chance of missing applications that impact battery depletion.
 
 \subsection{Estimation Model}
 Initially, we experimented with using long term historical usage metrics in estimating application resource consumption.
@@ -56,9 +56,9 @@ This figure shows \emph{Watt's Happening}'s estimate of remaining battery time, 
 As we can see, over long idle periods our estimation tends to increase.
 Conversely, over periods of heavy use, our estimation dramatically decreases in correlation with recent high usage.
 
-Figure \ref{fig:bat_vs_time_short} shows the battery depletion over a 15 minute run.
-The battery level drops from 50\% to 25\% over only 15 minutes, corresponding to our test user's use of a CPU-intensive game (in this case, \emph{Great Little War Game}\cite{glwg}).
-At the end of this use session, \emph{Watt's Happening} estimated  approximately 20 minutes of battery life remains if the user continues their application use.
+Figure \ref{fig:bat_vs_time_short} shows the battery depletion over a 35 minute run.
+The battery level drops from 40\% to 25\% over only 10 minutes, corresponding to our tester's use of a CPU-intensive game (in this case, \emph{Great Little War Game}\cite{glwg}).
+At the end of this use session, \emph{Watt's Happening} estimated approximately 20 minutes of battery life remained if application use continues.
 The test user continued the activity until battery depletion, demonstrating the accuracy of the estimate.
 
 Since the goal of \emph{Watt's Happening} is to monitor application resource usage, we can use  \emph{Watt's Happening} to monitor itself.
