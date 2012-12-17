@@ -25,7 +25,7 @@ This estimate is provided along with a list of the currently running application
 This provides the user with information that can be used to terminate a running application, thereby lengthening remaining battery time.
 The resource usage metrics are calculated on a per-application basis.
 The resources examined include CPU and network I/O.
-The reason to choose these resources for examination is twofold: the ease of measurement, and the high correlation between the usage of these resources and battery draw.
+The reason to choose these resources for examination is twofold: the ease of measurement, and the high correlation between the use of these resources and battery draw.
 
 In order to obtain metrics on resource usage, data is gathered from the underlying operating system.
 The status of hardware devices including radio states, location, screen state, and battery levels is queried and retained.
@@ -37,8 +37,9 @@ Of course, the act of measuring carries the risk of excessive power draw; we att
 Performing this balance does allow the possibility that short-running applications will not be seen by the \emph{Watt's Happening} logger.
 We assume that short-running applications that account for significant battery draw will eventually appear to our logger.
 This is a reasonable assumption for several reasons.
-First, most applications are not killed but simply backgrounded and therefore will be running at the same time as the logger.
+First, many applications are not killed but simply backgrounded and therefore will be running at the same time as the logger.
 Applications that are not backgrounded are generally user-driven.
+%Unless the user only interacts with the application in cycles directly opposing the logger...
 Unless the user only interacts with the application in strictly opposite cycles from the logger (which is unlikely), then at some point the logger will observe the application.
 If an application is short-running, not user-driven, and not backgrounded then it would need to run frequently in order to draw significant amounts of battery.
 If the application is running frequently then it will eventually overlap with the logger.
