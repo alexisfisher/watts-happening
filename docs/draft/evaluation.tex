@@ -1,6 +1,26 @@
 \section{Evaluation}
 \label{sec:evaluation}
-
+\begin{figure*}[ht!]
+	\begin{center}
+		\includegraphics[scale=0.5]{figs/BatteryLevelLong.png}
+		\caption{Battery Level Over Time, Dataset 1}
+		\label{fig:bat_level}
+\end{center}
+\end{figure*}
+\begin{figure*}[ht!]
+	\begin{center}
+		\includegraphics[scale=0.5]{figs/EstimatedTimeRemainingLong.png}
+		\caption{Estimated Time Remaining Over Time, Dataset 1}
+		\label{fig:est_remaining}
+\end{center}
+\end{figure*}
+\begin{figure*}[ht!]
+	\begin{center}
+		\includegraphics[scale=0.5]{figs/BatteryLevelShort.png}
+		\caption{Battery Level Over Time, Dataset 2}
+		\label{fig:bat_vs_time_short}
+\end{center}
+\end{figure*}
 \subsection{Logging Window}
 \emph{Watt's Happening} selected a five minute logging window.
 This window was chosen to balance the impact on the system with a desire to capture as much data as possible, as mentioned in Section \ref{subsec:impl_logging}.
@@ -28,42 +48,19 @@ We tested and analyzed \emph{Watt's Happening} via iterative real world testing 
 The devices included an HTC EVO 3D and a Motorola Droid RAZR both running Android 4.0. 
 
 \subsection{Performance}
-\begin{figure*}[h]
-	\begin{center}
-		\includegraphics[scale=0.5]{figs/BatteryLevelLong.png}
-		\caption{Battery Level Over Time, Dataset 1}
-		\label{fig:bat_level}
-\end{center}
-\end{figure*}
-\begin{figure*}[h]
-	\begin{center}
-		\includegraphics[scale=0.5]{figs/EstimatedTimeRemainingLong.png}
-		\caption{Estimated Time Remaining Over Time, Dataset 1}
-		\label{fig:est_remaining}
-\end{center}
-\end{figure*}
-\begin{figure*}[h]
-	\begin{center}
-		\includegraphics[scale=0.5]{figs/BatteryLevelShort.png}
-		\caption{Battery Level Over Time, Dataset 2}
-		\label{fig:bat_vs_time_short}
-\end{center}
-\end{figure*}
 Figure \ref{fig:bat_level} shows the battery depletion over an approximately 20 hour run, beginning at approximately 11:00am. 
 The long period of minimal battery depletion aligns with our test user's sleeping habits.
 A sharp spike of device usage and corresponding battery depletion is evident, and correlates to our test user streaming music over 3G, a relatively resource intensive task.
-
 
 Figure \ref{fig:est_remaining} is from the same test period as figure \ref{fig:bat_level}.
 This figure shows \emph{Watt's Happening}'s estimate of remaining battery time, calculated every 30 minutes.
 As we can see, over long idle periods our estimation tends to increase.
 Conversely, over periods of heavy use, our estimation dramatically decreases in correlation with recent high usage.
-%TODO softshoe around overestimation
+
 Figure \ref{fig:bat_vs_time_short} shows the battery depletion over a 15 minute run.
 The battery level drops from 50\% to 25\% over only 15 minutes, corresponding to our test user's use of a CPU-intensive game (in this case, \emph{Great Little War Game}\cite{glwg}).
-At the end of this use session, Watt's Happening estimates that approximately 25 minutes of battery life remains if application use is continued.
-This estimate is accurate, assessed by our test user and drawing from his past observations and experience.
-%TODO- Nick is going to run his phone into the ground so we don't have to sound wishy-washy
+At the end of this use session, Watt's Happening estimated  approximately 20 minutes of battery life remains if application use is continued.
+This estimate is accurate, assessed by our test user continuing the activity until the device's battery was depleted.
 
 Since the goal of \emph{Watt's Happening} is to monitor application resource usage, we can use  \emph{Watt's Happening} to monitor itself.
 In our test runs, \emph{Watt's Happening} routinely uses a negligible amount of CPU resources, in relation to other running applications.
