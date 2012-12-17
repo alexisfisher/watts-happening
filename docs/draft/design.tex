@@ -43,10 +43,10 @@ Generally, user-driven applications are not backgrounded.
 Unless the user only interacts with the application in strictly opposite cycles from the logger (which is unlikely), then at some point the logger will observe the application.
 A frequently running application will eventually overlap with the logger.
 If the application is running frequently then it will eventually overlap with the logger.
-Applications that are still not visible to our logger will certainly draw battery, but visible applications will amortize this usage, by necessity.
+Applications that are still not visible to our logger will draw battery, but visible applications will amortize this usage, by necessity.
 
 \emph{Watt's Happening} provides a battery life estimate based on rate of usage in conjunction with battery level remaining.
-Recent activity stronly biases this estimate in its favor, while still incorporating long-term historic usage.
+Recent activity strongly biases this estimate in its favor, while still incorporating long-term historic usage in certain scenarios.
 Since the battery consumption rate is derived from the assumption that the current usage pattern will continue, recent activities will yield a more conservative estimation of future use.
 %We use this assumption to find 
 The reported time remaining requires a conservative estimate because user expectation dictates that the battery will last at least as long as the \emph{Watt's Happening} estimate.

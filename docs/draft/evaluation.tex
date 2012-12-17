@@ -3,8 +3,8 @@
 
 \subsection{Logging Window}
 \emph{Watt's Happening} selected a five minute logging window.
-This window was chosen to balance impact on the system with a desire to capture as much data as possible, as mentioned in Section \ref{subsec:impl_logging}.
-Our timing window also impacts our time remaining calculation, described in Section %TODO citation 
+This window was chosen to balance the impact on the system with a desire to capture as much data as possible, as mentioned in Section \ref{subsec:impl_logging}.
+Our timing window also impacts our time remaining calculation, described in Section \ref{subsec:impl_analysis} 
 As we've seen in our test cases, because battery level does not change for long periods of time while the phone idles, shorter logging windows would not provide more utility for our estimations. %TODO table ref
 Using less than a five minute window, the number of short term observations with no battery change registered will grow, which results in more logging with no gain in useful data.
 If more fine-grained battery information is required, we could register a \texttt{BatteryLevelChange} event handler to capture exactly when a battery level change occurs.
@@ -16,16 +16,16 @@ This led to overestimation, since usage spikes are overly smoothed into long per
 %This led to overestimation, since current usage is overly smoothed.
 Next, we attempted to incorporate both long and short term usage metrics in estimating application resource consumption by doing a weighted average.
 While our estimates improved, this still resulted in overestimation. 
-Both overestimations were due to long periods with a lower rate of battery use outweighing short periods with a higher rate of battery use, that could continue until the end of the battery.
+Both overestimations were due to long periods with a lower rate of battery use outweighing short periods with a higher rate of battery use, which could continue until the end of the battery.
 %This led to overestimation, since long periods with a lower rate of battery use outweighed the short periods with a higher rate of battery use that could continue until the end of the battery.
 Due to our goal of not overestimating remaining battery levels, our estimation is derived primarily from short term use when available and falling back on historic usage information, as described in Section \ref{subsec:impl_analysis}.
 
 \subsection{Experimentation}
 % Methodology
 Although formal and repeatable testing would have provided a consistent and controlled environment to display incontrovertible usage trends, a sterile environment is not the expected use case.
-Therefore, averaging real world usage scenarios provide a more realistic, yet hopefully still convincing, data set.
-\emph{Watt's Happening} was tested and analyzed via iterative real world testing on a selection of Android devices for over 40 hours of total testing time.
-The devices include an HTC EVO 3D and a Motorola Droid RAZR both running Android 4.0. 
+Therefore, averaging real world usage scenarios provides a more realistic, yet hopefully still convincing, data set.
+We tested and analyzed \emph{Watt's Happening} via iterative real world testing on a selection of Android devices for over 40 hours of total testing time.
+The devices included an HTC EVO 3D and a Motorola Droid RAZR both running Android 4.0. 
 
 \subsection{Performance}
 \begin{figure*}[h]
@@ -68,7 +68,7 @@ This estimate is accurate, assessed by our test user and drawing from his past o
 Since the goal of \emph{Watt's Happening} is to monitor application resource usage, we can use  \emph{Watt's Happening} to monitor itself.
 In our test runs, \emph{Watt's Happening} routinely uses a negligible amount of CPU resources, in relation to other running applications.
 Therefore, we conclude that the resource consumption of \emph{Watt's Happening} is acceptable.
-Although we the developers of \emph{Watt's Happening} have taken great strides toward conservative yet accurate battery life estimates, runs with long idle times may still have some amount of overestimation.
+Although we, the developers of \emph{Watt's Happening}, have taken great strides toward conservative yet accurate battery life estimates, runs with long idle times may still have some amount of overestimation.
 %
 When taken in context to the life of the universe, for example, over estimation by hours is a very small thing. 
 Humans don't live that long, anyway.

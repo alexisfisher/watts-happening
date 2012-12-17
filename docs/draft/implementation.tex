@@ -29,15 +29,15 @@ Application CPU and network I/O information is condensed to a persistent long-te
 Once the analysis stores the average, the application archives the short-term information thus reducing the memory footprint of our program.
 \emph{Watt's Happening} projects the battery longevity estimate based on short and long term battery drain rate.
 We calculate the drain by compiling the battery level change over time, yielding  percentage decrease in battery level per minute. 
-Since the device only reports the battery level to the closest 1%, we may not observe a visible change over a short term period, especially with an idle device.
+Our application uses a non-zero short term drain rate whenever possible.
+Since the device only reports the battery level to the closest 1\%, we may not observe a visible change over a short term period, especially with an idle device.
 In this case, we estimate battery longevity based on the long term battery drain rate.
-However, our application uses a non-zero short term drain rate whenever possible.
 This allows a highly responsive model based on changing usage patterns, while still maintaining accuracy over long term idle periods.
 As demonstrated in figure \ref{fig:bat_v_time}, naively using all collected data leads to averaging multiple disparate usage patterns, which can lead to gross overestimation.  
 This motivates our choice to use solely short-term use information when available.
 %Although we experimented with combining the short and long term rates, this failed to capture the impact of significant short term usage.  
 %This would result in severe overestimation of remaining battery duration.
-Future long term rates incorprate short term usage if the device returns to an idle status.
+Future long term rates incorporate short term usage if the device returns to an idle status.
 \begin{figure}[ht!]
 	\begin{center}
 		\includegraphics[width=\columnwidth]{figs/bat_vs_time.png}
@@ -79,4 +79,4 @@ Future long term rates incorprate short term usage if the device returns to an i
 \subsection{Display} %TODO why we display what we do how we do dododo
 Upon request, \emph{Watt's Happening} displays to the user currently running applications sorted by resource consumption.
 This allows the user to see at a glance which applications are impacting their battery use rate. %change this
-The user can then view the estimate of time remaining and decide to take any action, including terminating a running application or continue in their current state.
+The user can then view the estimate of time remaining and decide to take any action, including terminating a running application or continuing in their current state.
