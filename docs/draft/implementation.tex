@@ -2,42 +2,42 @@
 \label{sec:implementation}
 \emph{Watt's Happening} is implemented on Android OS version 4.0, API level $>$ 14. 
 The Android OS provides a variety of APIs allowing access to application and hardware information.
-Information that is not exposed via the API is obtained directly from the underlying operating system.
+Our application directly obtains not-exposed information via the API directly from the underlying operating system.
 
 \subsection{Logging}
 \label{subsec:impl_logging}
 When obtaining information, it is important to ensure \emph{Watt's Happening} remains relatively low-impact.
-This is accomplished by using a time-based polling method of collecting data, as opposed to constant and intrusive observation.
-Resource usage is obtained via the Managers provided in the Android API.
+We accomplish this by using a time-based polling method of collecting data, as opposed to constant and intrusive observation.
+The Managers provided in the Android API allow \emph{Watt's Happening} to obtain resource usage.
 Battery level, GPS state, WiFi state, Bluetooth state, network connection and screen state are all collected and stored.
 Application information including UID, name, network information transmitted and received, CPU usage, and runtime is collected and stored. 
-While the majority of the application information is obtained from the Managers described above, CPU usage is not exposed via the API.
-\emph{Watt's Happening} obtains cpu usage in the same manner as `top', `ps', and other standard system tools.
-Each application has a file in proc that allows \emph{Watt's Happening} to obtain the CPU ticks for the application.
-This value can then be correlated to the number of overall CPU ticks to determine the percentage of the CPU the application consumes during the logging window.
-Based on our iterative experimentation, information is polled every five minutes.
+While \emph{Watt's Happening} obtain application information fom the Managers described above, the API does not expose CPU usage.
+\emph{Watt's Happening} obtains CPU usage in the same manner as `top', `ps', and other standard system tools.
+Each application contains a file in proc that allows \emph{Watt's Happening} to obtain the CPU ticks for the application.
+Our application correlates this value to the number of overall CPU ticks to determine the percentage of the CPU the application consumes during the logging window.
+\emph{Watt's Happening} polls every five minutes based on our iterative experiments.
 We believe this maintains the delicate balance between fine-grained information capture and battery used by \emph{Watt's Happening}.
-There are some low duration, high-power events, such as BlueTooth pairing and GPS-based updates, that may not be captured by time-based polling.
+Our application does not capture some low-duration, high-power events such as BlueTooth pairing and GPS-based events by time-based polling.
 To handle these cases, our framework allows for event listeners.
-These events are logged when they occur. 
+Passive loggers capture these events when they occur.
 
 \subsection{Analysis}
 \label{subsec:impl_analysis}
-Although data is collected every five minutes, analysis is delayed until there is sufficient information to justify the overhead of performing the analysis.
+\emph{Watt's Happening} collects data every five minutes, but delays analysis until sufficient information exists to justify the overhead of performing the analysis.
 The analysis performs two distinct tasks, aggregating application resource usage and determining projected battery longevity.
 Application CPU and network I/O information is condensed to a persistent long-term running average, and stored.
-Once this average is stored, the short-term information can be archived, reducing the memory footprint of \emph{Watt's Happening}.
-Projected battery longevity is estimated based on short and long term battery drain rate.
-This drain is calculated by battery level change over time, yielding  percentage decrease in battery level per minute. 
-Since battery level is only reported to the closest 1\%, a change may not be visible over a short term period, especially if the device is idle.
-In this case, the long term battery drain rate is used to estimate battery longevity.  
-If the short term battery drain rate is non-zero, it is used to estimate the battery longevity.
-This allows our model to be highly responsive to changing usage patterns, while still maintaining accuracy over long term idle periods.
+Once the analysis stores the average, the application archives the short-term information thus reducing the memory footprint of our program.
+\emph{Watt's Happening} projects the battery longevity estimate based on short and long term battery drain rate.
+We calculate the drain by compiling the battery level change over time, yielding  percentage decrease in battery level per minute. 
+Since the device only reports the battery level to the closest 1%, we may not observe a visible change over a short term period, especially with an idle device.
+In this case, we estimate battery longevity based on the long term battery drain rate.
+However, our application uses a non-zero short term drain rate whenever possible.
+This allows a highly responsive model based on changing usage patterns, while still maintaining accuracy over long term idle periods.
 As demonstrated in figure \ref{fig:bat_v_time}, naively using all collected data leads to averaging multiple disparate usage patterns, which can lead to gross overestimation.  
 This motivates our choice to use solely short-term use information when available.
 %Although we experimented with combining the short and long term rates, this failed to capture the impact of significant short term usage.  
 %This would result in severe overestimation of remaining battery duration.
-Short term usage is incorporated in to future long term rates, which will be used if the device is again idle.
+Future long term rates incorprate short term usage if the device returns to an idle status.
 \begin{figure}[ht!]
 	\begin{center}
 		\includegraphics[width=\columnwidth]{figs/bat_vs_time.png}
@@ -79,4 +79,4 @@ Short term usage is incorporated in to future long term rates, which will be use
 \subsection{Display} %TODO why we display what we do how we do dododo
 Upon request, \emph{Watt's Happening} displays to the user currently running applications sorted by resource consumption.
 This allows the user to see at a glance which applications are impacting their battery use rate. %change this
-The user can then view the estimate of time remaining and decide if any action, including terminating a running application, must be taken.
+The user can then view the estimate of time remaining and decide to take any action, including terminating a running application or continue in their current state.

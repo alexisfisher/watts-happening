@@ -21,14 +21,14 @@
 % energy draw is amortized over all running apps
 
 The \emph{Watt's Happening} application provides an estimate of remaining battery time, based on current and historic resource usage metrics. 
-This estimate is provided along with a list of the currently running applications, weighted based on resource usage metrics.  
+Our application provides an estimate along with a list of the currently running applications, weighted based on resource usage metrics.  
 This provides the user with information that can be used to terminate a running application, thereby lengthening remaining battery time.
-The resource usage metrics are calculated on a per-application basis.
+\emph{Watt's Happening} calculates the resource usage metrics on a per-application basis.
 The resources examined include CPU and network I/O.
 The reason to choose these resources for examination is twofold: the ease of measurement, and the high correlation between the use of these resources and battery draw.
 
-In order to obtain metrics on resource usage, data is gathered from the underlying operating system.
-The status of hardware devices including radio states, location, screen state, and battery levels is queried and retained.
+We gather data from the underlying operating system in order to obtain metrics on resource usage.
+The logging code queries and retains the status of hardware devices to include radio states, location, screen state, and battery levels.
 Currently running applications and resource consumption metrics are also queried and retained. 
 Hardware use is attributed to each application based on application resource consumption metrics. 
 Battery drain is attributed to hardware states.
@@ -37,19 +37,19 @@ Of course, the act of measuring carries the risk of excessive power draw; we att
 Performing this balance does allow the possibility that short-running applications will not be seen by the \emph{Watt's Happening} logger.
 We assume that short-running applications that account for significant battery draw will eventually appear to our logger.
 This is a reasonable assumption for several reasons.
-First, many applications are not killed but simply backgrounded and therefore will be running at the same time as the logger.
-Applications that are not backgrounded are generally user-driven.
+First, most applications are not killed but simply backgrounded and therefore run at the same time as the logger.
+Generally, user-driven applications are not backgrounded.
 %Unless the user only interacts with the application in cycles directly opposing the logger...
 Unless the user only interacts with the application in strictly opposite cycles from the logger (which is unlikely), then at some point the logger will observe the application.
-If an application is short-running, not user-driven, and not backgrounded then it would need to run frequently in order to draw significant amounts of battery.
+A frequently running application will eventually overlap with the logger.
 If the application is running frequently then it will eventually overlap with the logger.
-Applications that are still not visible to our logger will certainly still draw battery, but this usage, by necessity, will be amortized over applications that are visible.
+Applications that are still not visible to our logger will certainly draw battery, but visible applications will amortize this usage, by necessity.
 
 \emph{Watt's Happening} provides a battery life estimate based on rate of usage in conjunction with battery level remaining.
-This estimate is strongly biased in favor of recent activity, while still incorporating long-term historic usage. 
+Recent activity stronly biases this estimate in its favor, while still incorporating long-term historic usage.
 Since the battery consumption rate is derived from the assumption that the current usage pattern will continue, recent activities will yield a more conservative estimation of future use.
 %We use this assumption to find 
-The reported time remaining should be conservative because user expectation dictates that the battery will last at least as long as the \emph{Watt's Happening} estimate.
+The reported time remaining requires a conservative estimate because user expectation dictates that the battery will last at least as long as the \emph{Watt's Happening} estimate.
 
 %In the case of no change in the battery level during a short term snapshot, a longterm averaged estimate is used.
 
