@@ -60,18 +60,18 @@ The differences between their OS and our goal is that they built a new OS where 
 In addition, Cinder actively limits the energy consumption of various applications where we create suggestions for the user to implement. 
 
 Zeng et al. established energy as a resource called currentcy and established pricing for using that resource \cite{Zeng:2003:CUA:1247340.1247344}. 
-Both currentcy and Watt's Happening set usage time goals and dynamically adjusts to overspent and underspent energy to allow the application to meet that energy goal. 
+Both currentcy and\emph{ Watt's Happening} set usage time goals and dynamically adjusts to overspent and underspent energy to allow the application to meet that energy goal. 
 However, currentcy forces all devices on the platform to adopt the energy resource type. 
-This makes application programmers factor currentcy in to their design whereas Watt's Happening aims to be invisible to other applications. 
+This makes application programmers factor currentcy in to their design whereas \emph{Watt's Happening} aims to be invisible to other applications. 
 
 Shi et al. develop a method of identifying users based on behavior profiling \cite{learningUserBehavior}. 
 Their methods of learning users' typical habits could be applied to power usage as well. 
 If we know that a person uses their GPS when traveling to work every morning then we can account for that required power consumption when modeling usage goals. 
 
-Oliner et al. develop Carat, a system to identify misbehaving code and energy-inefficient applications \cite{Oliner:2012:CED:2387858.2387864}.
-Carat is differentiated from \emph{Watt's Happening} by using a community model.
+Oliner et al. developed Carat, a system to identify misbehaving code and energy-inefficient applications \cite{Oliner:2012:CED:2387858.2387864}.
+The designers differentiated Carat from \emph{Watt's Happening} by using a community model.
 Carat's sparse information gathering is also different than \emph{Watt's Happening}'s continuous logging cycle.
-Due to this sparseness, Carat estimations of application usage may not be available to the user for up to a week after initial installation.
+Due to this sparseness, Carat's estimations of application usage may not be available to the user for up to a week after initial installation.
 \emph{Watt's Happening} can provide preliminary observations after the first analysis has been performed, as quickly as 15 minutes after initial installation.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
