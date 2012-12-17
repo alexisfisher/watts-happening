@@ -1,6 +1,26 @@
 \section{Evaluation}
 \label{sec:evaluation}
-
+\begin{figure*}[ht!]
+	\begin{center}
+		\includegraphics[scale=0.5]{figs/BatteryLevelLong.png}
+		\caption{Battery Level Over Time, Dataset 1}
+		\label{fig:bat_level}
+\end{center}
+\end{figure*}
+\begin{figure*}[ht!]
+	\begin{center}
+		\includegraphics[scale=0.5]{figs/EstimatedTimeRemainingLong.png}
+		\caption{Estimated Time Remaining Over Time, Dataset 1}
+		\label{fig:est_remaining}
+\end{center}
+\end{figure*}
+\begin{figure*}[ht!]
+	\begin{center}
+		\includegraphics[scale=0.5]{figs/BatteryLevelShort.png}
+		\caption{Battery Level Over Time, Dataset 2}
+		\label{fig:bat_vs_time_short}
+\end{center}
+\end{figure*}
 \subsection{Logging Window}
 \emph{Watt's Happening} selected a five minute logging window.
 This window was chosen to balance the impact on the system with a desire to capture as much data as possible, as mentioned in Section \ref{subsec:impl_logging}.
@@ -28,27 +48,7 @@ We tested and analyzed \emph{Watt's Happening} via iterative real world testing 
 The devices included an HTC EVO 3D and a Motorola Droid RAZR both running Android 4.0. 
 
 \subsection{Performance}
-\begin{figure*}[h]
-	\begin{center}
-		\includegraphics[scale=0.5]{figs/battery_level.png}
-		\caption{Battery Level Over Time, Dataset 1}
-		\label{fig:bat_level}
-\end{center}
-\end{figure*}
-\begin{figure*}[h]
-	\begin{center}
-		\includegraphics[scale=0.5]{figs/est_time_remaining.png}
-		\caption{Estimated Time Remaining Over Time, Dataset 1}
-		\label{fig:est_remaining}
-\end{center}
-\end{figure*}
-\begin{figure*}[h]
-	\begin{center}
-		\includegraphics[scale=0.5]{figs/bat_vs_time_short.png}
-		\caption{Battery Level Over Time, Dataset 2}
-		\label{fig:bat_vs_time_short}
-\end{center}
-\end{figure*}
+
 Figure \ref{fig:bat_level} shows the battery depletion over an approximately 20 hour run, beginning at approximately 11:00am. 
 The long period of minimal battery depletion aligns with our test user's sleeping habits.
 A sharp spike of device usage and corresponding battery depletion is evident, and correlates to our test user streaming music over 3G, a relatively resource intensive task.

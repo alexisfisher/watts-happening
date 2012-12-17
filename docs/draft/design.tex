@@ -28,12 +28,9 @@ The resources examined include CPU and network I/O.
 The reason to choose these resources for examination is twofold: the ease of measurement, and the high correlation between the use of these resources and battery draw.
 
 We gather data from the underlying operating system in order to obtain metrics on resource usage.
-The logging code queries and retains the status of hardware devices to include radio states, location, screen state, and battery levels.
+The logging code queries and retains the status of hardware devices including radio states, location, screen state, and battery levels.
 We query and retain currently running applications and resource consumption metrics to attribute hardware use to each application.
-For battery drain, we attribute change to hardware states.
-%Currently running applications and resource consumption metrics are also queried and retained. 
-%Hardware use is attributed to each application based on application resource consumption metrics. 
-%Battery drain is attributed to hardware states.
+For battery drain, we attribute the change in level to hardware states.
 Use of hardware allows allocation of battery consumption across applications.
 Of course, the act of measuring carries the risk of excessive power draw; we attempt to obtain representative data collection in a conservative manner.
 Performing this balance does allow the possibility that short-running applications will not be seen by the \emph{Watt's Happening} logger.
