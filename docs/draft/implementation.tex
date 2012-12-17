@@ -14,7 +14,7 @@ Application information including UID, name, network data transmitted and receiv
 %
 While \emph{Watt's Happening} acquires application information from the Managers described above, the API does not expose CPU usage.
 \emph{Watt's Happening} obtains CPU usage in the same manner as `top', `ps', and other standard system tools.
-Each application contains a file in proc that allows \emph{Watt's Happening} to collect the CPU ticks for the application.
+Each application contains a file in the proc directory that allows \emph{Watt's Happening} to collect the CPU ticks for the application.
 %
 Our application correlates this value to the number of overall CPU ticks to determine the percentage of the CPU the application consumed during the logging window.
 \emph{Watt's Happening} polls every five minutes based on our iterative experiments.
